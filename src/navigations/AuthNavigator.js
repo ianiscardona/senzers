@@ -4,10 +4,20 @@ import RegisterScreen from "../screens/register-screen";
 
 const Stack = createStackNavigator();
 
-function AuthNavigator() {
+function AuthNavigator({ onLogin }) {
   return (
-    <Stack.Navigator>
-      <Stack.Screen name="Home" component={Home} />
+    <Stack.Navigator
+      initialRouteName="Login"
+      screenOptions={{
+        headerShown: false,
+      }}
+    >
+      <Stack.Screen
+        name="Login"
+        component={LoginScreen}
+        initialParams={{ onLogin }}
+      />
+      <Stack.Screen name="Register" component={RegisterScreen} />
     </Stack.Navigator>
   );
 }

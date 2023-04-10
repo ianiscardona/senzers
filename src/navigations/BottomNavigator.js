@@ -9,13 +9,14 @@ import { FontAwesome5 } from "@expo/vector-icons";
 
 const Tab = createBottomTabNavigator();
 
-const BottomNavigator = () => {
+const BottomNavigator = ({ user, onLogout }) => {
   return (
     <Tab.Navigator
       initialRouteName="Dashboard"
       screenOptions={{
         tabBarShowLabel: false,
         tabBarStyle: styles.tabBarStyle,
+        headerShown: false,
       }}
     >
       <Tab.Screen
