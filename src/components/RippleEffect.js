@@ -10,7 +10,7 @@ const RippleEffect = () => {
   return (
     <View
       style={{
-        backgroundColor: "lightblue",
+        backgroundColor: "steelblue",
       }}
     >
       <View style={styles.container}>
