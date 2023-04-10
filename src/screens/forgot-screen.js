@@ -1,14 +1,14 @@
 import { StyleSheet, Text, View } from "react-native";
 import React from "react";
 
-const AlertScreen = ({navigation}) => {
+const ForgotScreen = () => {
   return (
     <View>
-      <Text>AlertScreen</Text>
+      <Text>ForgotScreen</Text>
     </View>
   );
 };
 
-export default AlertScreen;
+export default ForgotScreen;
 
 const styles = StyleSheet.create({});
