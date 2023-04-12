@@ -13,6 +13,7 @@ import { FontAwesome5 } from "@expo/vector-icons";
 const LoginScreen = ({ navigation, route }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+
   function handleLogin() {
     route.params.onLogin();
   }

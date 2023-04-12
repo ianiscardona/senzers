@@ -10,11 +10,23 @@ import {
 import React, { useState } from "react";
 import { FontAwesome5 } from "@expo/vector-icons";
 import Checkbox from "../components/Checkbox";
+import { auth, createUserWithEmailAndPassword } from "../../firebase";
 
 const RegisterScreen = ({ navigation }) => {
+  const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isSelected, setSelection] = useState(false);
+
+  const handleSignup = (email, password) => {
+    createUserWithEmailAndPassword(auth, email, password)
+      .then((userCredential) => {
+        const user = userCredential.user;
+        console.log(user.email);
+        console.log(user.password);
+      })
+      .catch((error) => alert(error.message));
+  };
 
   return (
     <KeyboardAvoidingView style={styles.container} behavior="padding">
@@ -24,8 +36,8 @@ const RegisterScreen = ({ navigation }) => {
         <View style={styles.inputContainer}>
           <TextInput
             placeholder="Juan Dela Cruz"
-            value={email}
-            onChangeText={(text) => setEmail(text)}
+            value={fullName}
+            onChangeText={(text) => setFullName(text)}
             style={styles.input}
           />
         </View>
@@ -66,11 +78,19 @@ const RegisterScreen = ({ navigation }) => {
         <Text style={{ fontSize: 16 }}>
           By registering, you confirm that you accept our{" "}
           <View style={{ flexDirection: "row", alignItems: "flex-end" }}>
-            <Pressable onPress={() => alert("Terms of Use pressed")}>
+            <Pressable
+              onPress={() => {
+                navigation.navigate("Terms");
+              }}
+            >
               <Text style={{ color: "green", fontSize: 16 }}>Terms of Use</Text>
             </Pressable>
             <Text style={{ fontSize: 16 }}> and </Text>
-            <Pressable onPress={() => alert("Terms of Use pressed")}>
+            <Pressable
+              onPress={() => {
+                navigation.navigate("Privacy");
+              }}
+            >
               <Text style={{ color: "green", fontSize: 16 }}>
                 Privacy Policy
               </Text>
@@ -79,19 +99,20 @@ const RegisterScreen = ({ navigation }) => {
         </Text>
       </View>
 
-      <View style={styles.buttonContainer}>
-        <TouchableOpacity onPress={() => {}} style={styles.button}>
-          <Text style={styles.buttonText}>Register</Text>
-        </TouchableOpacity>
-      </View>
-      <View style={styles.buttonContainer}>
-        <TouchableOpacity onPress={() => {}} style={styles.button}>
-          <View style={[styles.icon, { marginRight: 10 }]}>
-            <FontAwesome5 name="google" size={18} color="white" />
-          </View>
-          <Text style={styles.buttonText}>Register with Google</Text>
-        </TouchableOpacity>
-      </View>
+      <TouchableOpacity
+        onPress={() => handleSignup(email, password)}
+        style={styles.button}
+      >
+        <Text style={styles.buttonText}>Register</Text>
+      </TouchableOpacity>
+
+      <TouchableOpacity onPress={() => {}} style={styles.button}>
+        <View style={[styles.icon, { marginRight: 10 }]}>
+          <FontAwesome5 name="google" size={18} color="white" />
+        </View>
+        <Text style={styles.buttonText}>Register with Google</Text>
+      </TouchableOpacity>
+
       <View style={{ flexDirection: "row", marginTop: 5 }}>
         <Text style={{ fontSize: 16 }}>Already have an account? </Text>
         <Pressable
@@ -149,21 +170,16 @@ const styles = StyleSheet.create({
     alignSelf: "flex-end",
     marginBottom: 10,
   },
-  buttonContainer: {
-    width: "80%",
-    justifyContent: "center",
-    alignItems: "center",
-    marginBottom: 15,
-  },
   button: {
     flexDirection: "row",
     backgroundColor: "#292828",
-    width: "100%",
+    width: "80%",
     paddingVertical: 15,
     paddingHorizontal: 30,
     borderRadius: 999,
     alignItems: "center",
     justifyContent: "center",
+    marginBottom: 15,
   },
   buttonText: {
     textAlign: "center",
