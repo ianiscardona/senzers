@@ -51,7 +51,7 @@ const LoginScreen = ({ navigation, route }) => {
         </View>
       </View>
       <Pressable
-        // onPress={() => Alert.alert("The text is clicked!")}
+        onPress={() => navigation.navigate("Forgot")}
         style={styles.forgotContainer}
       >
         <Text
