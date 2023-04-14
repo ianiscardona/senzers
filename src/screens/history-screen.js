@@ -1,8 +1,8 @@
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, View } from "react-native";
 import React from "react";
 import HistoryNavigator from "../navigations/HistoryNavigator";
 
-const HistoryScreen = () => {
+const HistoryScreen = ({ navigation }) => {
   return (
     <View style={styles.container}>
       <HistoryNavigator />
