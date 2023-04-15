@@ -3,6 +3,7 @@ import LoginScreen from "../screens/login-screen";
 import RegisterScreen from "../screens/register-screen";
 import TermsScreen from "../screens/terms-screen";
 import PrivacyScreen from "../screens/privacy-screen";
+import ForgotScreen from "../screens/forgot-screen";
 
 const Stack = createStackNavigator();
 
@@ -20,6 +21,13 @@ function AuthNavigator({ onLogin }) {
       <Stack.Screen
         name="Register"
         component={RegisterScreen}
+        options={{
+          headerShown: false,
+        }}
+      />
+      <Stack.Screen
+        name="Forgot"
+        component={ForgotScreen}
         options={{
           headerShown: false,
         }}
