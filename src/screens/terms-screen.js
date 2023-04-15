@@ -1,22 +1,22 @@
 import { StyleSheet, Text, View } from "react-native";
 import React from "react";
-import HistoryNavigator from "../navigations/HistoryNavigator";
 
-const HistoryScreen = () => {
+const TermsScreen = () => {
   return (
     <View style={styles.container}>
-      <HistoryNavigator />
+      <Text>Terms of Use</Text>
     </View>
   );
 };
 
-export default HistoryScreen;
+export default TermsScreen;
 
 const styles = StyleSheet.create({
   container: {
-    paddingHorizontal: 20,
+    backgroundColor: "pink",
     width: "100%",
     height: "100%",
-    backgroundColor: "white",
+    alignItems: "center",
+    paddingTop: 10,
   },
 });
