@@ -8,9 +8,13 @@ import {
   StyleSheet,
   KeyboardAvoidingView,
 } from "react-native";
+import { db } from "../../firebase";
+import { collection, doc, setDoc, addDoc} from "firebase/firestore";
 
 const _primary = "#000000";
 const _secondary = "#A4A2A2";
+
+
 
 const ReportFormModal = ({ visible, onClose }) => {
   const [vehicleType, setVehicleType] = useState("");
@@ -18,6 +22,21 @@ const ReportFormModal = ({ visible, onClose }) => {
   const [timeSeen, setTimeSeen] = useState("");
   const [dateSeen, setDateSeen] = useState("");
 
+  function Create () {
+    addDoc(collection(db, "reports"), {     
+          vehicleType: vehicleType,
+          plateNumber: plateNumber,
+          timeSeen: timeSeen,
+          dateSeen: dateSeen
+        }).then(() => { 
+          // Data saved successfully!
+          console.log('data submitted');  
+    
+        }).catch((error) => {
+              // The write failed...
+              console.log(error);
+        });
+    }
   const handleSave = () => {
     console.log("Vehicle type:", vehicleType);
     console.log("Plate number:", plateNumber);
@@ -112,7 +131,7 @@ const ReportFormModal = ({ visible, onClose }) => {
               <Text style={styles.buttonText}>Cancel</Text>
             </TouchableOpacity>
             <TouchableOpacity
-              onPress={handleSave}
+              onPress={Create}
               style={[styles.button, { backgroundColor: "#F3F641" }]}
             >
               <Text style={styles.buttonText}>Save</Text>
