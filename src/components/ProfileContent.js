@@ -1,4 +1,4 @@
-import { Alert, StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, View } from "react-native";
 import React from "react";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { FontAwesome5 } from "@expo/vector-icons";
@@ -8,7 +8,7 @@ const ProfileContent = ({ navigation }) => {
     <>
       <TouchableOpacity
         onPress={() => {
-          Alert.alert("Button Pressed", "You pressed the back button!");
+          navigation.navigate("SettingsContent");
         }}
         style={{
           marginBottom: "5%",
@@ -28,7 +28,7 @@ const ProfileContent = ({ navigation }) => {
       >
         <Text style={{ fontSize: 30, fontWeight: "bold" }}>Profile</Text>
         <TouchableOpacity
-          onPress={() => navigation.navigate("Edit")}
+          onPress={() => navigation.navigate("EditProfile")}
           style={styles.contentEditButton}
         >
           <Text style={styles.contentEditButtonText}>Edit Profile</Text>

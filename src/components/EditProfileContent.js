@@ -6,7 +6,7 @@ const EditProfileContent = ({ navigation }) => {
   return (
     <>
       <TouchableOpacity
-        onPress={() => navigation.navigate("Profile")}
+        onPress={() => navigation.navigate("ProfileContent")}
         style={{
           marginBottom: "5%",
           alignSelf: "flex-start",
