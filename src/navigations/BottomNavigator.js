@@ -12,7 +12,7 @@ const Tab = createBottomTabNavigator();
 const BottomNavigator = ({ user, onLogout }) => {
   return (
     <Tab.Navigator
-      initialRouteName="Dashboard"
+      initialRouteName="DashboardScreen"
       screenOptions={{
         tabBarShowLabel: false,
         tabBarStyle: styles.tabBarStyle,
@@ -20,7 +20,7 @@ const BottomNavigator = ({ user, onLogout }) => {
       }}
     >
       <Tab.Screen
-        name="Home"
+        name="HomeScreen"
         component={HomeScreen}
         options={{
           tabBarIcon: ({ focused }) => (
@@ -33,7 +33,7 @@ const BottomNavigator = ({ user, onLogout }) => {
         }}
       />
       <Tab.Screen
-        name="Dashboard"
+        name="DashboardScreen"
         component={DashboardScreen}
         options={{
           tabBarIcon: ({ focused }) => (
@@ -46,7 +46,7 @@ const BottomNavigator = ({ user, onLogout }) => {
         }}
       />
       <Tab.Screen
-        name="History"
+        name="HistoryScreen"
         component={HistoryScreen}
         options={{
           tabBarIcon: ({ focused }) => (
@@ -57,6 +57,16 @@ const BottomNavigator = ({ user, onLogout }) => {
             />
           ),
         }}
+      />
+      <Tab.Screen
+        name="ProfileScreen"
+        component={ProfileScreen}
+        options={() => ({
+          tabBarStyle: {
+            display: "none",
+          },
+          tabBarButton: () => null,
+        })}
       />
     </Tab.Navigator>
   );
