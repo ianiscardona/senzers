@@ -10,7 +10,8 @@ import {
 import React, { useState } from "react";
 import { FontAwesome5 } from "@expo/vector-icons";
 import Checkbox from "../components/Checkbox";
-import { auth, createUserWithEmailAndPassword } from "../../firebase";
+import { auth, db, createUserWithEmailAndPassword, firebase, Date } from "../../firebase";
+import { collection, doc, setDoc, addDoc, Timestamp} from "firebase/firestore";
 
 const RegisterScreen = ({ navigation }) => {
   const [fullName, setFullName] = useState("");
@@ -18,15 +19,62 @@ const RegisterScreen = ({ navigation }) => {
   const [password, setPassword] = useState("");
   const [isSelected, setSelection] = useState(false);
 
+  // function CreateProfile () {
+  //   addDoc(collection(db, "reports"), {     
+  //         vehicleType: vehicleType,
+  //         plateNumber: plateNumber,
+  //         timeSeen: timeSeen,
+  //         dateSeen: dateSeen
+  //       }).then(() => { 
+  //         // Data saved successfully!
+  //         console.log('data submitted');  
+    
+  //       }).catch((error) => {
+  //             // The write failed...
+  //             console.log(error);
+  //       });
+  //   }
+
   const handleSignup = (email, password) => {
     createUserWithEmailAndPassword(auth, email, password)
-      .then((userCredential) => {
+      .then(() => {
         const user = userCredential.user;
         console.log(user.email);
         console.log(user.password);
       })
       .catch((error) => alert(error.message));
   };
+
+  // const timestamp = firebase.Date;
+  // const updateTimestamp = await updateDoc(docRef, {
+  //   timestamp: serverTimestamp()
+  // });
+
+  const timestamp = firebase.firestore.FieldValue.serverTimestamp();
+
+  function CreateNewProfile () {
+    setDoc(collection(db, "ProfileInfo"), {     
+          fullName: fullName,
+          email: email,
+          password: password,
+          // updatedAt: timestamp,
+          // createdAt: Timestamp.fromDate(new Date("December 10, 1815")),
+        }).then(() => { 
+          // Data saved successfully!
+          console.log('data submitted');  
+    
+        }).catch((error) => {
+              // The write failed...
+              console.log(error);
+        });
+    }
+
+
+    function CreateSignup (){
+      handleSignup(email,password);
+      CreateNewProfile();
+      }
+
 
   return (
     <KeyboardAvoidingView style={styles.container} behavior="padding">
@@ -100,7 +148,7 @@ const RegisterScreen = ({ navigation }) => {
       </View>
 
       <TouchableOpacity
-        onPress={() => handleSignup(email, password)}
+        onPress={() => CreateSignup ()}
         style={styles.button}
       >
         <Text style={styles.buttonText}>Register</Text>

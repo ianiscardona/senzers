@@ -6,6 +6,7 @@ import EditProfile from "../components/EditProfileContent";
 
 const EditTab = createMaterialTopTabNavigator();
 
+
 const EditProfileNavigator = () => {
   return (
     <EditTab.Navigator

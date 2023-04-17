@@ -44,7 +44,7 @@ export default function App() {
 
   return (
     <NavigationContainer>
-      {isAuthenticated ? (
+      {/* {isAuthenticated ? (
         hasCompletedWalkthrough ? (
           <BottomNavigator />
         ) : (
@@ -52,8 +52,8 @@ export default function App() {
         )
       ) : (
         <AuthNavigator onLogin={handleLogin} />
-      )}
-      {/* <ProfileNavigator /> */}
+      )} */}
+      <ProfileNavigator />
     </NavigationContainer>
   );
 }

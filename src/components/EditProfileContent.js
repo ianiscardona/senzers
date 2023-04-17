@@ -2,6 +2,32 @@ import { Alert, StyleSheet, Text, TextInput, View } from "react-native";
 import React from "react";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { FontAwesome5 } from "@expo/vector-icons";
+import { firestore } from "firebase/firestore";
+import { storage } from "firebase/storage";
+
+const handleUpdate = () => {
+  
+  firestore()
+  .collection('users')
+  .doc(user.uid)
+  .update({
+    // fname: userData.fname,
+    // lname: userData.lname,
+    fullName: userData.fullName,
+    email: userData.email,
+    password: userData.password,
+  })
+  .then(() => {
+    console.log('User Updated!');
+    Alert.alert(
+      'Profile Updated!',
+      'Your profile has been updated successfully.'
+    );
+  })
+}
+
+
+
 const EditProfileContent = ({ navigation }) => {
   return (
     <>
@@ -61,11 +87,11 @@ const EditProfileContent = ({ navigation }) => {
           />
         </View>
         <TouchableOpacity
-          onPress={() => {
-            Alert.alert(
-              "Save Successful",
-              "You have changed your information succesfully!"
-            );
+          onPress={() => { handleUpdate
+            // Alert.alert(
+            //   "Save Successful",
+            //   "You have changed your information succesfully!"
+            // );
           }}
           style={styles.contentEditButton}
         >
