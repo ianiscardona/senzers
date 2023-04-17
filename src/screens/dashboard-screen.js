@@ -5,7 +5,7 @@ import BatteryStatus from "../components/BatteryStatus";
 import CustomButton from "../components/CustomButton";
 import ReportFormModal from "../components/ReportFormModal";
 
-const DashboardScreen = () => {
+const DashboardScreen = ({ navigation }) => {
   const [modalVisible, setModalVisible] = useState(false);
 
   const handleOpenModal = () => {
@@ -24,6 +24,12 @@ const DashboardScreen = () => {
         <ReportFormModal visible={modalVisible} onClose={handleCloseModal} />
       )}
       <BatteryStatus />
+      <CustomButton
+        onPress={() => {
+          navigation.navigate("ProfileScreen");
+        }}
+        text={"Settings"}
+      />
     </View>
   );
 };

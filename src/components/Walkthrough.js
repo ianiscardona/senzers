@@ -1,8 +1,7 @@
-import { StyleSheet, Text, View, Image } from "react-native";
+import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
 import React, { useState } from "react";
 import { WalkthroughPresetsData } from "../data/WalkthroughPresetsData";
 import WalkthroughPresets from "./WalkthroughPresets";
-import { TouchableOpacity } from "react-native-gesture-handler";
 
 const Walkthrough = ({ onComplete }) => {
   function handleStart() {

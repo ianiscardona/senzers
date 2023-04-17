@@ -3,25 +3,26 @@ import React from "react";
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 import ProfileContent from "../components/ProfileContent";
 import EditProfile from "../components/EditProfileContent";
+import SettingsContent from "../components/SettingsContent";
 
-const EditTab = createMaterialTopTabNavigator();
+const AccountTab = createMaterialTopTabNavigator();
 
-
-const EditProfileNavigator = () => {
+const AccountNavigator = () => {
   return (
-    <EditTab.Navigator
+    <AccountTab.Navigator
       sceneContainerStyle={{ backgroundColor: "transparent" }}
       screenOptions={{
         tabBarStyle: { display: "none" },
         swipeEnabled: false,
       }}
     >
-      <EditTab.Screen name="Profile" component={ProfileContent} />
-      <EditTab.Screen name="Edit" component={EditProfile} />
-    </EditTab.Navigator>
+      <AccountTab.Screen name="SettingsContent" component={SettingsContent} />
+      <AccountTab.Screen name="ProfileContent" component={ProfileContent} />
+      <AccountTab.Screen name="EditProfile" component={EditProfile} />
+    </AccountTab.Navigator>
   );
 };
 
-export default EditProfileNavigator;
+export default AccountNavigator;
 
 const styles = StyleSheet.create({});

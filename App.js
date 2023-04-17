@@ -4,7 +4,6 @@ import { NavigationContainer } from "@react-navigation/native";
 import Walkthrough from "./src/components/Walkthrough";
 import AuthNavigator from "./src/navigations/AuthNavigator";
 import BottomNavigator from "./src/navigations/BottomNavigator";
-import ProfileNavigator from "./src/navigations/ProfileNavigator";
 
 export default function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -57,5 +56,3 @@ export default function App() {
     </NavigationContainer>
   );
 }
-
-// pang test ng edit profile <ProfileNavigator>

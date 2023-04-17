@@ -7,9 +7,7 @@ import {
 } from "react-native";
 import topBarBG from "../../assets/images/topbar-bg-1.png";
 import React from "react";
-import EditProfileContent from "../components/EditProfileContent";
-import ProfileContent from "../components/ProfileContent";
-import EditProfileNavigator from "../navigations/EditProfileNavigator";
+import AccountNavigator from "../navigations/AccountNavigator";
 
 const ProfileScreen = ({ navigation }) => {
   return (
@@ -56,9 +54,7 @@ const ProfileScreen = ({ navigation }) => {
         <View style={styles.circle}></View>
       </View>
       <View style={styles.content}>
-        {/* <ProfileContent /> */}
-        {/* <EditProfileContent /> */}
-        <EditProfileNavigator />
+        <AccountNavigator />
       </View>
     </KeyboardAvoidingView>
   );
@@ -75,7 +71,6 @@ const styles = StyleSheet.create({
     zIndex: 1,
     width: "100%",
     height: "30%",
-    backgroundColor: "red",
   },
   topBarInfo: {
     flex: 1,
@@ -101,7 +96,7 @@ const styles = StyleSheet.create({
     alignSelf: "center",
     width: 128,
     height: 128,
-    backgroundColor: "green",
+    backgroundColor: "gray",
     borderRadius: 999,
   },
   content: {
