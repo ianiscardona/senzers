@@ -26,7 +26,7 @@ const DashboardScreen = ({ navigation }) => {
       <BatteryStatus />
       <CustomButton
         onPress={() => {
-          navigation.navigate("ProfileScreen");
+          navigation.navigate("AccountScreen");
         }}
         text={"Settings"}
       />

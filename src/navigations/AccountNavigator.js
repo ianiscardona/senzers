@@ -1,24 +1,21 @@
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet } from "react-native";
 import React from "react";
-import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
-import ProfileContent from "../components/ProfileContent";
-import EditProfile from "../components/EditProfileContent";
-import SettingsContent from "../components/SettingsContent";
+import { createStackNavigator } from "@react-navigation/stack";
+import ChangePasswordModal from "../screens/change-password-screen";
+import ProfileNavigator from "./ProfileNavigator";
+import AccountContent from "../components/AccountContent";
 
-const AccountTab = createMaterialTopTabNavigator();
+const AccountTab = createStackNavigator();
 
 const AccountNavigator = () => {
   return (
     <AccountTab.Navigator
-      sceneContainerStyle={{ backgroundColor: "transparent" }}
       screenOptions={{
-        tabBarStyle: { display: "none" },
-        swipeEnabled: false,
+        headerShown: false,
       }}
     >
-      <AccountTab.Screen name="SettingsContent" component={SettingsContent} />
-      <AccountTab.Screen name="ProfileContent" component={ProfileContent} />
-      <AccountTab.Screen name="EditProfile" component={EditProfile} />
+      <AccountTab.Screen name="AccountContent" component={AccountContent} />
+      <AccountTab.Screen name="ProfileNavigator" component={ProfileNavigator} />
     </AccountTab.Navigator>
   );
 };

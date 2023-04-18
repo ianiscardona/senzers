@@ -2,9 +2,9 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { StyleSheet } from "react-native";
 import DashboardScreen from "../screens/dashboard-screen";
 import HistoryScreen from "../screens/history-screen";
-import ProfileScreen from "../screens/profile-screen";
+import AccountScreen from "../screens/account-screen";
 import HomeScreen from "../screens/home-screen";
-
+import ChangePasswordScreen from "../screens/change-password-screen";
 import { FontAwesome5 } from "@expo/vector-icons";
 
 const Tab = createBottomTabNavigator();
@@ -59,8 +59,18 @@ const BottomNavigator = ({ user, onLogout }) => {
         }}
       />
       <Tab.Screen
-        name="ProfileScreen"
-        component={ProfileScreen}
+        name="AccountScreen"
+        component={AccountScreen}
+        options={() => ({
+          tabBarStyle: {
+            display: "none",
+          },
+          tabBarButton: () => null,
+        })}
+      />
+      <Tab.Screen
+        name="ChangePasswordScreen"
+        component={ChangePasswordScreen}
         options={() => ({
           tabBarStyle: {
             display: "none",
