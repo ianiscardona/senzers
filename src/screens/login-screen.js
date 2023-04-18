@@ -6,9 +6,11 @@ import {
   TouchableOpacity,
   Text,
   Pressable,
+  Image,
 } from "react-native";
 import React, { useState } from "react";
 import { FontAwesome5 } from "@expo/vector-icons";
+import Logos from "../utilities/Logos";
 
 const LoginScreen = ({ navigation, route }) => {
   const [email, setEmail] = useState("");
@@ -20,6 +22,7 @@ const LoginScreen = ({ navigation, route }) => {
 
   return (
     <KeyboardAvoidingView style={styles.container} behavior="padding">
+      <Image source={Logos.SENZERS_LOGO_BLACK} alt="Senzers" />
       <Text style={styles.logo}>Senzers</Text>
       <View style={styles.credentialContainer}>
         <Text style={styles.inputTitle}>Email</Text>
@@ -95,19 +98,20 @@ export default LoginScreen;
 
 const styles = StyleSheet.create({
   container: {
-    paddingTop: 80,
-    paddingHorizontal: 20,
-    flex: 1,
+    width: "90%",
+    height: "90%",
+    marginHorizontal: "5%",
+    marginVertical: "5%",
     alignItems: "center",
-    // backgroundColor: "skyblue",
+    justifyContent: "center",
   },
   logo: {
+    marginTop: 10,
     fontSize: 30,
-    marginBottom: 50,
+    fontWeight: "bold",
   },
   credentialContainer: {
     marginBottom: 15,
-    // backgroundColor: "yellowgreen",
   },
   inputTitle: {
     fontSize: 18,
@@ -133,14 +137,12 @@ const styles = StyleSheet.create({
   forgotContainer: {
     alignSelf: "flex-end",
     marginBottom: 10,
-    // backgroundColor: "yellowgreen",
   },
   buttonContainer: {
     width: "80%",
     justifyContent: "center",
     alignItems: "center",
     marginBottom: 15,
-    // backgroundColor: "yellowgreen",
   },
   button: {
     flexDirection: "row",
@@ -156,6 +158,5 @@ const styles = StyleSheet.create({
     textAlign: "center",
     color: "white",
     fontSize: 18,
-    // backgroundColor: "blue",
   },
 });

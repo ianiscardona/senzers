@@ -6,42 +6,51 @@ import {
   TouchableOpacity,
   Text,
   Pressable,
+  Image,
 } from "react-native";
 import React, { useState } from "react";
 import { FontAwesome5 } from "@expo/vector-icons";
 import Checkbox from "../components/Checkbox";
 import { auth, createUserWithEmailAndPassword } from "../../firebase";
+import Logos from "../utilities/Logos";
 
 const RegisterScreen = ({ navigation }) => {
-  const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isSelected, setSelection] = useState(false);
 
-  const handleSignup = (email, password) => {
-    createUserWithEmailAndPassword(auth, email, password)
-      .then((userCredential) => {
-        const user = userCredential.user;
-        console.log(user.email);
-        console.log(user.password);
-      })
-      .catch((error) => alert(error.message));
+  const handleSignup = async (email, password) => {
+    try {
+      const userCredential = await createUserWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
+      const user = userCredential.user;
+      console.log(user.email);
+      console.log(user.password);
+    } catch (error) {
+      throw error;
+    }
+  };
+
+  const navigateToEnterInfo = () => {
+    navigation.navigate("EnterInformation");
+  };
+
+  const handleSignupAndEnterInfo = async (email, password) => {
+    try {
+      await handleSignup(email, password);
+      navigateToEnterInfo();
+    } catch (error) {
+      alert(error.message);
+    }
   };
 
   return (
     <KeyboardAvoidingView style={styles.container} behavior="padding">
+      <Image source={Logos.SENZERS_LOGO_BLACK} alt="Senzers" />
       <Text style={styles.logo}>Register</Text>
-      <View style={styles.credentialContainer}>
-        <Text style={styles.inputTitle}>Full Name</Text>
-        <View style={styles.inputContainer}>
-          <TextInput
-            placeholder="Juan Dela Cruz"
-            value={fullName}
-            onChangeText={(text) => setFullName(text)}
-            style={styles.input}
-          />
-        </View>
-      </View>
       <View style={styles.credentialContainer}>
         <Text style={styles.inputTitle}>Email</Text>
         <View style={styles.inputContainer}>
@@ -80,7 +89,7 @@ const RegisterScreen = ({ navigation }) => {
           <View style={{ flexDirection: "row", alignItems: "flex-end" }}>
             <Pressable
               onPress={() => {
-                navigation.navigate("Terms");
+                navigation.navigate("EnterInformation");
               }}
             >
               <Text style={{ color: "green", fontSize: 16 }}>Terms of Use</Text>
@@ -100,10 +109,10 @@ const RegisterScreen = ({ navigation }) => {
       </View>
 
       <TouchableOpacity
-        onPress={() => handleSignup(email, password)}
+        onPress={() => handleSignupAndEnterInfo(email, password)}
         style={styles.button}
       >
-        <Text style={styles.buttonText}>Register</Text>
+        <Text style={styles.buttonText}>Create Account</Text>
       </TouchableOpacity>
 
       <TouchableOpacity onPress={() => {}} style={styles.button}>
@@ -133,14 +142,17 @@ export default RegisterScreen;
 
 const styles = StyleSheet.create({
   container: {
-    paddingTop: 80,
-    paddingHorizontal: 20,
-    flex: 1,
+    width: "90%",
+    height: "90%",
+    marginHorizontal: "5%",
+    marginVertical: "5%",
     alignItems: "center",
+    justifyContent: "center",
   },
   logo: {
+    marginTop: 10,
     fontSize: 30,
-    marginBottom: 50,
+    fontWeight: "bold",
   },
   credentialContainer: {
     marginBottom: 15,

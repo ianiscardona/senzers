@@ -1,7 +1,7 @@
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { StyleSheet } from "react-native";
 import DashboardScreen from "../screens/dashboard-screen";
-import HistoryScreen from "../screens/history-screen";
+import AlertScreen from "../screens/alert-screen";
 import AccountScreen from "../screens/account-screen";
 import HomeScreen from "../screens/home-screen";
 import ChangePasswordScreen from "../screens/change-password-screen";
@@ -46,8 +46,8 @@ const BottomNavigator = ({ user, onLogout }) => {
         }}
       />
       <Tab.Screen
-        name="HistoryScreen"
-        component={HistoryScreen}
+        name="AlertScreen"
+        component={AlertScreen}
         options={{
           tabBarIcon: ({ focused }) => (
             <FontAwesome5
