@@ -8,12 +8,15 @@ import {
 import topBarBG from "../../assets/images/topbar-bg-1.png";
 import React from "react";
 import AccountNavigator from "../navigations/AccountNavigator";
+import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 
-const ProfileScreen = ({ navigation }) => {
+const AccountScreen = ({ navigation }) => {
   return (
-    <KeyboardAvoidingView
-      style={styles.container}
-      behavior={Platform.OS === "ios" ? "padding" : "height"}
+    <KeyboardAwareScrollView
+      contentContainerStyle={styles.container}
+      enableOnAndroid={true}
+      extraScrollHeight={20}
+      bounces={false}
     >
       <View style={styles.topBar}>
         <View style={styles.topBarInfo}>
@@ -27,7 +30,7 @@ const ProfileScreen = ({ navigation }) => {
                 },
               ]}
             >
-              MY PROFILE
+              MY ACCOUNT
             </Text>
             <Text
               style={[
@@ -56,11 +59,11 @@ const ProfileScreen = ({ navigation }) => {
       <View style={styles.content}>
         <AccountNavigator />
       </View>
-    </KeyboardAvoidingView>
+    </KeyboardAwareScrollView>
   );
 };
 
-export default ProfileScreen;
+export default AccountScreen;
 
 const styles = StyleSheet.create({
   container: {
@@ -70,7 +73,7 @@ const styles = StyleSheet.create({
   topBar: {
     zIndex: 1,
     width: "100%",
-    height: "30%",
+    minHeight: "30%",
   },
   topBarInfo: {
     flex: 1,
