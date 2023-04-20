@@ -8,7 +8,7 @@ const ProfileContent = ({ navigation }) => {
     <>
       <TouchableOpacity
         onPress={() => {
-          navigation.navigate("SettingsContent");
+          navigation.navigate("AccountContent");
         }}
         style={{
           marginBottom: "5%",

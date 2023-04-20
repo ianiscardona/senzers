@@ -6,20 +6,35 @@ import {
   TouchableOpacity,
   Text,
   Pressable,
+  Image,
+  Alert,
 } from "react-native";
 import React, { useState } from "react";
 import { FontAwesome5 } from "@expo/vector-icons";
+import Logos from "../utilities/Logos";
+import { firebase } from "../../firebase";
+import { auth,firestore,db  } from "../../firebase";
 
-const LoginScreen = ({ navigation, route }) => {
+const LoginScreen = ({ navigation }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  function handleLogin() {
-    route.params.onLogin();
-  }
+  // function handleLogin() {
+  //   route.params.onLogin();
+  // }
+  const loginUser = async ( email, password) => {
+    try {
+      await firebase.auth().signInWithEmailAndPassword(email, password).then((userCredential) => {
+        console.log(userCredential.user.uid);
+      });
+    } catch (error) {
+      Alert.alert("Login unsuccessful", "Username or password incorrect");
+    }
+  };
 
   return (
     <KeyboardAvoidingView style={styles.container} behavior="padding">
+      <Image source={Logos.SENZERS_LOGO_BLACK} alt="Senzers" />
       <Text style={styles.logo}>Senzers</Text>
       <View style={styles.credentialContainer}>
         <Text style={styles.inputTitle}>Email</Text>
@@ -30,7 +45,7 @@ const LoginScreen = ({ navigation, route }) => {
           <TextInput
             placeholder="Enter your email here..."
             value={email}
-            onChangeText={(text) => setEmail(text)}
+            onChangeText={(email) => setEmail(email)}
             style={styles.input}
           />
         </View>
@@ -44,7 +59,7 @@ const LoginScreen = ({ navigation, route }) => {
           <TextInput
             placeholder="Enter your password here..."
             value={password}
-            onChangeText={(text) => setPassword(text)}
+            onChangeText={(password) => setPassword(password)}
             style={styles.input}
             secureTextEntry
           />
@@ -63,7 +78,10 @@ const LoginScreen = ({ navigation, route }) => {
         </Text>
       </Pressable>
       <View style={styles.buttonContainer}>
-        <TouchableOpacity onPress={handleLogin} style={styles.button}>
+        <TouchableOpacity
+          onPress={() => loginUser(email, password)}
+          style={styles.button}
+        >
           <Text style={styles.buttonText}>Login</Text>
         </TouchableOpacity>
       </View>
@@ -95,19 +113,20 @@ export default LoginScreen;
 
 const styles = StyleSheet.create({
   container: {
-    paddingTop: 80,
-    paddingHorizontal: 20,
-    flex: 1,
+    width: "90%",
+    height: "90%",
+    marginHorizontal: "5%",
+    marginVertical: "5%",
     alignItems: "center",
-    // backgroundColor: "skyblue",
+    justifyContent: "center",
   },
   logo: {
+    marginTop: 10,
     fontSize: 30,
-    marginBottom: 50,
+    fontWeight: "bold",
   },
   credentialContainer: {
     marginBottom: 15,
-    // backgroundColor: "yellowgreen",
   },
   inputTitle: {
     fontSize: 18,
@@ -133,14 +152,12 @@ const styles = StyleSheet.create({
   forgotContainer: {
     alignSelf: "flex-end",
     marginBottom: 10,
-    // backgroundColor: "yellowgreen",
   },
   buttonContainer: {
     width: "80%",
     justifyContent: "center",
     alignItems: "center",
     marginBottom: 15,
-    // backgroundColor: "yellowgreen",
   },
   button: {
     flexDirection: "row",
@@ -156,6 +173,5 @@ const styles = StyleSheet.create({
     textAlign: "center",
     color: "white",
     fontSize: 18,
-    // backgroundColor: "blue",
   },
 });

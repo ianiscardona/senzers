@@ -2,12 +2,12 @@ import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
 import React from "react";
 import { FontAwesome5 } from "@expo/vector-icons";
 
-const SettingsContent = ({ navigation }) => {
+const AccountContent = ({ navigation }) => {
   return (
     <>
       <TouchableOpacity
         onPress={() => {
-          navigation.navigate("DashboardScreen");
+          navigation.goBack();
         }}
         style={{
           marginBottom: "5%",
@@ -23,7 +23,7 @@ const SettingsContent = ({ navigation }) => {
       <View style={styles.settingsContainer}>
         <TouchableOpacity
           style={styles.settingsChoicesContainer}
-          onPress={() => navigation.navigate("ProfileContent")}
+          onPress={() => navigation.navigate("ProfileNavigator")}
         >
           <View style={{ flexDirection: "row" }}>
             <FontAwesome5 name="user-alt" size={20} color="black" />
@@ -32,7 +32,10 @@ const SettingsContent = ({ navigation }) => {
           <FontAwesome5 name="angle-right" size={20} color="black" />
         </TouchableOpacity>
         <View style={styles.line} />
-        <TouchableOpacity style={styles.settingsChoicesContainer}>
+        <TouchableOpacity
+          style={styles.settingsChoicesContainer}
+          onPress={() => navigation.navigate("ChangePasswordScreen")}
+        >
           <View style={{ flexDirection: "row" }}>
             <FontAwesome5 name="unlock-alt" size={20} color="black" />
             <Text style={styles.settingsChoicesTitle}>Change Password</Text>
@@ -53,7 +56,7 @@ const SettingsContent = ({ navigation }) => {
   );
 };
 
-export default SettingsContent;
+export default AccountContent;
 
 const styles = StyleSheet.create({
   settingsContainer: {

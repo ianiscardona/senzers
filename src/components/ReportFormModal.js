@@ -8,7 +8,7 @@ import {
   StyleSheet,
   KeyboardAvoidingView,
 } from "react-native";
-import { db } from "../../firebase";
+import { db, firebase } from "../../firebase";
 import { collection, doc, setDoc, addDoc} from "firebase/firestore";
 
 const _primary = "#000000";
@@ -21,13 +21,15 @@ const ReportFormModal = ({ visible, onClose }) => {
   const [plateNumber, setPlateNumber] = useState("");
   const [timeSeen, setTimeSeen] = useState("");
   const [dateSeen, setDateSeen] = useState("");
-
+  const user = firebase.auth().currentUser;
+  
   function Create () {
     addDoc(collection(db, "reports"), {     
           vehicleType: vehicleType,
           plateNumber: plateNumber,
           timeSeen: timeSeen,
-          dateSeen: dateSeen
+          dateSeen: dateSeen,
+          UserID: user
         }).then(() => { 
           // Data saved successfully!
           console.log('data submitted');  

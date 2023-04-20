@@ -1,11 +1,12 @@
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { StyleSheet } from "react-native";
 import DashboardScreen from "../screens/dashboard-screen";
-import HistoryScreen from "../screens/history-screen";
-import ProfileScreen from "../screens/profile-screen";
+import AlertScreen from "../screens/alert-screen";
+import AccountScreen from "../screens/account-screen";
 import HomeScreen from "../screens/home-screen";
-
+import ChangePasswordScreen from "../screens/change-password-screen";
 import { FontAwesome5 } from "@expo/vector-icons";
+import EnterInformationScreen from "../screens/enter-information-screen";
 
 const Tab = createBottomTabNavigator();
 
@@ -46,8 +47,8 @@ const BottomNavigator = ({ user, onLogout }) => {
         }}
       />
       <Tab.Screen
-        name="HistoryScreen"
-        component={HistoryScreen}
+        name="AlertScreen"
+        component={AlertScreen}
         options={{
           tabBarIcon: ({ focused }) => (
             <FontAwesome5
@@ -59,14 +60,37 @@ const BottomNavigator = ({ user, onLogout }) => {
         }}
       />
       <Tab.Screen
-        name="ProfileScreen"
-        component={ProfileScreen}
+        name="AccountScreen"
+        component={AccountScreen}
         options={() => ({
           tabBarStyle: {
             display: "none",
           },
           tabBarButton: () => null,
         })}
+      />
+      <Tab.Screen
+        name="ChangePasswordScreen"
+        component={ChangePasswordScreen}
+        options={() => ({
+          tabBarStyle: {
+            display: "none",
+          },
+          tabBarButton: () => null,
+        })}
+      />
+            <Tab.Screen
+        name="EnterInformationScreen"
+        component={EnterInformationScreen}
+        options={{
+          tabBarIcon: ({ focused }) => (
+            <FontAwesome5
+              name="home"
+              color={focused ? "#FFBC00" : "#FFFFFF"}
+              size={20}
+            />
+          ),
+        }}
       />
     </Tab.Navigator>
   );

@@ -5,9 +5,15 @@ import Walkthrough from "./src/components/Walkthrough";
 import AuthNavigator from "./src/navigations/AuthNavigator";
 import BottomNavigator from "./src/navigations/BottomNavigator";
 
-export default function App() {
+import { firebase } from "./firebase";
+import EnterInformationScreen from "./src/screens/enter-information-screen";
+
+function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [hasCompletedWalkthrough, setHasCompletedWalkthrough] = useState(false);
+
+  const [initializing, setInitializing] = useState(true);
+  const [user, setUser] = useState();
 
   const handleLogin = () => {
     setIsAuthenticated(true);
@@ -41,18 +47,35 @@ export default function App() {
       });
   }, []);
 
+  function onAuthStateChanged(user) {
+    setUser(user);
+    if (initializing) setInitializing(false);
+  }
+  useEffect(() => {
+    const subscriber = firebase.auth().onAuthStateChanged(onAuthStateChanged);
+    return subscriber;
+  }, []);
+  if (initializing) return null;
+
+  if (!user) {
+    return <AuthNavigator />;
+  }
+  return (
+    <>
+      {hasCompletedWalkthrough ? (
+        <BottomNavigator />
+      ) : (
+        <Walkthrough onComplete={handleCompleteWalkthrough} />
+      )}
+    </>
+  );
+ 
+}
+
+export default () => {
   return (
     <NavigationContainer>
-      {/* {isAuthenticated ? (
-        hasCompletedWalkthrough ? (
-          <BottomNavigator />
-        ) : (
-          <Walkthrough onComplete={handleCompleteWalkthrough} />
-        )
-      ) : (
-        <AuthNavigator onLogin={handleLogin} />
-      )} */}
-      <ProfileNavigator />
+      <App />
     </NavigationContainer>
   );
-}
+};
