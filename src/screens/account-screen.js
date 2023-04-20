@@ -16,7 +16,7 @@ const AccountScreen = ({ navigation }) => {
     <KeyboardAwareScrollView
       contentContainerStyle={styles.container}
       enableOnAndroid={true}
-      extraScrollHeight={20}
+      extraScrollHeight={100}
       bounces={false}
     >
       <TopBar />

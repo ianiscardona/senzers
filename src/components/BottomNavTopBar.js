@@ -1,10 +1,18 @@
-import { StyleSheet, Text, View, ImageBackground, Image } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  View,
+  ImageBackground,
+  Image,
+  TouchableOpacity,
+} from "react-native";
 import topBarBG from "../../assets/images/topbar-bg-1.png";
 import topBarLogo from "../../assets/icons/topbar-logo.png";
+import userProfileSmall from "../../assets/icons/user-profile-small.png";
 import React, { useState, useEffect } from "react";
 import moment from "moment";
 
-const BottomNavTopBar = ({ topBarTitle }) => {
+const BottomNavTopBar = ({ topBarTitle, navigation }) => {
   const [dateTime, setDateTime] = useState(moment());
 
   useEffect(() => {
@@ -43,7 +51,18 @@ const BottomNavTopBar = ({ topBarTitle }) => {
               </Text>
             </View>
           </View>
-          <View style={styles.circle} />
+          <TouchableOpacity
+            style={styles.circle}
+            onPress={() => {
+              navigation.navigate("AccountScreen");
+            }}
+          >
+            <Image
+              source={userProfileSmall}
+              alt=""
+              style={{ resizeMode: "cover" }}
+            />
+          </TouchableOpacity>
         </ImageBackground>
       </View>
     </View>

@@ -5,13 +5,30 @@ import {
   View,
   KeyboardAvoidingView,
   TouchableOpacity,
+  Image,
 } from "react-native";
 import React, { useState } from "react";
+import forgotPasswordIcon from "../../assets/icons/forgot-password-icon.png";
+import { FontAwesome5 } from "@expo/vector-icons";
 
-const ForgotScreen = () => {
+const ForgotScreen = ({ navigation }) => {
   const [email, setEmail] = useState("");
   return (
     <KeyboardAvoidingView style={styles.container} behavior="padding">
+      <TouchableOpacity
+        onPress={() => {
+          navigation.goBack();
+        }}
+        style={{
+          alignSelf: "flex-start",
+          width: 25,
+          height: 25,
+          marginBottom: 10,
+        }}
+      >
+        <FontAwesome5 name="angle-left" size={25} color="black" />
+      </TouchableOpacity>
+      <Image source={forgotPasswordIcon} alt="Forgot Password" />
       <Text style={styles.logo}>Forgot Password</Text>
       <View style={styles.credentialContainer}>
         <Text style={styles.inputTitle}>Enter your email</Text>
@@ -40,11 +57,11 @@ export default ForgotScreen;
 
 const styles = StyleSheet.create({
   container: {
-    paddingTop: 80,
-    paddingHorizontal: 20,
-    flex: 1,
+    width: "90%",
+    height: "80%",
+    marginVertical: "10%",
+    marginHorizontal: "5%",
     alignItems: "center",
-    // backgroundColor: "skyblue",
   },
   logo: {
     fontSize: 30,
@@ -52,7 +69,6 @@ const styles = StyleSheet.create({
   },
   credentialContainer: {
     marginBottom: 15,
-    // backgroundColor: "yellowgreen",
   },
   inputTitle: {
     fontSize: 18,
@@ -74,14 +90,12 @@ const styles = StyleSheet.create({
   forgotContainer: {
     alignSelf: "flex-end",
     marginBottom: 10,
-    // backgroundColor: "yellowgreen",
   },
   buttonContainer: {
     width: "80%",
     justifyContent: "center",
     alignItems: "center",
     marginBottom: 15,
-    // backgroundColor: "yellowgreen",
   },
   button: {
     flexDirection: "row",
@@ -97,6 +111,5 @@ const styles = StyleSheet.create({
     textAlign: "center",
     color: "white",
     fontSize: 18,
-    // backgroundColor: "blue",
   },
 });

@@ -15,7 +15,7 @@ const AlertScreen = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
-      <BottomNavTopBar topBarTitle={"ALERTS"} />
+      <BottomNavTopBar topBarTitle={"ALERTS"} navigation={navigation} />
       <View style={styles.content}>
         <View style={styles.contentContainer}>
           <View style={styles.contentButtonsContainer}>

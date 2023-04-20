@@ -15,7 +15,7 @@ const TermsScreen = ({ navigation }) => {
       <View style={styles.contentContainer}>
         <TouchableOpacity
           onPress={() => {
-            navigation.navigate("Register");
+            navigation.goBack();
           }}
           style={styles.backButton}
         >

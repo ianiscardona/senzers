@@ -5,7 +5,7 @@ import BottomNavTopBar from "../components/BottomNavTopBar";
 const HomeScreen = ({ navigation }) => {
   return (
     <View>
-      <BottomNavTopBar topBarTitle={"WELCOME"} />
+      <BottomNavTopBar topBarTitle={"WELCOME"} navigation={navigation} />
     </View>
   );
 };

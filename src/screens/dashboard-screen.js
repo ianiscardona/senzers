@@ -1,38 +1,39 @@
-import { StyleSheet, View } from "react-native";
+import { StyleSheet, View, Text } from "react-native";
 import React, { useState } from "react";
 import RippleEffect from "../components/RippleEffect";
 import BatteryStatus from "../components/BatteryStatus";
 import CustomButton from "../components/CustomButton";
 import ReportFormModal from "../components/ReportFormModal";
 import BottomNavTopBar from "../components/BottomNavTopBar";
+import TimeCounter from "../components/TimeCounter";
+import moment from "moment";
 
 const DashboardScreen = ({ navigation }) => {
-  const [modalVisible, setModalVisible] = useState(false);
+  const [isSensorActive, setIsSensorActive] = useState(false);
+  const [parkedTime, setParkedTime] = useState(moment.duration());
 
-  const handleOpenModal = () => {
-    setModalVisible(true);
-  };
+  // const [modalVisible, setModalVisible] = useState(false);
 
-  const handleCloseModal = () => {
-    setModalVisible(false);
-  };
+  // const handleOpenModal = () => {
+  //   setModalVisible(true);
+  // };
+
+  // const handleCloseModal = () => {
+  //   setModalVisible(false);
+  // };
 
   return (
-    <View style={{ flex: 1, backgroundColor: "white" }}>
-      <BottomNavTopBar topBarTitle={"DASHBOARD"} />
-      <View style={styles.container}>
-        <RippleEffect />
-        <CustomButton onPress={handleOpenModal} text={"Yes"} />
+    <View style={styles.container}>
+      <BottomNavTopBar topBarTitle={"DASHBOARD"} navigation={navigation} />
+      <View style={styles.content}>
+        <TimeCounter parkedTime={parkedTime} />
+        <RippleEffect isSensorActive={true} setParkedTime={setParkedTime} />
+        {/* <CustomButton onPress={handleOpenModal} text={"Yes"} />
         {modalVisible && (
           <ReportFormModal visible={modalVisible} onClose={handleCloseModal} />
-        )}
+        )} */}
+        <Text style={styles.indicator}>Senzer is in standby...</Text>
         <BatteryStatus />
-        <CustomButton
-          onPress={() => {
-            navigation.navigate("AccountScreen");
-          }}
-          text={"Settings"}
-        />
       </View>
     </View>
   );
@@ -40,13 +41,17 @@ const DashboardScreen = ({ navigation }) => {
 
 const styles = StyleSheet.create({
   container: {
-    paddingTop: 80,
-    paddingBottom: 30,
+    flex: 1,
+    backgroundColor: "white",
+    paddingBottom: "20%",
+  },
+  content: {
     width: "100%",
-    height: "80%",
-    justifyContent: "space-evenly",
+    height: "75%",
+    justifyContent: "space-between",
     alignItems: "center",
   },
+  indicator: { fontWeight: "bold", fontSize: 20 },
 });
 
 export default DashboardScreen;

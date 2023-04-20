@@ -1,6 +1,12 @@
-import { Alert, StyleSheet, Text, TextInput, View } from "react-native";
+import {
+  Alert,
+  StyleSheet,
+  Text,
+  TextInput,
+  View,
+  TouchableOpacity,
+} from "react-native";
 import React from "react";
-import { TouchableOpacity } from "react-native-gesture-handler";
 import { FontAwesome5 } from "@expo/vector-icons";
 const EditProfileContent = ({ navigation }) => {
   return (
@@ -105,12 +111,5 @@ const styles = StyleSheet.create({
     borderRadius: 999,
     padding: 10,
     marginBottom: 10,
-  },
-  line: {
-    borderBottomColor: "lightgray",
-    borderBottomWidth: 1,
-    marginTop: 10,
-    marginBottom: 10,
-    width: "100%",
   },
 });

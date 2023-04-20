@@ -15,7 +15,7 @@ const PrivacyScreen = ({ navigation }) => {
       <View style={styles.contentContainer}>
         <TouchableOpacity
           onPress={() => {
-            navigation.navigate("Register");
+            navigation.goBack();
           }}
           style={{
             alignSelf: "flex-start",
