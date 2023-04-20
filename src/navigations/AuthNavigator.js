@@ -23,7 +23,6 @@ function AuthNavigator({ onLogin }) {
       <Stack.Screen
         name="EnterInformation"
         component={EnterInformationScreen}
-        initialParams={{ onLogin }}
       />
       <Stack.Screen name="Forgot" component={ForgotScreen} />
       <Stack.Screen name="Terms" component={TermsScreen} />

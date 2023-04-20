@@ -7,12 +7,13 @@ import {
   View,
   StyleSheet,
   KeyboardAvoidingView,
+  Alert,
 } from "react-native";
 
 const _primary = "#000000";
 const _secondary = "#A4A2A2";
 
-const ReportFormModal = ({ visible, onClose }) => {
+const ReportFormModal = ({ onClose, visible, onReset }) => {
   const [vehicleType, setVehicleType] = useState("");
   const [plateNumber, setPlateNumber] = useState("");
   const [timeSeen, setTimeSeen] = useState("");
@@ -23,15 +24,29 @@ const ReportFormModal = ({ visible, onClose }) => {
     console.log("Plate number:", plateNumber);
     console.log("Time seen:", timeSeen);
     console.log("Date seen:", dateSeen);
+    onReset();
     onClose();
   };
 
   const handleCancel = () => {
-    setVehicleType("");
-    setPlateNumber("");
-    setTimeSeen("");
-    setDateSeen("");
-    onClose();
+    Alert.alert(
+      "Confirmation",
+      "Are you sure you wanna close this message?",
+      [
+        {
+          text: "Cancel",
+          style: "cancel",
+        },
+        {
+          text: "Yes",
+          onPress: () => {
+            onReset();
+            onClose();
+          },
+        },
+      ],
+      { cancelable: false }
+    );
   };
 
   return (
