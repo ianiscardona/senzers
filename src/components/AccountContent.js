@@ -7,7 +7,7 @@ const AccountContent = ({ navigation }) => {
     <>
       <TouchableOpacity
         onPress={() => {
-          navigation.navigate("DashboardScreen");
+          navigation.goBack();
         }}
         style={{
           marginBottom: "5%",

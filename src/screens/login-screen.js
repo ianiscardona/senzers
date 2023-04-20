@@ -7,18 +7,27 @@ import {
   Text,
   Pressable,
   Image,
+  Alert,
 } from "react-native";
 import React, { useState } from "react";
 import { FontAwesome5 } from "@expo/vector-icons";
 import Logos from "../utilities/Logos";
+import { firebase } from "../../firebase";
 
-const LoginScreen = ({ navigation, route }) => {
+const LoginScreen = ({ navigation }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  function handleLogin() {
-    route.params.onLogin();
-  }
+  // function handleLogin() {
+  //   route.params.onLogin();
+  // }
+  const loginUser = async (email, password) => {
+    try {
+      await firebase.auth().signInWithEmailAndPassword(email, password);
+    } catch (error) {
+      Alert.alert("Login unsuccessful", "Username or password incorrect");
+    }
+  };
 
   return (
     <KeyboardAvoidingView style={styles.container} behavior="padding">
@@ -33,7 +42,7 @@ const LoginScreen = ({ navigation, route }) => {
           <TextInput
             placeholder="Enter your email here..."
             value={email}
-            onChangeText={(text) => setEmail(text)}
+            onChangeText={(email) => setEmail(email)}
             style={styles.input}
           />
         </View>
@@ -47,7 +56,7 @@ const LoginScreen = ({ navigation, route }) => {
           <TextInput
             placeholder="Enter your password here..."
             value={password}
-            onChangeText={(text) => setPassword(text)}
+            onChangeText={(password) => setPassword(password)}
             style={styles.input}
             secureTextEntry
           />
@@ -66,7 +75,10 @@ const LoginScreen = ({ navigation, route }) => {
         </Text>
       </Pressable>
       <View style={styles.buttonContainer}>
-        <TouchableOpacity onPress={handleLogin} style={styles.button}>
+        <TouchableOpacity
+          onPress={() => loginUser(email, password)}
+          style={styles.button}
+        >
           <Text style={styles.buttonText}>Login</Text>
         </TouchableOpacity>
       </View>

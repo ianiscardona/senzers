@@ -1,18 +1,30 @@
 import { StyleSheet, Text, View } from "react-native";
-import React, { useMemo } from "react";
+import React, { useMemo, useState, useEffect } from "react";
 import { MotiView } from "moti";
 import { Easing } from "react-native-reanimated";
+import Colors from "../utilities/Colors";
+import moment from "moment";
 
-const _color = "#EBC55B";
 const _size = 85;
 
-const RippleEffect = () => {
+const RippleEffect = ({ isSensorActive, setParkedTime }) => {
+  const dotColor = isSensorActive ? "red" : Colors.PRIMARY_YELLOW;
+  const [startTime, setStartTime] = useState(moment());
+
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      const duration = moment.duration(moment().diff(startTime));
+      setParkedTime(duration);
+    }, 1000);
+    return () => clearInterval(intervalId);
+  }, [startTime, setParkedTime]);
+
   const dots = useMemo(
     () =>
       [...Array(3).keys()].map((index) => (
         <MotiView
           key={index}
-          from={{ opacity: 0.7, scale: 1 }}
+          from={{ opacity: 0.7, scale: 0 }}
           animate={{ opacity: 0, scale: 3.5 }}
           transition={{
             type: "timing",
@@ -22,19 +34,21 @@ const RippleEffect = () => {
             repeatReverse: false,
             loop: true,
           }}
-          style={[StyleSheet.absoluteFillObject, styles.dot]}
+          style={[
+            StyleSheet.absoluteFillObject,
+            styles.dot,
+            { backgroundColor: dotColor },
+          ]}
         />
       )),
-    []
+    [dotColor]
   );
-
   return (
-    <View>
+    <>
       <View style={styles.container}>
         <View style={[styles.dot, styles.center]}>{dots}</View>
       </View>
-      <Text style={styles.indicator}>Senzer is in standby...</Text>
-    </View>
+    </>
   );
 };
 
@@ -44,17 +58,15 @@ const styles = StyleSheet.create({
   container: {
     alignItems: "center",
     justifyContent: "center",
-    paddingBottom: 130,
   },
   dot: {
     width: _size,
     height: _size,
     borderRadius: _size,
-    backgroundColor: _color,
   },
   center: {
     alignItems: "center",
     justifyContent: "center",
+    backgroundColor: "transparent",
   },
-  indicator: { fontWeight: "bold", fontSize: 20 },
 });

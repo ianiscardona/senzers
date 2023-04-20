@@ -89,7 +89,7 @@ const RegisterScreen = ({ navigation }) => {
           <View style={{ flexDirection: "row", alignItems: "flex-end" }}>
             <Pressable
               onPress={() => {
-                navigation.navigate("EnterInformation");
+                navigation.navigate("Terms");
               }}
             >
               <Text style={{ color: "green", fontSize: 16 }}>Terms of Use</Text>

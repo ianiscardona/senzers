@@ -1,5 +1,8 @@
-import { initializeApp } from "firebase/app";
-import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
+// import { initializeApp } from "firebase/app";
+// import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth";
+import firebase from "firebase/compat/app";
+import "firebase/compat/auth";
+import "firebase/compat/firestore";
 
 const firebaseConfig = {
   apiKey: "AIzaSyDa02bYTWL8ZFtWBgewhi2W-9X-r-1pAQw",
@@ -13,7 +16,13 @@ const firebaseConfig = {
   measurementId: "G-0V63GQE01J",
 };
 
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
+if (!firebase.apps.length) {
+  firebase.initializeApp(firebaseConfig);
+}
 
-export { auth, createUserWithEmailAndPassword };
+export { firebase };
+
+// const app = initializeApp(firebaseConfig);
+// const auth = getAuth(app);
+
+// export { auth, createUserWithEmailAndPassword, signInWithEmailAndPassword };
