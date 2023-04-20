@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, View } from "react-native";
 import React, { useMemo, useState, useEffect } from "react";
 import { MotiView } from "moti";
 import { Easing } from "react-native-reanimated";
@@ -7,23 +7,14 @@ import moment from "moment";
 
 const _size = 85;
 
-const RippleEffect = ({ isSensorActive, setParkedTime }) => {
-  const dotColor = isSensorActive ? "red" : Colors.PRIMARY_YELLOW;
-  const [startTime, setStartTime] = useState(moment());
-
-  useEffect(() => {
-    const intervalId = setInterval(() => {
-      const duration = moment.duration(moment().diff(startTime));
-      setParkedTime(duration);
-    }, 1000);
-    return () => clearInterval(intervalId);
-  }, [startTime, setParkedTime]);
+const RippleEffect = ({ isActive }) => {
+  const dotColor = isActive ? "red" : Colors.PRIMARY_YELLOW;
 
   const dots = useMemo(
     () =>
       [...Array(3).keys()].map((index) => (
         <MotiView
-          key={index}
+          key={`${index}-${isActive}`}
           from={{ opacity: 0.7, scale: 0 }}
           animate={{ opacity: 0, scale: 3.5 }}
           transition={{
