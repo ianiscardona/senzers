@@ -63,7 +63,9 @@ const DashboardScreen = ({ navigation }) => {
             isSensorActive={isSensorActive}
             visible={isParkedTimeExpired}
             ImportantModalTitle={"VEHICLE DETECTED!"}
-            ImportantModalContent={"Is it an illegally parked vehicle?"}
+            ImportantModalContent={
+              "Kindly check if the vehicle is illegally parked?"
+            }
           />
         ) : (
           <ImportantModal

@@ -9,9 +9,7 @@ import {
   KeyboardAvoidingView,
   Alert,
 } from "react-native";
-
-const _primary = "#000000";
-const _secondary = "#A4A2A2";
+import Colors from "../utilities/Colors";
 
 const ReportFormModal = ({ onClose, visible, onReset }) => {
   const [vehicleType, setVehicleType] = useState("");
@@ -155,7 +153,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   line: {
-    borderBottomColor: _secondary,
+    borderBottomColor: Colors.SECONDARY_GRAY,
     borderBottomWidth: 1,
     marginTop: 10,
     marginBottom: 10,
