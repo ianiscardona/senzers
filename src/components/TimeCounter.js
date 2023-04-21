@@ -29,7 +29,7 @@ const TimeCounter = ({
       const timeoutId = setTimeout(() => {
         setIsParkedTimeExpired(true);
         console.log("nice");
-      }, 5000);
+      }, 300000);
       return () => {
         clearInterval(intervalId);
         clearTimeout(timeoutId);

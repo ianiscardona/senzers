@@ -11,6 +11,7 @@ import topBarLogo from "../../assets/icons/topbar-logo.png";
 import userProfileSmall from "../../assets/icons/user-profile-small.png";
 import React, { useState, useEffect } from "react";
 import moment from "moment";
+import Colors from "../utilities/Colors";
 
 const BottomNavTopBar = ({ topBarTitle, navigation }) => {
   const [dateTime, setDateTime] = useState(moment());
@@ -76,6 +77,11 @@ const styles = StyleSheet.create({
     zIndex: 1,
     width: "100%",
     minHeight: "20%",
+    elevation: 5,
+    shadowColor: Colors.PRIMARY_BLACK,
+    shadowOffset: { width: 0, height: 2 },
+    shadowRadius: 5,
+    shadowOpacity: 0.4,
   },
   topBarInfo: {
     flex: 1,
@@ -100,7 +106,9 @@ const styles = StyleSheet.create({
   circle: {
     width: 60,
     height: 60,
-    backgroundColor: "white",
     borderRadius: 999,
+    borderWidth: 1,
+    borderColor: Colors.PRIMARY_WHITE,
+    overflow: "hidden",
   },
 });

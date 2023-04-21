@@ -1,10 +1,29 @@
 import { StyleSheet, Text, View, ImageBackground } from "react-native";
 import topBarBG from "../../assets/images/topbar-bg-1.png";
-import React from "react";
+import React, { useEffect, useState, useRef } from "react";
+import { MotiView } from "moti";
+import { useIsFocused } from "@react-navigation/native";
+import Colors from "../utilities/Colors";
 
 const TopBar = () => {
+  const isFocused = useIsFocused();
+  const screenKeyRef = useRef(0);
+
+  useEffect(() => {
+    if (isFocused) {
+      console.log("mf");
+      screenKeyRef.current += 1;
+    }
+  }, [isFocused]);
+
   return (
-    <View style={styles.topBar}>
+    <MotiView
+      key={screenKeyRef.current}
+      from={{ opacity: 1, translateY: -70 }}
+      animate={{ opacity: 1, translateY: 0 }}
+      transition={{ type: "timing", duration: 1500 }}
+      style={styles.topBar}
+    >
       <View style={styles.topBarInfo}>
         <ImageBackground style={styles.topBarBgImage} source={topBarBG}>
           <Text
@@ -40,8 +59,16 @@ const TopBar = () => {
           </Text>
         </ImageBackground>
       </View>
-      <View style={styles.circle}></View>
-    </View>
+      <MotiView
+        from={{ opacity: 1, translateY: -70, translateX: 140, scale: 0.5 }}
+        animate={{ opacity: 1, translateY: 0, translateX: 0, scale: 1 }} // add this line
+        transition={{
+          type: "timing",
+          duration: 1500,
+        }}
+        style={styles.circle}
+      ></MotiView>
+    </MotiView>
   );
 };
 
@@ -52,6 +79,11 @@ const styles = StyleSheet.create({
     zIndex: 1,
     width: "100%",
     minHeight: "30%",
+    elevation: 5,
+    shadowColor: Colors.PRIMARY_BLACK,
+    shadowOffset: { width: 0, height: 2 },
+    shadowRadius: 4,
+    shadowOpacity: 0.25,
   },
   topBarInfo: {
     flex: 1,
@@ -78,7 +110,7 @@ const styles = StyleSheet.create({
     alignSelf: "center",
     width: 128,
     height: 128,
-    backgroundColor: "gray",
+    backgroundColor: Colors.PRIMARY_WHITE,
     borderRadius: 999,
   },
 });

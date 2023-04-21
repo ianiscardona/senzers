@@ -29,9 +29,9 @@ function App() {
       });
   };
 
-  useEffect(() => {
-    AsyncStorage.clear();
-  }, []);
+  // useEffect(() => {
+  //   AsyncStorage.clear();
+  // }, []);
 
   useEffect(() => {
     // Check if the user has completed the walkthrough before
