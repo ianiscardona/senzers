@@ -1,37 +1,41 @@
-import {
-  StyleSheet,
-  Text,
-  View,
-  ImageBackground,
-  KeyboardAvoidingView,
-} from "react-native";
-import topBarBG from "../../assets/images/topbar-bg-1.png";
-import React, { useEffect } from "react";
+import { StyleSheet, View } from "react-native";
+import React, { useEffect, useState } from "react";
 import AccountNavigator from "../navigations/AccountNavigator";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import TopBar from "../components/TopBar";
 import { useIsFocused } from "@react-navigation/native";
+import { FlatList, ScrollView } from "react-native-gesture-handler";
 
 const AccountScreen = ({ navigation }) => {
   const isFocused = useIsFocused();
+  const [isTopBarVisible, setTopBarVisible] = useState(false);
+
+  useEffect(() => {
+    setTopBarVisible(true);
+  }, []);
 
   useEffect(() => {
     if (isFocused) {
-      console.log("bitch");
+      setTopBarVisible(true);
     }
   }, [isFocused]);
+
+  const handleNavigate = () => {
+    setTopBarVisible(false);
+    setTimeout(() => {
+      navigation.navigate("DashboardScreen", {
+        onScreenFocus: () => setTopBarVisible(true),
+      });
+    }, 500);
+  };
+
   return (
-    <KeyboardAwareScrollView
-      contentContainerStyle={styles.container}
-      enableOnAndroid={true}
-      extraScrollHeight={100}
-      bounces={false}
-    >
-      <TopBar />
+    <View style={styles.container}>
+      <TopBar isVisible={isTopBarVisible} />
       <View style={styles.content}>
-        <AccountNavigator />
+        <AccountNavigator onNavigate={handleNavigate} />
       </View>
-    </KeyboardAwareScrollView>
+    </View>
   );
 };
 

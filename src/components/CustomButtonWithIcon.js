@@ -1,9 +1,18 @@
-import { StyleSheet, Text } from "react-native";
+import { StyleSheet, Text, View } from "react-native";
 import React, { useMemo } from "react";
 import { MotiPressable } from "moti/interactions";
 import Colors from "../utilities/Colors";
+import { FontAwesome5 } from "@expo/vector-icons";
 
-const CustomButton = ({ onPress, text, width }) => {
+const CustomButtonWithIcon = ({
+  onPress,
+  text,
+  width,
+  icon,
+  color,
+  marginRight,
+  size,
+}) => {
   return (
     <MotiPressable
       onPress={onPress}
@@ -31,12 +40,17 @@ const CustomButton = ({ onPress, text, width }) => {
       )}
       style={[styles.container, { width }]}
     >
+      <View
+        style={{ marginRight, justifyContent: "center", alignItems: "center" }}
+      >
+        <FontAwesome5 name={icon} size={size} color={color} />
+      </View>
       <Text style={styles.text}>{text}</Text>
     </MotiPressable>
   );
 };
 
-export default CustomButton;
+export default CustomButtonWithIcon;
 
 const styles = StyleSheet.create({
   container: {
@@ -45,9 +59,10 @@ const styles = StyleSheet.create({
     borderRadius: 999,
     alignItems: "center",
     justifyContent: "center",
-    paddingHorizontal: 20,
+    paddingHorizontal: 30,
     paddingVertical: 15,
   },
+
   text: {
     textAlign: "center",
     color: Colors.PRIMARY_WHITE,

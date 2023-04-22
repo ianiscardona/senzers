@@ -13,14 +13,14 @@ import React, { useState } from "react";
 import { FontAwesome5 } from "@expo/vector-icons";
 import Logos from "../utilities/Logos";
 import { firebase } from "../../firebase";
+import CustomButton from "../components/CustomButton";
+import CustomButtonWithIcon from "../components/CustomButtonWithIcon";
+import Colors from "../utilities/Colors";
+import { MotiImage } from "moti";
 
 const LoginScreen = ({ navigation }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-
-  // function handleLogin() {
-  //   route.params.onLogin();
-  // }
   const loginUser = async (email, password) => {
     try {
       await firebase.auth().signInWithEmailAndPassword(email, password);
@@ -31,8 +31,15 @@ const LoginScreen = ({ navigation }) => {
 
   return (
     <KeyboardAvoidingView style={styles.container} behavior="padding">
-      <Image source={Logos.SENZERS_LOGO_BLACK} alt="Senzers" />
-      <Text style={styles.logo}>Senzers</Text>
+      <View style={styles.logoAndTextContainer}>
+        <MotiImage
+          source={Logos.SENZERS_LOGO_BLACK_MEDIUM}
+          alt="Senzers"
+          from={{ opacity: 1, translateY: -50 }}
+          animate={{ opacity: 1, translateY: 0 }}
+          transition={{ type: "timing", duration: 500 }}
+        />
+      </View>
       <View style={styles.credentialContainer}>
         <Text style={styles.inputTitle}>Email</Text>
         <View style={styles.inputContainer}>
@@ -75,20 +82,29 @@ const LoginScreen = ({ navigation }) => {
         </Text>
       </Pressable>
       <View style={styles.buttonContainer}>
-        <TouchableOpacity
+        <CustomButton
           onPress={() => loginUser(email, password)}
-          style={styles.button}
-        >
-          <Text style={styles.buttonText}>Login</Text>
-        </TouchableOpacity>
+          text={"Login"}
+          width={"100%"}
+        />
       </View>
-      <View style={styles.buttonContainer}>
-        <TouchableOpacity onPress={() => {}} style={styles.button}>
-          <View style={[styles.icon, { marginRight: 10 }]}>
-            <FontAwesome5 name="google" size={18} color="white" />
-          </View>
-          <Text style={styles.buttonText}>Login with Google</Text>
-        </TouchableOpacity>
+      <View style={[styles.buttonContainer]}>
+        <CustomButtonWithIcon
+          onPress={() => {}}
+          text={"Login with Google"}
+          width={"100%"}
+          marginRight={10}
+          icon={"google"}
+          size={18}
+          color={"white"}
+        />
+      </View>
+      <View style={styles.orContainer}>
+        <View style={styles.line} />
+        <Text style={{ fontSize: 16, fontWeight: "bold", marginHorizontal: 5 }}>
+          or
+        </Text>
+        <View style={styles.line} />
       </View>
       <View style={{ flexDirection: "row", marginTop: 5 }}>
         <Text style={{ fontSize: 16 }}>Don't have an account? </Text>
@@ -110,17 +126,17 @@ export default LoginScreen;
 
 const styles = StyleSheet.create({
   container: {
-    width: "90%",
-    height: "90%",
-    marginHorizontal: "5%",
-    marginVertical: "5%",
+    flex: 1,
+    paddingVertical: "10%",
+    paddingHorizontal: "5%",
     alignItems: "center",
     justifyContent: "center",
+    backgroundColor: Colors.PRIMARY_WHITE,
   },
-  logo: {
-    marginTop: 10,
-    fontSize: 30,
-    fontWeight: "bold",
+  logoAndTextContainer: {
+    justifyContent: "center",
+    alignItems: "center",
+    marginBottom: 10,
   },
   credentialContainer: {
     marginBottom: 15,
@@ -135,40 +151,28 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
   },
-  icon: {
-    justifyContent: "center",
-    alignItems: "center",
-  },
   input: {
     width: "90%",
-    backgroundColor: "lightgray",
-    paddingVertical: 15,
+    backgroundColor: Colors.FIELDS_GRAY,
+    paddingVertical: 18,
     paddingLeft: 15,
     borderRadius: 10,
   },
   forgotContainer: {
     alignSelf: "flex-end",
-    marginBottom: 10,
+    marginBottom: 15,
   },
   buttonContainer: {
     width: "80%",
-    justifyContent: "center",
-    alignItems: "center",
     marginBottom: 15,
   },
-  button: {
+  orContainer: {
     flexDirection: "row",
-    backgroundColor: "#292828",
-    width: "100%",
-    paddingVertical: 15,
-    paddingHorizontal: 30,
-    borderRadius: 999,
     alignItems: "center",
-    justifyContent: "center",
   },
-  buttonText: {
-    textAlign: "center",
-    color: "white",
-    fontSize: 18,
+  line: {
+    borderBottomColor: Colors.PRIMARY_BLACK,
+    borderBottomWidth: 1,
+    width: "45%",
   },
 });

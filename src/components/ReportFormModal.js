@@ -11,7 +11,7 @@ import {
 } from "react-native";
 import Colors from "../utilities/Colors";
 
-const ReportFormModal = ({ onClose, visible, onReset }) => {
+const ReportFormModal = ({ onClose, visible, onReset, onFormDone }) => {
   const [vehicleType, setVehicleType] = useState("");
   const [plateNumber, setPlateNumber] = useState("");
   const [timeSeen, setTimeSeen] = useState("");
@@ -24,6 +24,7 @@ const ReportFormModal = ({ onClose, visible, onReset }) => {
     console.log("Date seen:", dateSeen);
     onReset();
     onClose();
+    onFormDone();
   };
 
   const handleCancel = () => {

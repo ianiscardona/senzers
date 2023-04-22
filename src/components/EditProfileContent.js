@@ -5,12 +5,14 @@ import {
   TextInput,
   View,
   TouchableOpacity,
+  ScrollView,
 } from "react-native";
 import React from "react";
 import { FontAwesome5 } from "@expo/vector-icons";
+import CustomButton from "./CustomButton";
 const EditProfileContent = ({ navigation }) => {
   return (
-    <>
+    <ScrollView>
       <TouchableOpacity
         onPress={() => navigation.navigate("ProfileContent")}
         style={{
@@ -66,19 +68,20 @@ const EditProfileContent = ({ navigation }) => {
             style={[styles.contentInput, { fontStyle: "italic" }]}
           />
         </View>
-        <TouchableOpacity
-          onPress={() => {
-            Alert.alert(
-              "Save Successful",
-              "You have changed your information succesfully!"
-            );
-          }}
-          style={styles.contentEditButton}
-        >
-          <Text style={styles.contentEditButtonText}>Save Changes</Text>
-        </TouchableOpacity>
+        <View style={{ alignSelf: "center", marginTop: 10 }}>
+          <CustomButton
+            onPress={() => {
+              Alert.alert(
+                "Save Successful",
+                "You have changed your information succesfully!"
+              );
+            }}
+            text={"Save Changes"}
+            width={200}
+          />
+        </View>
       </View>
-    </>
+    </ScrollView>
   );
 };
 
@@ -86,6 +89,7 @@ export default EditProfileContent;
 
 const styles = StyleSheet.create({
   contentEditButton: {
+    marginTop: 15,
     width: 200,
     height: 43,
     backgroundColor: "#292828",
