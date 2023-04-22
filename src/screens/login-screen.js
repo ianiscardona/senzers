@@ -14,14 +14,101 @@ import { FontAwesome5 } from "@expo/vector-icons";
 import Logos from "../utilities/Logos";
 import { firebase } from "../../firebase";
 import { auth,firestore,db  } from "../../firebase";
+import { GoogleSignInAsync } from 'expo-google-app-auth';
+import * as GoogleSignIn from 'expo-google-sign-in';
+
+// const { GoogleSignIn } = require('expo-google-sign-in');
+
+GoogleSignIn.initAsync({
+  clientId: '181380347790-rro0rg7qogb0akmivdd8mhmkm8trkhgc.apps.googleusercontent.com',
+});
+
+const signInWithGoogle = async () => {
+  try {
+    await GoogleSignIn.askForPlayServicesAsync();
+    const { type, user } = await GoogleSignIn.signInAsync();
+
+    if (type === 'success') {
+      // Get the user's Google ID token and access token
+      const { idToken, accessToken } = user.auth;
+
+      // Create a Firebase credential with the Google tokens
+      const credential = firebase.auth.GoogleAuthProvider.credential(idToken, accessToken);
+
+      // Sign in to Firebase with the Google credential
+      await firebase.auth().signInWithCredential(credential);
+
+      console.log('Signed in with Google!');
+    } else {
+      console.log('Google sign-in cancelled');
+    }
+  } catch (error) {
+    console.log('Error signing in with Google:', error);
+  }
+};
+
 
 const LoginScreen = ({ navigation }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [user, setUser] = useState(null);
+
+  
+
+  // const signInWithGoogle = async () => {
+  //   try {
+  //     const result = await GoogleSignInAsync({
+  //       clientId: '181380347790-rro0rg7qogb0akmivdd8mhmkm8trkhgc.apps.googleusercontent.com',
+  //       scopes: ['profile', 'email'],
+  //     });
+  
+  //     if (result.type === 'success') {
+  //       const { idToken, accessToken } = result;
+  //       const credential = firebase.auth.GoogleAuthProvider.credential(idToken, accessToken);
+  
+  //       firebase.auth()
+  //         .signInWithCredential(credential)
+  //         .then(() => console.log('Signed in with Google!'))
+  //         .catch(error => console.log('Error signing in with Google:', error));
+  //     }
+  //   } catch (error) {
+  //     console.log('Error signing in with Google:', error);
+  //   }
+  // };
+
 
   // function handleLogin() {
   //   route.params.onLogin();
-  // }
+
+  // useEffect(() => {
+  //   initGoogleSignIn();
+  // }, []);
+
+  // const initGoogleSignIn = async () => {
+  //   try {
+  //     await GoogleSignIn.initAsync({
+  //       clientId: 'YOUR_CLIENT_ID_HERE',
+  //     });
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // };
+
+  // const signInWithGoogle = async () => {
+  //   try {
+  //     const { type, user } = await GoogleSignIn.signInAsync();
+
+  //     if (type === 'success') {
+  //       setUser(user);
+  //     } else {
+  //       console.log('Cancelled');
+  //     }
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // };
+
+  
   const loginUser = async ( email, password) => {
     try {
       await firebase.auth().signInWithEmailAndPassword(email, password).then((userCredential) => {
@@ -86,7 +173,7 @@ const LoginScreen = ({ navigation }) => {
         </TouchableOpacity>
       </View>
       <View style={styles.buttonContainer}>
-        <TouchableOpacity onPress={() => {}} style={styles.button}>
+        <TouchableOpacity onPress={() => signInWithGoogle(email, password)} style={styles.button}>
           <View style={[styles.icon, { marginRight: 10 }]}>
             <FontAwesome5 name="google" size={18} color="white" />
           </View>

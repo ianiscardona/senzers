@@ -1,6 +1,7 @@
 import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
 import React from "react";
 import { FontAwesome5 } from "@expo/vector-icons";
+import { firebase } from "../../firebase";
 
 const AccountContent = ({ navigation }) => {
   return (
@@ -43,7 +44,8 @@ const AccountContent = ({ navigation }) => {
           <FontAwesome5 name="angle-right" size={20} color="black" />
         </TouchableOpacity>
         <View style={styles.line} />
-        <TouchableOpacity style={styles.settingsChoicesContainer}>
+        <TouchableOpacity style={styles.settingsChoicesContainer}
+            onPress= {() => firebase.auth().signOut()}>
           <View style={{ flexDirection: "row" }}>
             <FontAwesome5 name="door-open" size={20} color="black" />
             <Text style={styles.settingsChoicesTitle}>Logout</Text>

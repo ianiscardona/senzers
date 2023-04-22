@@ -7,6 +7,7 @@ import HomeScreen from "../screens/home-screen";
 import ChangePasswordScreen from "../screens/change-password-screen";
 import { FontAwesome5 } from "@expo/vector-icons";
 import EnterInformationScreen from "../screens/enter-information-screen";
+import ThanksScreen from "../screens/thanks-screen";
 
 const Tab = createBottomTabNavigator();
 
@@ -92,6 +93,7 @@ const BottomNavigator = ({ user, onLogout }) => {
           ),
         }}
       />
+      <Tab.Screen name="ThanksScreen" component={ThanksScreen} />
     </Tab.Navigator>
   );
 };

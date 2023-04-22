@@ -11,9 +11,20 @@ import { FontAwesome5 } from "@expo/vector-icons";
 import changePasswordImage from "../../assets/images/change-password-1.png";
 import CustomButton from "../components/CustomButton";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
+import { firebase } from "../../firebase";
 
 const ChangePasswordScreen = ({ navigation }) => {
   const [isFocused, setIsFocused] = useState(false);
+
+  //Change User Password
+  const changePassword = () => { 
+    firebase.auth().sendPasswordResetEmail(firebase.auth().currentUser.email)
+    .then(() => {
+      alert ("Password reset email sent")
+    }).catch((error) => {
+      alert(error)
+    })
+  }
 
   const handleFocus = () => {
     setIsFocused(true);
@@ -89,12 +100,13 @@ const ChangePasswordScreen = ({ navigation }) => {
       </View>
       <CustomButton
         text={"Save Changes"}
-        onPress={() =>
-          Alert.alert(
-            "Save Successful",
-            "You have changed your password successfully!"
-          )
-        }
+        onPress={ changePassword}
+        //   () =>
+        //   Alert.alert(
+        //     "Save Successful",
+        //     "You have changed your password successfully!"
+        //   )
+        // }
       ></CustomButton>
     </KeyboardAwareScrollView>
   );

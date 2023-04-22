@@ -7,6 +7,7 @@ import {
   View,
   StyleSheet,
   KeyboardAvoidingView,
+  Alert,
 } from "react-native";
 import { db, firebase } from "../../firebase";
 import { collection, doc, setDoc, addDoc} from "firebase/firestore";
@@ -14,22 +15,21 @@ import { collection, doc, setDoc, addDoc} from "firebase/firestore";
 const _primary = "#000000";
 const _secondary = "#A4A2A2";
 
-
-
-const ReportFormModal = ({ visible, onClose }) => {
+const ReportFormModal = ({ onClose, visible, onReset }) => {
   const [vehicleType, setVehicleType] = useState("");
   const [plateNumber, setPlateNumber] = useState("");
   const [timeSeen, setTimeSeen] = useState("");
   const [dateSeen, setDateSeen] = useState("");
-  const user = firebase.auth().currentUser;
+  // const user = firebase.auth().currentUser;
   
   function Create () {
+    const user = firebase.auth().currentUser;
     addDoc(collection(db, "reports"), {     
           vehicleType: vehicleType,
           plateNumber: plateNumber,
           timeSeen: timeSeen,
           dateSeen: dateSeen,
-          UserID: user
+          UserID: user.uid
         }).then(() => { 
           // Data saved successfully!
           console.log('data submitted');  
@@ -44,15 +44,29 @@ const ReportFormModal = ({ visible, onClose }) => {
     console.log("Plate number:", plateNumber);
     console.log("Time seen:", timeSeen);
     console.log("Date seen:", dateSeen);
+    onReset();
     onClose();
   };
 
   const handleCancel = () => {
-    setVehicleType("");
-    setPlateNumber("");
-    setTimeSeen("");
-    setDateSeen("");
-    onClose();
+    Alert.alert(
+      "Confirmation",
+      "Are you sure you wanna close this message?",
+      [
+        {
+          text: "Cancel",
+          style: "cancel",
+        },
+        {
+          text: "Yes",
+          onPress: () => {
+            onReset();
+            onClose();
+          },
+        },
+      ],
+      { cancelable: false }
+    );
   };
 
   return (
