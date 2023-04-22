@@ -1,74 +1,120 @@
-import { StyleSheet, Text, View, ImageBackground } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  View,
+  ImageBackground,
+  TouchableOpacity,
+  Image,
+} from "react-native";
 import topBarBG from "../../assets/images/topbar-bg-1.png";
 import React, { useEffect, useState, useRef } from "react";
-import { MotiView } from "moti";
-import { useIsFocused } from "@react-navigation/native";
+import { MotiView, AnimatePresence } from "moti";
+import * as ImagePicker from "expo-image-picker";
 import Colors from "../utilities/Colors";
 
-const TopBar = () => {
-  const isFocused = useIsFocused();
-  const screenKeyRef = useRef(0);
+const TopBar = ({ isVisible }) => {
+  const [imageUri, setImageUri] = useState(null);
 
-  useEffect(() => {
-    if (isFocused) {
-      console.log("mf");
-      screenKeyRef.current += 1;
+  const pickImage = async () => {
+    const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+    if (status !== "granted") {
+      alert("Sorry, we need camera roll permissions to make this work!");
+      return;
     }
-  }, [isFocused]);
+
+    const result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,
+      aspect: [1, 1],
+      quality: 1,
+    });
+
+    if (!result.canceled) {
+      setImageUri(result.assets[0].uri);
+    }
+  };
 
   return (
-    <MotiView
-      key={screenKeyRef.current}
-      from={{ opacity: 1, translateY: -70 }}
-      animate={{ opacity: 1, translateY: 0 }}
-      transition={{ type: "timing", duration: 1500 }}
-      style={styles.topBar}
-    >
-      <View style={styles.topBarInfo}>
-        <ImageBackground style={styles.topBarBgImage} source={topBarBG}>
-          <Text
-            style={[
-              styles.topBarText,
-              {
-                fontSize: 30,
-                marginBottom: 5,
-              },
-            ]}
-          >
-            MY
-          </Text>
-          <Text
-            style={[
-              styles.topBarText,
-              {
-                fontSize: 20,
-              },
-            ]}
-          >
-            Hello,
-          </Text>
-          <Text
-            style={[
-              styles.topBarText,
-              {
-                fontSize: 25,
-              },
-            ]}
-          >
-            Juan Dela Cruz
-          </Text>
-        </ImageBackground>
-      </View>
-      <MotiView
-        from={{ opacity: 1, translateY: -70, translateX: 140, scale: 0.5 }}
-        animate={{ opacity: 1, translateY: 0, translateX: 0, scale: 1 }} // add this line
-        transition={{
-          type: "timing",
-          duration: 1500,
-        }}
-        style={styles.circle}
-      ></MotiView>
-    </MotiView>
+    <AnimatePresence>
+      {isVisible && (
+        <MotiView
+          from={{ opacity: 1, translateY: -55 }}
+          animate={{ opacity: 1, translateY: 0 }}
+          transition={{ type: "timing", duration: 700 }}
+          exit={{ opacity: 1, translateY: -55 }}
+          style={styles.topBar}
+        >
+          <View style={styles.topBarInfo}>
+            <ImageBackground style={styles.topBarBgImage} source={topBarBG}>
+              <MotiView
+                from={{ opacity: 1, translateX: -55 }}
+                animate={{ opacity: 1, translateX: 0 }}
+                transition={{ type: "timing", duration: 700 }}
+                exit={{ opacity: 1, translateX: -55 }}
+              >
+                <Text
+                  style={[
+                    styles.topBarText,
+                    {
+                      fontSize: 30,
+                      marginBottom: 5,
+                    },
+                  ]}
+                >
+                  MY
+                </Text>
+                <Text
+                  style={[
+                    styles.topBarText,
+                    {
+                      fontSize: 20,
+                    },
+                  ]}
+                >
+                  Hello,
+                </Text>
+                <Text
+                  style={[
+                    styles.topBarText,
+                    {
+                      fontSize: 25,
+                    },
+                  ]}
+                >
+                  Juan Dela Cruz
+                </Text>
+              </MotiView>
+            </ImageBackground>
+          </View>
+          <TouchableOpacity onPress={pickImage}>
+            <MotiView
+              from={{
+                opacity: 1,
+                translateY: -70,
+                translateX: 140,
+                scale: 0.5,
+              }}
+              animate={{ opacity: 1, translateY: 0, translateX: 0, scale: 1 }}
+              exit={{
+                opacity: 1,
+                translateY: -70,
+                translateX: 140,
+                scale: 0.5,
+              }}
+              transition={{
+                type: "timing",
+                duration: 700,
+              }}
+              style={styles.circle}
+            >
+              {imageUri ? (
+                <Image source={{ uri: imageUri }} style={styles.image} />
+              ) : null}
+            </MotiView>
+          </TouchableOpacity>
+        </MotiView>
+      )}
+    </AnimatePresence>
   );
 };
 
@@ -102,7 +148,6 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     textAlign: "left",
   },
-
   circle: {
     zIndex: 1,
     position: "absolute",
@@ -112,5 +157,12 @@ const styles = StyleSheet.create({
     height: 128,
     backgroundColor: Colors.PRIMARY_WHITE,
     borderRadius: 999,
+    overflow: "hidden",
+    borderWidth: 1,
+    borderColor: Colors.PRIMARY_WHITE,
+  },
+  image: {
+    flex: 1,
+    resizeMode: "cover",
   },
 });

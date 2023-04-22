@@ -3,16 +3,15 @@ import {
   StyleSheet,
   TextInput,
   View,
-  TouchableOpacity,
   Text,
   Pressable,
-  Image,
 } from "react-native";
 import React, { useState } from "react";
-import { FontAwesome5 } from "@expo/vector-icons";
 import Checkbox from "../components/Checkbox";
 import { auth, createUserWithEmailAndPassword } from "../../firebase";
-import Logos from "../utilities/Logos";
+import Colors from "../utilities/Colors";
+import CustomButton from "../components/CustomButton";
+import CustomButtonWithIcon from "../components/CustomButtonWithIcon";
 
 const RegisterScreen = ({ navigation }) => {
   const [email, setEmail] = useState("");
@@ -49,8 +48,7 @@ const RegisterScreen = ({ navigation }) => {
 
   return (
     <KeyboardAvoidingView style={styles.container} behavior="padding">
-      <Image source={Logos.SENZERS_LOGO_BLACK} alt="Senzers" />
-      <Text style={styles.logo}>Register</Text>
+      <Text style={styles.logoText}>Register</Text>
       <View style={styles.credentialContainer}>
         <Text style={styles.inputTitle}>Email</Text>
         <View style={styles.inputContainer}>
@@ -92,7 +90,9 @@ const RegisterScreen = ({ navigation }) => {
                 navigation.navigate("Terms");
               }}
             >
-              <Text style={{ color: "green", fontSize: 16 }}>Terms of Use</Text>
+              <Text style={{ color: Colors.PRIMARY_RED, fontSize: 16 }}>
+                Terms of Use
+              </Text>
             </Pressable>
             <Text style={{ fontSize: 16 }}> and </Text>
             <Pressable
@@ -100,28 +100,38 @@ const RegisterScreen = ({ navigation }) => {
                 navigation.navigate("Privacy");
               }}
             >
-              <Text style={{ color: "green", fontSize: 16 }}>
+              <Text style={{ color: Colors.PRIMARY_RED, fontSize: 16 }}>
                 Privacy Policy
               </Text>
             </Pressable>
           </View>
         </Text>
       </View>
-
-      <TouchableOpacity
-        onPress={() => handleSignupAndEnterInfo(email, password)}
-        style={styles.button}
-      >
-        <Text style={styles.buttonText}>Create Account</Text>
-      </TouchableOpacity>
-
-      <TouchableOpacity onPress={() => {}} style={styles.button}>
-        <View style={[styles.icon, { marginRight: 10 }]}>
-          <FontAwesome5 name="google" size={18} color="white" />
-        </View>
-        <Text style={styles.buttonText}>Register with Google</Text>
-      </TouchableOpacity>
-
+      <View style={styles.buttonContainer}>
+        <CustomButton
+          onPress={() => handleSignupAndEnterInfo(email, password)}
+          text={"Create Account"}
+          width={"100%"}
+        />
+      </View>
+      <View style={[styles.buttonContainer]}>
+        <CustomButtonWithIcon
+          onPress={() => {}}
+          text={"Register with Google"}
+          width={"100%"}
+          marginRight={10}
+          icon={"google"}
+          size={18}
+          color={"white"}
+        />
+      </View>
+      <View style={styles.orContainer}>
+        <View style={styles.line} />
+        <Text style={{ fontSize: 16, fontWeight: "bold", marginHorizontal: 5 }}>
+          or
+        </Text>
+        <View style={styles.line} />
+      </View>
       <View style={{ flexDirection: "row", marginTop: 5 }}>
         <Text style={{ fontSize: 16 }}>Already have an account? </Text>
         <Pressable
@@ -142,14 +152,14 @@ export default RegisterScreen;
 
 const styles = StyleSheet.create({
   container: {
-    width: "90%",
-    height: "90%",
-    marginHorizontal: "5%",
-    marginVertical: "5%",
+    flex: 1,
+    paddingVertical: "10%",
+    paddingHorizontal: "5%",
     alignItems: "center",
     justifyContent: "center",
+    backgroundColor: Colors.PRIMARY_WHITE,
   },
-  logo: {
+  logoText: {
     marginTop: 10,
     fontSize: 30,
     fontWeight: "bold",
@@ -173,8 +183,8 @@ const styles = StyleSheet.create({
   },
   input: {
     width: "100%",
-    backgroundColor: "lightgray",
-    paddingVertical: 15,
+    backgroundColor: Colors.FIELDS_GRAY,
+    paddingVertical: 18,
     paddingLeft: 15,
     borderRadius: 10,
   },
@@ -182,20 +192,23 @@ const styles = StyleSheet.create({
     alignSelf: "flex-end",
     marginBottom: 10,
   },
-  button: {
-    flexDirection: "row",
-    backgroundColor: "#292828",
+  buttonContainer: {
     width: "80%",
-    paddingVertical: 15,
-    paddingHorizontal: 30,
-    borderRadius: 999,
-    alignItems: "center",
-    justifyContent: "center",
     marginBottom: 15,
   },
   buttonText: {
     textAlign: "center",
     color: "white",
     fontSize: 18,
+  },
+
+  orContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  line: {
+    borderBottomColor: Colors.PRIMARY_BLACK,
+    borderBottomWidth: 1,
+    width: "45%",
   },
 });

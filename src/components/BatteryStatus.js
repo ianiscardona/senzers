@@ -25,7 +25,6 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     flexDirection: "row",
     width: "100%",
-    // backgroundColor: "pink",
   },
   statusButton: {
     width: 150,

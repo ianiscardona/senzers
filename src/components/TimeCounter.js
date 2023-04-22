@@ -29,13 +29,14 @@ const TimeCounter = ({
       const timeoutId = setTimeout(() => {
         setIsParkedTimeExpired(true);
         console.log("nice");
-      }, 300000);
+      }, 5000);
       return () => {
         clearInterval(intervalId);
         clearTimeout(timeoutId);
       };
     }
   }, [startTime, setParkedTime, setIsParkedTimeExpired]);
+  // 300000
 
   const displayDuration = moment.duration(parkedTime);
   const hours = displayDuration.hours().toString().padStart(2, "0");

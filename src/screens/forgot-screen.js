@@ -6,10 +6,13 @@ import {
   KeyboardAvoidingView,
   TouchableOpacity,
   Image,
+  Alert,
 } from "react-native";
 import React, { useState } from "react";
 import forgotPasswordIcon from "../../assets/icons/forgot-password-icon.png";
 import { FontAwesome5 } from "@expo/vector-icons";
+import CustomButton from "../components/CustomButton";
+import Colors from "../utilities/Colors";
 
 const ForgotScreen = ({ navigation }) => {
   const [email, setEmail] = useState("");
@@ -42,12 +45,16 @@ const ForgotScreen = ({ navigation }) => {
         </View>
       </View>
       <View style={styles.buttonContainer}>
-        <TouchableOpacity
-          onPress={() => alert("Clicked")}
-          style={styles.button}
-        >
-          <Text style={styles.buttonText}>Send Verification</Text>
-        </TouchableOpacity>
+        <CustomButton
+          onPress={() =>
+            Alert.alert(
+              "Verification sent!",
+              "Kindly check your email to change your password."
+            )
+          }
+          text={"Send Verification"}
+          width={"100%"}
+        />
       </View>
     </KeyboardAvoidingView>
   );
@@ -57,15 +64,16 @@ export default ForgotScreen;
 
 const styles = StyleSheet.create({
   container: {
-    width: "90%",
-    height: "80%",
-    marginVertical: "10%",
-    marginHorizontal: "5%",
+    flex: 1,
+    paddingVertical: "10%",
+    paddingHorizontal: "5%",
     alignItems: "center",
+    backgroundColor: Colors.PRIMARY_WHITE,
   },
   logo: {
     fontSize: 30,
     marginBottom: 50,
+    fontWeight: "bold",
   },
   credentialContainer: {
     marginBottom: 15,
@@ -93,23 +101,6 @@ const styles = StyleSheet.create({
   },
   buttonContainer: {
     width: "80%",
-    justifyContent: "center",
-    alignItems: "center",
     marginBottom: 15,
-  },
-  button: {
-    flexDirection: "row",
-    backgroundColor: "#292828",
-    width: "100%",
-    paddingVertical: 15,
-    paddingHorizontal: 30,
-    borderRadius: 999,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  buttonText: {
-    textAlign: "center",
-    color: "white",
-    fontSize: 18,
   },
 });

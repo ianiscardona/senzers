@@ -41,7 +41,7 @@ const BottomNavigator = ({ user, onLogout }) => {
     <>
       {isTutorialVisible && <Tutorial onComplete={hideTutorial} />}
       <Tab.Navigator
-        initialRouteName="DashboardScreen"
+        initialRouteName="HomeScreen"
         screenOptions={{
           tabBarShowLabel: false,
           tabBarStyle: styles.tabBarStyle,
@@ -64,23 +64,38 @@ const BottomNavigator = ({ user, onLogout }) => {
                   animate={{
                     scale: isFocused ? 1.2 : 1,
                     translateY: isFocused ? -20 : 0,
-                    backgroundColor: isFocused
-                      ? Colors.PRIMARY_YELLOW
-                      : Colors.SPLASH_BLACK,
+                    backgroundColor: Colors.SPLASH_BLACK,
                   }}
                   transition={{
                     type: "timing",
-                    duration: 300,
+                    duration: 400,
                   }}
-                  style={styles.iconContainer}
+                  style={[
+                    styles.iconContainer,
+                    isFocused && styles.iconContainerFocused,
+                  ]}
                 >
-                  <FontAwesome5
-                    name="home"
-                    color={
-                      isFocused ? Colors.SPLASH_BLACK : Colors.PRIMARY_YELLOW
-                    }
-                    size={22}
-                  />
+                  <MotiView
+                    from={{
+                      translateY: 0,
+                    }}
+                    animate={{
+                      translateY: focused ? (isFocused ? 0 : -5) : 0,
+                    }}
+                    transition={{
+                      type: "timing",
+                      duration: 1000,
+                      loop: true,
+                    }}
+                  >
+                    <FontAwesome5
+                      name="home"
+                      color={
+                        isFocused ? Colors.PRIMARY_YELLOW : Colors.PRIMARY_WHITE
+                      }
+                      size={isFocused ? 27 : 22}
+                    />
+                  </MotiView>
                 </MotiView>
               );
             },
@@ -102,23 +117,38 @@ const BottomNavigator = ({ user, onLogout }) => {
                   animate={{
                     scale: isFocused ? 1.2 : 1,
                     translateY: isFocused ? -20 : 0,
-                    backgroundColor: isFocused
-                      ? Colors.SPLASH_BLACK
-                      : Colors.SPLASH_BLACK,
+                    backgroundColor: Colors.SPLASH_BLACK,
                   }}
                   transition={{
                     type: "timing",
-                    duration: 300,
+                    duration: 400,
                   }}
-                  style={styles.iconContainer}
+                  style={[
+                    styles.iconContainer,
+                    isFocused && styles.iconContainerFocused,
+                  ]}
                 >
-                  <FontAwesome5
-                    name="car"
-                    color={
-                      isFocused ? Colors.PRIMARY_YELLOW : Colors.PRIMARY_WHITE
-                    }
-                    size={25}
-                  />
+                  <MotiView
+                    from={{
+                      translateY: 0,
+                    }}
+                    animate={{
+                      translateY: focused ? (isFocused ? 0 : -5) : 0,
+                    }}
+                    transition={{
+                      type: "timing",
+                      duration: 1000,
+                      loop: true,
+                    }}
+                  >
+                    <FontAwesome5
+                      name="car"
+                      color={
+                        isFocused ? Colors.PRIMARY_YELLOW : Colors.PRIMARY_WHITE
+                      }
+                      size={isFocused ? 30 : 25}
+                    />
+                  </MotiView>
                 </MotiView>
               );
             },
@@ -140,23 +170,38 @@ const BottomNavigator = ({ user, onLogout }) => {
                   animate={{
                     scale: isFocused ? 1.2 : 1,
                     translateY: isFocused ? -20 : 0,
-                    backgroundColor: isFocused
-                      ? Colors.PRIMARY_WHITE
-                      : Colors.SPLASH_BLACK,
+                    backgroundColor: Colors.SPLASH_BLACK,
                   }}
                   transition={{
                     type: "timing",
-                    duration: 300,
+                    duration: 400,
                   }}
-                  style={styles.iconContainer}
+                  style={[
+                    styles.iconContainer,
+                    isFocused && styles.iconContainerFocused,
+                  ]}
                 >
-                  <FontAwesome5
-                    name="th-large"
-                    color={
-                      isFocused ? Colors.PRIMARY_YELLOW : Colors.PRIMARY_WHITE
-                    }
-                    size={22}
-                  />
+                  <MotiView
+                    from={{
+                      translateY: 0,
+                    }}
+                    animate={{
+                      translateY: focused ? (isFocused ? 0 : -5) : 0,
+                    }}
+                    transition={{
+                      type: "timing",
+                      duration: 1000,
+                      loop: true,
+                    }}
+                  >
+                    <FontAwesome5
+                      name="th-large"
+                      color={
+                        isFocused ? Colors.PRIMARY_YELLOW : Colors.PRIMARY_WHITE
+                      }
+                      size={isFocused ? 27 : 22}
+                    />
+                  </MotiView>
                 </MotiView>
               );
             },
@@ -182,7 +227,16 @@ const BottomNavigator = ({ user, onLogout }) => {
             tabBarButton: () => null,
           })}
         />
-        <Tab.Screen name="ThanksScreen" component={ThanksScreen} />
+        <Tab.Screen
+          name="ThanksScreen"
+          component={ThanksScreen}
+          options={() => ({
+            tabBarStyle: {
+              display: "none",
+            },
+            tabBarButton: () => null,
+          })}
+        />
       </Tab.Navigator>
     </>
   );
@@ -197,13 +251,13 @@ const styles = StyleSheet.create({
     // height: 60,
     // borderRadius: 10,
     backgroundColor: Colors.SPLASH_BLACK,
-    shadowColor: Colors.SECONDARY_LIGHT_YELLOW,
+    shadowColor: Colors.PRIMARY_BLACK,
     shadowOffset: {
       width: 0,
-      height: 2,
+      height: 3,
     },
     shadowOpacity: 0.5,
-    shadowRadius: 20,
+    shadowRadius: 10,
     elevation: 5,
     justifyContent: "center",
     paddingHorizontal: 20,
@@ -214,6 +268,10 @@ const styles = StyleSheet.create({
     borderRadius: 999,
     justifyContent: "center",
     alignItems: "center",
+  },
+  iconContainerFocused: {
+    width: 60,
+    height: 60,
   },
 });
 
