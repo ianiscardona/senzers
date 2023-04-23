@@ -8,8 +8,12 @@ const TutorialPresets = (props) => {
       <View style={styles.descriptionContainer}>
         <Text style={{ textAlign: "center", fontSize: 16 }}>
           {props.desc.split(" ").map((val, key) => {
-            if (["metro.", "parked.", "not."].includes(val))
-              return <Text key={key}>{val}</Text>;
+            if (["HMC", "5983", "A02YYUW"].includes(val.split(",")[0]))
+              return (
+                <Text style={{ fontWeight: "bold" }} key={key}>
+                  {val}{" "}
+                </Text>
+              );
             return `${val} `;
           })}
         </Text>
@@ -22,15 +26,11 @@ export default TutorialPresets;
 
 const styles = StyleSheet.create({
   imageFormat: {
-    maxWidth: "100%",
-    height: "50%",
-    marginBottom: 10,
+    height: 200,
+    width: "100%",
     resizeMode: "contain",
-    backgroundColor: "red",
   },
   descriptionContainer: {
-    width: "100%",
-    height: "15%",
-    backgroundColor: "red",
+    marginBottom: 30,
   },
 });

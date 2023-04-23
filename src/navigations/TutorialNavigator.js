@@ -11,7 +11,7 @@ const TutorialNavigator = ({ onComplete }) => {
         name="Tutorial"
         component={Tutorial}
         options={{ title: "Tutorial" }}
-        onComplete={onComplete} // Pass onComplete as a prop to Tutorial
+        onComplete={onComplete}
       />
     </Stack.Navigator>
   );

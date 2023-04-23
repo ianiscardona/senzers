@@ -3,8 +3,6 @@ import React, { useMemo, useState, useEffect } from "react";
 import { MotiView } from "moti";
 import { Easing } from "react-native-reanimated";
 import Colors from "../utilities/Colors";
-import moment from "moment";
-
 const _size = 85;
 
 const RippleEffect = ({ isActive }) => {
