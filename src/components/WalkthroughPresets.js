@@ -6,20 +6,22 @@ const WalkthroughPresets = (props) => {
     <>
       <Text style={styles.header}>
         {props.header.split(" ").map((val, key) => {
-          if (["Lookout!", "Radar", "Presence", "Information"].includes(val))
+          if (
+            [
+              "Lookout!",
+              "Radar",
+              "Presence",
+              "Information",
+              "Submit!",
+            ].includes(val)
+          )
             return <Text key={key}>{val}</Text>;
           return `${val} `;
         })}
       </Text>
       <Image style={styles.imageFormat} source={props.img} />
       <View style={styles.descriptionContainer}>
-        <Text style={{ textAlign: "center", fontSize: 16 }}>
-          {props.desc.split(" ").map((val, key) => {
-            if (["metro.", "parked.", "not.", "authorities."].includes(val))
-              return <Text key={key}>{val}</Text>;
-            return `${val} `;
-          })}
-        </Text>
+        <Text style={{ textAlign: "center", fontSize: 16 }}>{props.desc}</Text>
       </View>
     </>
   );
@@ -32,14 +34,12 @@ const styles = StyleSheet.create({
     fontSize: 40,
     fontWeight: "bold",
     textAlign: "center",
-    // backgroundColor: "blue",
   },
   imageFormat: {
-    minWidth: "100%",
-    width: "100%",
-    height: "65%",
-    marginBottom: 10,
-    // backgroundColor: "red",
+    width: 300,
+    height: 300,
+    resizeMode: "contain",
+    marginVertical: 20,
   },
   descriptionContainer: {
     width: "100%",

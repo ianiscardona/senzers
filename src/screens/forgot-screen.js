@@ -17,7 +17,7 @@ import Colors from "../utilities/Colors";
 const ForgotScreen = ({ navigation }) => {
   const [email, setEmail] = useState("");
   return (
-    <KeyboardAvoidingView style={styles.container} behavior="padding">
+    <KeyboardAvoidingView style={styles.container} behavior="height">
       <TouchableOpacity
         onPress={() => {
           navigation.goBack();

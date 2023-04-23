@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Modal,
   Text,
@@ -11,21 +11,33 @@ import {
 } from "react-native";
 import Colors from "../utilities/Colors";
 
-const ReportFormModal = ({ onClose, visible, onReset, onFormDone }) => {
+const ReportFormModal = ({
+  onClose,
+  visible,
+  onReset,
+  onFormDone,
+  formDate,
+  isSensorActive,
+}) => {
   const [vehicleType, setVehicleType] = useState("");
   const [plateNumber, setPlateNumber] = useState("");
-  const [timeSeen, setTimeSeen] = useState("");
-  const [dateSeen, setDateSeen] = useState("");
+  const [timeDetected, setTimeDetected] = useState("");
+  const [dateDetected, setDateDetected] = useState("");
 
   const handleSave = () => {
     console.log("Vehicle type:", vehicleType);
     console.log("Plate number:", plateNumber);
-    console.log("Time seen:", timeSeen);
-    console.log("Date seen:", dateSeen);
+    console.log("Time Detected:", timeDetected);
+    console.log("Date Detected:", dateDetected);
     onReset();
     onClose();
     onFormDone();
   };
+
+  useEffect(() => {
+    setTimeDetected(formDate.format("hh:mm:ss"));
+    setDateDetected(formDate.format("MMMM Do YYYY"));
+  }, []);
 
   const handleCancel = () => {
     Alert.alert(
@@ -92,24 +104,22 @@ const ReportFormModal = ({ onClose, visible, onReset, onFormDone }) => {
               style={styles.input}
             />
             <Text style={{ fontSize: 16, fontWeight: "bold", marginBottom: 5 }}>
-              Time Seen:
+              Time Detected:
             </Text>
             <TextInput
-              placeholder="Time seen"
-              placeholderTextColor="gray"
-              value={timeSeen}
-              onChangeText={setTimeSeen}
+              placeholder={timeDetected}
+              value={timeDetected}
               style={styles.input}
+              editable={false}
             />
             <Text style={{ fontSize: 16, fontWeight: "bold", marginBottom: 5 }}>
-              Date Seen:
+              Date Detected:
             </Text>
             <TextInput
-              placeholder="Date seen"
-              placeholderTextColor="gray"
-              value={dateSeen}
-              onChangeText={setDateSeen}
+              placeholder={dateDetected}
+              value={dateDetected}
               style={styles.input}
+              editable={false}
             />
           </View>
           <View style={styles.line}></View>

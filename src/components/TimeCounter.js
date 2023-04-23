@@ -1,20 +1,57 @@
 import { StyleSheet, Text, View } from "react-native";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import moment from "moment";
 import Colors from "../utilities/Colors";
+import { scheduleNotification } from "./Notification";
 
 const TimeCounter = ({
   parkedTime,
   isSensorActive,
   setParkedTime,
   setIsParkedTimeExpired,
+  setFormDate,
+  setIsSensorActive,
+  setIsImportantModalActive,
+  onReset,
 }) => {
   const [startTime, setStartTime] = useState(null);
+  const intervalIdRef = useRef(null);
+  const timeoutIdRef = useRef(null);
+
+  const handleTimeout = useCallback(() => {
+    setIsParkedTimeExpired(true);
+    console.log("nice");
+    scheduleNotification(
+      {
+        title: "Check the location now!",
+        body: "Please confirm if Senzers has detected an illegally parked vehicle.",
+      },
+      {
+        seconds: 1,
+      }
+    );
+    setTimeout(() => {
+      setIsSensorActive(false);
+      setIsImportantModalActive(true);
+    }, 5000);
+  }, [setIsParkedTimeExpired, setIsSensorActive, setIsImportantModalActive]);
 
   useEffect(() => {
     if (isSensorActive) {
+      const formDateNow = moment();
       setStartTime(moment());
+      setFormDate(formDateNow);
+      scheduleNotification(
+        {
+          title: "Vehicle Detected!",
+          body: "Please wait while senzers is active.",
+        },
+        {
+          seconds: 1,
+        }
+      );
     } else {
+      setFormDate(null);
       setStartTime(null);
       setParkedTime(moment.duration());
     }
@@ -22,21 +59,20 @@ const TimeCounter = ({
 
   useEffect(() => {
     if (startTime) {
-      const intervalId = setInterval(() => {
+      intervalIdRef.current = setInterval(() => {
         const duration = moment.duration(moment().diff(startTime));
         setParkedTime(duration);
       }, 1000);
-      const timeoutId = setTimeout(() => {
-        setIsParkedTimeExpired(true);
-        console.log("nice");
-      }, 5000);
+      timeoutIdRef.current = setTimeout(handleTimeout, 5000);
+
       return () => {
-        clearInterval(intervalId);
-        clearTimeout(timeoutId);
+        clearInterval(intervalIdRef.current);
+        clearTimeout(timeoutIdRef.current);
       };
     }
-  }, [startTime, setParkedTime, setIsParkedTimeExpired]);
-  // 300000
+  }, [startTime, setParkedTime, handleTimeout]);
+
+  // setIsSensorActive(false);
 
   const displayDuration = moment.duration(parkedTime);
   const hours = displayDuration.hours().toString().padStart(2, "0");

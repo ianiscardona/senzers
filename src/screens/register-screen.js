@@ -47,7 +47,7 @@ const RegisterScreen = ({ navigation }) => {
   };
 
   return (
-    <KeyboardAvoidingView style={styles.container} behavior="padding">
+    <KeyboardAvoidingView style={styles.container} behavior="height">
       <Text style={styles.logoText}>Register</Text>
       <View style={styles.credentialContainer}>
         <Text style={styles.inputTitle}>Email</Text>

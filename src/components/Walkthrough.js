@@ -2,7 +2,8 @@ import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
 import React, { useState } from "react";
 import { WalkthroughPresetsData } from "../data/WalkthroughPresetsData";
 import WalkthroughPresets from "./WalkthroughPresets";
-
+import Colors from "../utilities/Colors";
+import { MotiView, MotiPressable } from "moti";
 const Walkthrough = ({ onComplete }) => {
   function handleStart() {
     onComplete();
@@ -32,25 +33,35 @@ const Walkthrough = ({ onComplete }) => {
   return (
     <View style={styles.container}>
       <View style={styles.walkthroughContainer}>{Presets[currentIndex]}</View>
-      <View style={styles.paginationContainer}>
-        {Presets.map((_, index) => {
-          return (
-            <View
-              key={index}
-              style={[
-                styles.paginationCircle,
-                currentIndex === index
-                  ? styles.paginationActive
-                  : styles.paginationInactive,
-              ]}
-            />
-          );
-        })}
-      </View>
+      {currentIndex === 0 ? null : (
+        <View style={styles.paginationContainer}>
+          {Presets.map((_, index) => {
+            return (
+              <MotiView
+                key={index}
+                from={{
+                  width: 10,
+                  opacity: 1,
+                }}
+                animate={{
+                  width: currentIndex === index ? 30 : 10,
+                }}
+                style={[
+                  styles.paginationCircle,
+                  currentIndex === index
+                    ? styles.paginationActive
+                    : styles.paginationInactive,
+                  index === 0 ? { display: "none" } : null,
+                ]}
+              />
+            );
+          })}
+        </View>
+      )}
       <View style={styles.buttonContainer}>
         {currentIndex === 0 ? null : (
           <TouchableOpacity
-            style={[styles.button, { backgroundColor: "#ECF4EF" }]}
+            style={[styles.button, { backgroundColor: Colors.STATUS_GRAY }]}
             onPress={previous}
           >
             <Text style={{ fontSize: 14 }}>Previous</Text>
@@ -58,21 +69,30 @@ const Walkthrough = ({ onComplete }) => {
         )}
         {currentIndex === Presets.length - 1 ? (
           <TouchableOpacity
-            style={[styles.button, { backgroundColor: "#EBC55B" }]}
+            style={[
+              styles.button,
+              { backgroundColor: Colors.SECONDARY_LIGHT_YELLOW },
+            ]}
             onPress={handleStart}
           >
             <Text style={{ fontSize: 14 }}>Start</Text>
           </TouchableOpacity>
         ) : currentIndex === 0 ? (
           <TouchableOpacity
-            style={[styles.button, { backgroundColor: "#EBC55B", width: 200 }]}
+            style={[
+              styles.button,
+              { backgroundColor: Colors.SECONDARY_LIGHT_YELLOW, width: 200 },
+            ]}
             onPress={next}
           >
             <Text style={{ fontSize: 14 }}>Get Started!</Text>
           </TouchableOpacity>
         ) : (
           <TouchableOpacity
-            style={[styles.button, { backgroundColor: "#EBC55B" }]}
+            style={[
+              styles.button,
+              { backgroundColor: Colors.SECONDARY_LIGHT_YELLOW },
+            ]}
             onPress={next}
           >
             <Text style={{ fontSize: 14 }}>Next</Text>
@@ -109,10 +129,10 @@ const styles = StyleSheet.create({
     borderRadius: 999,
   },
   paginationActive: {
-    backgroundColor: "blue",
+    backgroundColor: Colors.SECONDARY_LIGHT_YELLOW,
   },
   paginationInactive: {
-    backgroundColor: "gray",
+    backgroundColor: Colors.SECONDARY_GRAY,
   },
   buttonContainer: {
     flexDirection: "row",
