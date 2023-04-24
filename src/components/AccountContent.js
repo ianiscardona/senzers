@@ -1,15 +1,15 @@
 import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
-import React from "react";
+import React, { useEffect } from "react";
+import { useIsFocused } from "@react-navigation/native";
 import { FontAwesome5 } from "@expo/vector-icons";
 import { firebase } from "../../firebase";
+import DashboardScreen from "../screens/dashboard-screen";
 
-const AccountContent = ({ navigation }) => {
+const AccountContent = ({ navigation, route }) => {
   return (
     <>
       <TouchableOpacity
-        onPress={() => {
-          navigation.goBack();
-        }}
+        onPress={() => route.params.onNavigate()}
         style={{
           marginBottom: "5%",
           alignSelf: "flex-start",

@@ -9,6 +9,7 @@ import TimeCounter from "../components/TimeCounter";
 import moment from "moment";
 import SensorStatusText from "../components/SensorStatusText";
 import ImportantModal from "../components/ImportantModal";
+import Colors from "../utilities/Colors";
 
 const DashboardScreen = ({ navigation }) => {
   const [isSensorActive, setIsSensorActive] = useState(false);
@@ -18,6 +19,7 @@ const DashboardScreen = ({ navigation }) => {
   const [rippleEffectActive, setRippleEffectActive] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
   const isSensorActiveRef = useRef(false);
+  const [isFormDone, setIsFormDone] = useState(false);
 
   useEffect(() => {
     isSensorActiveRef.current = isSensorActive;
@@ -38,6 +40,10 @@ const DashboardScreen = ({ navigation }) => {
   const vehicleDetected = () => {
     setIsSensorActive(true);
     setRippleEffectActive(true);
+  };
+
+  const handleFormDone = () => {
+    navigation.navigate("ThanksScreen");
   };
 
   return (
@@ -63,7 +69,9 @@ const DashboardScreen = ({ navigation }) => {
             isSensorActive={isSensorActive}
             visible={isParkedTimeExpired}
             ImportantModalTitle={"VEHICLE DETECTED!"}
-            ImportantModalContent={"Is it an illegally parked vehicle?"}
+            ImportantModalContent={
+              "Kindly check if the vehicle is illegally parked?"
+            }
           />
         ) : (
           <ImportantModal
@@ -83,6 +91,7 @@ const DashboardScreen = ({ navigation }) => {
             onReset={handleReset}
             onClose={handleClose}
             setIsContinueClicked={setIsContinueClicked}
+            onFormDone={handleFormDone}
           />
         ) : null}
         <CustomButton onPress={vehicleDetected} text={"Spawn Car"} />
@@ -95,13 +104,12 @@ const DashboardScreen = ({ navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "white",
-    paddingBottom: "20%",
+    backgroundColor: Colors.PRIMARY_WHITE,
   },
   content: {
-    width: "100%",
-    height: "75%",
-    justifyContent: "space-between",
+    flex: 1,
+    marginBottom: "10%",
+    justifyContent: "space-around",
     alignItems: "center",
   },
 });

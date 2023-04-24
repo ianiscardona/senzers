@@ -14,38 +14,49 @@ import { FontAwesome5 } from "@expo/vector-icons";
 import Logos from "../utilities/Logos";
 import { firebase } from "../../firebase";
 import { auth,firestore,db  } from "../../firebase";
-import { GoogleSignInAsync } from 'expo-google-app-auth';
-import * as GoogleSignIn from 'expo-google-sign-in';
+import * as GoogleSignIn from 'expo-google-app-auth';
+
+// import { GoogleSignInAsync } from 'expo-google-app-auth';
+// import * as GoogleSignIn from 'expo-google-sign-in';
 
 // const { GoogleSignIn } = require('expo-google-sign-in');
 
-GoogleSignIn.initAsync({
-  clientId: '181380347790-rro0rg7qogb0akmivdd8mhmkm8trkhgc.apps.googleusercontent.com',
-});
+// GoogleSignIn.initAsync({
+//   clientId: '181380347790-rro0rg7qogb0akmivdd8mhmkm8trkhgc.apps.googleusercontent.com',
+// });
 
-const signInWithGoogle = async () => {
-  try {
-    await GoogleSignIn.askForPlayServicesAsync();
-    const { type, user } = await GoogleSignIn.signInAsync();
+// const signInWithGoogle = async () => {
+//   try {
+//     await GoogleSignIn.askForPlayServicesAsync();
+//     const { type, user } = await GoogleSignIn.signInAsync();
 
-    if (type === 'success') {
-      // Get the user's Google ID token and access token
-      const { idToken, accessToken } = user.auth;
+//     if (type === 'success') {
+//       // Get the user's Google ID token and access token
+//       const { idToken, accessToken } = user.auth;
 
-      // Create a Firebase credential with the Google tokens
-      const credential = firebase.auth.GoogleAuthProvider.credential(idToken, accessToken);
+//       // Create a Firebase credential with the Google tokens
+//       const credential = firebase.auth.GoogleAuthProvider.credential(idToken, accessToken);
 
-      // Sign in to Firebase with the Google credential
-      await firebase.auth().signInWithCredential(credential);
+//       // Sign in to Firebase with the Google credential
+//       await firebase.auth().signInWithCredential(credential);
 
-      console.log('Signed in with Google!');
-    } else {
-      console.log('Google sign-in cancelled');
-    }
-  } catch (error) {
-    console.log('Error signing in with Google:', error);
-  }
-};
+//       console.log('Signed in with Google!');
+//     } else {
+//       console.log('Google sign-in cancelled');
+//     }
+//   } catch (error) {
+//     console.log('Error signing in with Google:', error);
+//   }
+// };
+
+import CustomButton from "../components/CustomButton";
+import CustomButtonWithIcon from "../components/CustomButtonWithIcon";
+import Colors from "../utilities/Colors";
+import { MotiImage } from "moti";
+
+
+
+
 
 
 const LoginScreen = ({ navigation }) => {
@@ -53,6 +64,24 @@ const LoginScreen = ({ navigation }) => {
   const [password, setPassword] = useState("");
   const [user, setUser] = useState(null);
 
+  const googleConfig = {
+    clientId: '181380347790-rro0rg7qogb0akmivdd8mhmkm8trkhgc.apps.googleusercontent.com',
+    redirectUrl: `https://auth.expo.io/@lawrencepinlock/senzers:expo-google-auth`,
+    scopes: ['profile', 'email'],
+  };
+
+
+  const signInWithGoogle = async () => {
+    try {
+      const { type, user } = await GoogleSignIn.signInAsync(googleConfig);
+      if (type === 'success') {
+        const credential = firebase.auth.GoogleAuthProvider.credential(user.auth.idToken, user.auth.accessToken);
+        await firebase.auth().signInWithCredential(credential);
+      }
+    } catch ({ message }) {
+      console.error('Error signing in with Google: ', message);
+    }
+  };
   
 
   // const signInWithGoogle = async () => {
@@ -121,8 +150,15 @@ const LoginScreen = ({ navigation }) => {
 
   return (
     <KeyboardAvoidingView style={styles.container} behavior="padding">
-      <Image source={Logos.SENZERS_LOGO_BLACK} alt="Senzers" />
-      <Text style={styles.logo}>Senzers</Text>
+      <View style={styles.logoAndTextContainer}>
+        <MotiImage
+          source={Logos.SENZERS_LOGO_BLACK_MEDIUM}
+          alt="Senzers"
+          from={{ opacity: 1, translateY: -50 }}
+          animate={{ opacity: 1, translateY: 0 }}
+          transition={{ type: "timing", duration: 500 }}
+        />
+      </View>
       <View style={styles.credentialContainer}>
         <Text style={styles.inputTitle}>Email</Text>
         <View style={styles.inputContainer}>
@@ -165,20 +201,29 @@ const LoginScreen = ({ navigation }) => {
         </Text>
       </Pressable>
       <View style={styles.buttonContainer}>
-        <TouchableOpacity
+        <CustomButton
           onPress={() => loginUser(email, password)}
-          style={styles.button}
-        >
-          <Text style={styles.buttonText}>Login</Text>
-        </TouchableOpacity>
+          text={"Login"}
+          width={"100%"}
+        />
       </View>
-      <View style={styles.buttonContainer}>
-        <TouchableOpacity onPress={() => signInWithGoogle(email, password)} style={styles.button}>
-          <View style={[styles.icon, { marginRight: 10 }]}>
-            <FontAwesome5 name="google" size={18} color="white" />
-          </View>
-          <Text style={styles.buttonText}>Login with Google</Text>
-        </TouchableOpacity>
+      <View style={[styles.buttonContainer]}>
+        <CustomButtonWithIcon
+          onPress={() => { signInWithGoogle }}
+          text={"Login with Google"}
+          width={"100%"}
+          marginRight={10}
+          icon={"google"}
+          size={18}
+          color={"white"}
+        />
+      </View>
+      <View style={styles.orContainer}>
+        <View style={styles.line} />
+        <Text style={{ fontSize: 16, fontWeight: "bold", marginHorizontal: 5 }}>
+          or
+        </Text>
+        <View style={styles.line} />
       </View>
       <View style={{ flexDirection: "row", marginTop: 5 }}>
         <Text style={{ fontSize: 16 }}>Don't have an account? </Text>
@@ -200,17 +245,17 @@ export default LoginScreen;
 
 const styles = StyleSheet.create({
   container: {
-    width: "90%",
-    height: "90%",
-    marginHorizontal: "5%",
-    marginVertical: "5%",
+    flex: 1,
+    paddingVertical: "10%",
+    paddingHorizontal: "5%",
     alignItems: "center",
     justifyContent: "center",
+    backgroundColor: Colors.PRIMARY_WHITE,
   },
-  logo: {
-    marginTop: 10,
-    fontSize: 30,
-    fontWeight: "bold",
+  logoAndTextContainer: {
+    justifyContent: "center",
+    alignItems: "center",
+    marginBottom: 10,
   },
   credentialContainer: {
     marginBottom: 15,
@@ -225,40 +270,28 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
   },
-  icon: {
-    justifyContent: "center",
-    alignItems: "center",
-  },
   input: {
     width: "90%",
-    backgroundColor: "lightgray",
-    paddingVertical: 15,
+    backgroundColor: Colors.FIELDS_GRAY,
+    paddingVertical: 18,
     paddingLeft: 15,
     borderRadius: 10,
   },
   forgotContainer: {
     alignSelf: "flex-end",
-    marginBottom: 10,
+    marginBottom: 15,
   },
   buttonContainer: {
     width: "80%",
-    justifyContent: "center",
-    alignItems: "center",
     marginBottom: 15,
   },
-  button: {
+  orContainer: {
     flexDirection: "row",
-    backgroundColor: "#292828",
-    width: "100%",
-    paddingVertical: 15,
-    paddingHorizontal: 30,
-    borderRadius: 999,
     alignItems: "center",
-    justifyContent: "center",
   },
-  buttonText: {
-    textAlign: "center",
-    color: "white",
-    fontSize: 18,
+  line: {
+    borderBottomColor: Colors.PRIMARY_BLACK,
+    borderBottomWidth: 1,
+    width: "45%",
   },
 });

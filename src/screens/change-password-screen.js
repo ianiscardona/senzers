@@ -12,6 +12,7 @@ import changePasswordImage from "../../assets/images/change-password-1.png";
 import CustomButton from "../components/CustomButton";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { firebase } from "../../firebase";
+import { ScrollView } from "react-native-gesture-handler";
 
 const ChangePasswordScreen = ({ navigation }) => {
   const [isFocused, setIsFocused] = useState(false);
@@ -35,12 +36,7 @@ const ChangePasswordScreen = ({ navigation }) => {
   };
 
   return (
-    <KeyboardAwareScrollView
-      contentContainerStyle={styles.container}
-      enableOnAndroid={true}
-      extraScrollHeight={20}
-      bounces={false}
-    >
+    <ScrollView style={styles.container}>
       <TouchableOpacity
         onPress={() => {
           navigation.navigate("AccountScreen");
@@ -108,7 +104,7 @@ const ChangePasswordScreen = ({ navigation }) => {
         //   )
         // }
       ></CustomButton>
-    </KeyboardAwareScrollView>
+    </ScrollView>
   );
 };
 
@@ -119,7 +115,6 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingTop: "10%",
     paddingHorizontal: "5%",
-    alignItems: "center",
   },
   imageContainer: {},
   contentInputContainer: {

@@ -5,6 +5,7 @@ import {
   TextInput,
   View,
   TouchableOpacity,
+  ScrollView,
 } from "react-native";
 import React from "react";
 import { useState, useEffect } from "react";
@@ -16,6 +17,7 @@ import {firebase} from "../../firebase";
 
 
 
+import CustomButton from "./CustomButton";
 const EditProfileContent = ({ navigation }) => {
   const [userData, setUserData] = useState(null);
 
@@ -59,7 +61,7 @@ const EditProfileContent = ({ navigation }) => {
   };
 
   return (
-    <>
+    <ScrollView>
       <TouchableOpacity
         onPress={() => navigation.navigate("ProfileContent")}
         style={{
@@ -121,14 +123,20 @@ const EditProfileContent = ({ navigation }) => {
             style={[styles.contentInput, { fontStyle: "italic" }]}
           />
         </View>
-        <TouchableOpacity
-          onPress={handleUpdate}
-          style={styles.contentEditButton}
-        >
-          <Text style={styles.contentEditButtonText}>Save Changes</Text>
-        </TouchableOpacity>
+        <View style={{ alignSelf: "center", marginTop: 10 }}>
+          <CustomButton
+            onPress={() => {
+              Alert.alert(
+                "Save Successful",
+                "You have changed your information succesfully!"
+              );
+            }}
+            text={"Save Changes"}
+            width={200}
+          />
+        </View>
       </View>
-    </>
+    </ScrollView>
   );
 };
 
@@ -136,6 +144,7 @@ export default EditProfileContent;
 
 const styles = StyleSheet.create({
   contentEditButton: {
+    marginTop: 15,
     width: 200,
     height: 43,
     backgroundColor: "#292828",

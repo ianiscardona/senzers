@@ -4,15 +4,22 @@ import {
   View,
   TouchableOpacity,
   ScrollView,
+  Image,
 } from "react-native";
 import { FontAwesome5 } from "@expo/vector-icons";
 import React from "react";
 import Colors from "../utilities/Colors";
+import Logos from "../utilities/Logos";
 
 const TermsScreen = ({ navigation }) => {
   return (
     <View style={styles.container}>
       <View style={styles.contentContainer}>
+        <Image
+          source={Logos.SENZERS_LOGO_YELLOW_SMALL}
+          alt=""
+          style={styles.logo}
+        />
         <TouchableOpacity
           onPress={() => {
             navigation.goBack();
@@ -93,6 +100,10 @@ const styles = StyleSheet.create({
     height: "100%",
     alignItems: "center",
     backgroundColor: "white",
+  },
+  logo: {
+    position: "absolute",
+    top: -10,
   },
   backButton: {
     alignSelf: "flex-start",

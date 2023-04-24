@@ -11,11 +11,9 @@ import {
 } from "react-native";
 import { db, firebase } from "../../firebase";
 import { collection, doc, setDoc, addDoc} from "firebase/firestore";
+import Colors from "../utilities/Colors";
 
-const _primary = "#000000";
-const _secondary = "#A4A2A2";
-
-const ReportFormModal = ({ onClose, visible, onReset }) => {
+const ReportFormModal = ({ onClose, visible, onReset, onFormDone }) => {
   const [vehicleType, setVehicleType] = useState("");
   const [plateNumber, setPlateNumber] = useState("");
   const [timeSeen, setTimeSeen] = useState("");
@@ -40,12 +38,10 @@ const ReportFormModal = ({ onClose, visible, onReset }) => {
         });
     }
   const handleSave = () => {
-    console.log("Vehicle type:", vehicleType);
-    console.log("Plate number:", plateNumber);
-    console.log("Time seen:", timeSeen);
-    console.log("Date seen:", dateSeen);
+    Create ();
     onReset();
     onClose();
+    onFormDone();
   };
 
   const handleCancel = () => {
@@ -147,7 +143,7 @@ const ReportFormModal = ({ onClose, visible, onReset }) => {
               <Text style={styles.buttonText}>Cancel</Text>
             </TouchableOpacity>
             <TouchableOpacity
-              onPress={Create}
+              onPress={handleSave}
               style={[styles.button, { backgroundColor: "#F3F641" }]}
             >
               <Text style={styles.buttonText}>Save</Text>
@@ -175,7 +171,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   line: {
-    borderBottomColor: _secondary,
+    borderBottomColor: Colors.SECONDARY_GRAY,
     borderBottomWidth: 1,
     marginTop: 10,
     marginBottom: 10,

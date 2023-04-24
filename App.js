@@ -15,10 +15,6 @@ function App() {
   const [initializing, setInitializing] = useState(true);
   const [user, setUser] = useState();
 
-  const handleLogin = () => {
-    setIsAuthenticated(true);
-  };
-
   const handleCompleteWalkthrough = () => {
     setHasCompletedWalkthrough(true);
     AsyncStorage.setItem("hasCompletedWalkthrough", "true")
@@ -31,21 +27,23 @@ function App() {
   };
 
   useEffect(() => {
-    AsyncStorage.clear();
-  }, []);
-
-  useEffect(() => {
     // Check if the user has completed the walkthrough before
     AsyncStorage.getItem("hasCompletedWalkthrough")
       .then((value) => {
         if (value !== null) {
           setHasCompletedWalkthrough(true);
         }
+        setInitializing(false); // set initializing to false after checking AsyncStorage
       })
       .catch((error) => {
         console.log("Error retrieving data:", error);
+        setInitializing(false); // set initializing to false even if there is an error
       });
   }, []);
+
+  // useEffect(() => {
+  //   AsyncStorage.clear();
+  // }, []);
 
   function onAuthStateChanged(user) {
     setUser(user);
@@ -58,18 +56,30 @@ function App() {
   if (initializing) return null;
 
   if (!user) {
-    return <AuthNavigator />;
+    return (
+      <>
+        {hasCompletedWalkthrough ? (
+          <AuthNavigator />
+        ) : (
+          <Walkthrough onComplete={handleCompleteWalkthrough} />
+        )}
+      </>
+    );
   }
-  return (
-    <>
-      {hasCompletedWalkthrough ? (
-        <BottomNavigator />
-      ) : (
-        <Walkthrough onComplete={handleCompleteWalkthrough} />
-      )}
-    </>
-  );
- 
+  return <BottomNavigator />;
+  // return (
+  //   <NavigationContainer>
+  //     {isAuthenticated ? (
+  //       hasCompletedWalkthrough ? (
+  //         <BottomNavigator />
+  //       ) : (
+  //         <Walkthrough onComplete={handleCompleteWalkthrough} />
+  //       )
+  //     ) : (
+  //       <AuthNavigator onLogin={handleLogin} />
+  //     )}
+  //   </NavigationContainer>
+  // );
 }
 
 export default () => {

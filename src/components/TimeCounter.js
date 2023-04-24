@@ -36,6 +36,7 @@ const TimeCounter = ({
       };
     }
   }, [startTime, setParkedTime, setIsParkedTimeExpired]);
+  // 300000
 
   const displayDuration = moment.duration(parkedTime);
   const hours = displayDuration.hours().toString().padStart(2, "0");
