@@ -5,14 +5,24 @@ import { Easing } from "react-native-reanimated";
 import Colors from "../utilities/Colors";
 const _size = 85;
 
-const RippleEffect = ({ isActive }) => {
-  const dotColor = isActive ? "red" : Colors.PRIMARY_YELLOW;
+const RippleEffect = ({ isSensorActive, setRippleColor, rippleColor }) => {
+  useEffect(() => {
+    if (isSensorActive === true) {
+      setRippleColor("red");
+      console.log(rippleColor);
+      console.log(isSensorActive);
+    } else if (isSensorActive === false) {
+      setRippleColor(Colors.PRIMARY_YELLOW);
+      console.log(rippleColor);
+      console.log(isSensorActive);
+    }
+  });
 
   const dots = useMemo(
     () =>
       [...Array(3).keys()].map((index) => (
         <MotiView
-          key={`${index}-${isActive}`}
+          key={`${index}-${isSensorActive}`}
           from={{ opacity: 0.7, scale: 0 }}
           animate={{ opacity: 0, scale: 3.5 }}
           transition={{
@@ -26,11 +36,11 @@ const RippleEffect = ({ isActive }) => {
           style={[
             StyleSheet.absoluteFillObject,
             styles.dot,
-            { backgroundColor: dotColor },
+            { backgroundColor: rippleColor },
           ]}
         />
       )),
-    [dotColor]
+    [rippleColor]
   );
   return (
     <>

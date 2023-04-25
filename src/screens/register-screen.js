@@ -33,14 +33,9 @@ const RegisterScreen = ({ navigation }) => {
     }
   };
 
-  const navigateToEnterInfo = () => {
-    navigation.navigate("EnterInformation");
-  };
-
   const handleSignupAndEnterInfo = async (email, password) => {
     try {
       await handleSignup(email, password);
-      navigateToEnterInfo();
     } catch (error) {
       alert(error.message);
     }

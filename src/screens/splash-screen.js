@@ -37,6 +37,6 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: Colors.SPLASH_BLACK,
+    backgroundColor: Colors.PRIMARY_WHITE,
   },
 });

@@ -14,14 +14,14 @@ import Checkbox from "../components/Checkbox";
 import { auth, createUserWithEmailAndPassword } from "../../firebase";
 import Logos from "../utilities/Logos";
 
-const EnterInformationScreen = ({ navigation, route }) => {
+const EnterInformationScreen = ({ onComplete }) => {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
   const [address, setAddress] = useState("");
   const [isSelected, setSelection] = useState(false);
-  function handleLogin() {
-    route.params.onLogin();
+  function handleStart() {
+    onComplete();
   }
 
   return (
@@ -72,7 +72,7 @@ const EnterInformationScreen = ({ navigation, route }) => {
         </View>
       </View>
 
-      <TouchableOpacity onPress={handleLogin} style={styles.button}>
+      <TouchableOpacity onPress={handleStart} style={styles.button}>
         <Text style={styles.buttonText}>Create Account</Text>
       </TouchableOpacity>
     </KeyboardAvoidingView>
