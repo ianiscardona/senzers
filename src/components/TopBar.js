@@ -7,33 +7,21 @@ import {
   Image,
 } from "react-native";
 import topBarBG from "../../assets/images/topbar-bg-1.png";
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState } from "react";
 import { MotiView, AnimatePresence } from "moti";
-import * as ImagePicker from "expo-image-picker";
 import Colors from "../utilities/Colors";
 
-const TopBar = ({ isVisible }) => {
-  const [imageUri, setImageUri] = useState(null);
+const TopBar = ({ isVisible, imageUri, onPickImage }) => {
+  const [localImageUri, setLocalImageUri] = useState(imageUri);
 
-  const pickImage = async () => {
-    const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
-    if (status !== "granted") {
-      alert("Sorry, we need camera roll permissions to make this work!");
-      return;
-    }
+  useEffect(() => {
+    setLocalImageUri(imageUri);
+  }, [imageUri]);
 
-    const result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.Images,
-      allowsEditing: true,
-      aspect: [1, 1],
-      quality: 1,
-    });
-
-    if (!result.canceled) {
-      setImageUri(result.assets[0].uri);
-    }
+  const handlePickImage = () => {
+    onPickImage();
+    setLocalImageUri(imageUri);
   };
-
   return (
     <AnimatePresence>
       {isVisible && (
@@ -86,7 +74,7 @@ const TopBar = ({ isVisible }) => {
               </MotiView>
             </ImageBackground>
           </View>
-          <TouchableOpacity onPress={pickImage}>
+          <TouchableOpacity onPress={handlePickImage}>
             <MotiView
               from={{
                 opacity: 1,
@@ -107,9 +95,7 @@ const TopBar = ({ isVisible }) => {
               }}
               style={styles.circle}
             >
-              {imageUri ? (
-                <Image source={{ uri: imageUri }} style={styles.image} />
-              ) : null}
+              <Image source={{ uri: localImageUri }} style={styles.image} />
             </MotiView>
           </TouchableOpacity>
         </MotiView>

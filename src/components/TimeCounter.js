@@ -62,7 +62,13 @@ const TimeCounter = ({
       intervalIdRef.current = setInterval(() => {
         const duration = moment.duration(moment().diff(startTime));
         setParkedTime(duration);
+        if (!isSensorActive) {
+          onReset();
+        }
       }, 1000);
+      // setTimeout(() => {
+      //   setIsSensorActive(false);
+      // }, 2000);
       timeoutIdRef.current = setTimeout(handleTimeout, 5000);
 
       return () => {

@@ -4,7 +4,6 @@ import RegisterScreen from "../screens/register-screen";
 import TermsScreen from "../screens/terms-screen";
 import PrivacyScreen from "../screens/privacy-screen";
 import ForgotScreen from "../screens/forgot-screen";
-import EnterInformationScreen from "../screens/enter-information-screen";
 
 const Stack = createStackNavigator();
 
@@ -20,10 +19,6 @@ function AuthNavigator({ onLogin }) {
         initialParams={{ onLogin }}
       />
       <Stack.Screen name="Register" component={RegisterScreen} />
-      <Stack.Screen
-        name="EnterInformation"
-        component={EnterInformationScreen}
-      />
       <Stack.Screen name="Forgot" component={ForgotScreen} />
       <Stack.Screen name="Terms" component={TermsScreen} />
       <Stack.Screen name="Privacy" component={PrivacyScreen} />

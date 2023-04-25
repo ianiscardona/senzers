@@ -12,21 +12,15 @@ import ImportantModal from "../components/ImportantModal";
 import Colors from "../utilities/Colors";
 import { requestNotificationPermission } from "../components/Notification";
 
-const DashboardScreen = ({ navigation }) => {
+const DashboardScreen = ({ navigation, route }) => {
   const [isSensorActive, setIsSensorActive] = useState(false);
   const [parkedTime, setParkedTime] = useState(moment.duration());
   const [formDate, setFormDate] = useState(moment());
   const [isParkedTimeExpired, setIsParkedTimeExpired] = useState(false);
   const [isContinueClicked, setIsContinueClicked] = useState(false);
-  const [rippleEffectActive, setRippleEffectActive] = useState(false);
-  const [modalVisible, setModalVisible] = useState(false);
-  const isSensorActiveRef = useRef(false);
   const [isFormDone, setIsFormDone] = useState(false);
   const [isImportantModalActive, setIsImportantModalActive] = useState(false);
-
-  useEffect(() => {
-    isSensorActiveRef.current = isSensorActive;
-  }, [isSensorActive]);
+  const [rippleColor, setRippleColor] = useState(Colors.PRIMARY_YELLOW);
 
   const handleClose = () => {
     setIsParkedTimeExpired(false);
@@ -36,7 +30,6 @@ const DashboardScreen = ({ navigation }) => {
     setIsSensorActive(false);
     setIsParkedTimeExpired(false);
     setIsContinueClicked(false);
-    setRippleEffectActive(false);
     setParkedTime(moment.duration());
     setFormDate(moment());
     setIsImportantModalActive(false);
@@ -44,7 +37,6 @@ const DashboardScreen = ({ navigation }) => {
 
   const vehicleDetected = () => {
     setIsSensorActive(true);
-    setRippleEffectActive(true);
   };
 
   const handleFormDone = () => {
@@ -68,7 +60,11 @@ const DashboardScreen = ({ navigation }) => {
           setIsSensorActive={setIsSensorActive}
           setIsImportantModalActive={setIsImportantModalActive}
         />
-        <RippleEffect isActive={rippleEffectActive} />
+        <RippleEffect
+          isSensorActive={isSensorActive}
+          setRippleColor={setRippleColor}
+          rippleColor={rippleColor}
+        />
         <SensorStatusText
           isSensorActive={isSensorActive}
           isParkedTimeExpired={isParkedTimeExpired}
