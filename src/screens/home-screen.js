@@ -4,8 +4,6 @@ import BottomNavTopBar from "../components/BottomNavTopBar";
 import Colors from "../utilities/Colors";
 import { LinearGradient } from "expo-linear-gradient";
 
-
-
 const HomeScreen = ({ navigation }) => {
   const [activeStatus, setActiveStatus] = useState(false);
 
@@ -23,12 +21,56 @@ const HomeScreen = ({ navigation }) => {
           </View>
         </View>
         <View style={styles.historyDisplay}>
-          <View style={styles.reportedContainer}>
-            <Text>69</Text>
-          </View>
-          <View style={styles.notificationContainer}>
-            <Text>69</Text>
-          </View>
+          <LinearGradient
+            colors={["rgba(255, 188, 0, 0.47)", "#ffeab180"]}
+            start={{ x: 0, y: 0 }}
+            end={{ x: 1, y: 0 }}
+            style={styles.reportedContainer}
+          >
+            <View style={styles.reportedInfoContainer}>
+              <Text style={{ fontSize: 16, fontWeight: 600 }}>Total Data</Text>
+              <View
+                style={{
+                  flexDirection: "row",
+                  justifyContent: "space-between",
+                }}
+              >
+                <View style={{ alignItems: "center" }}>
+                  <Text style={{ fontSize: 14 }}>Detected</Text>
+                  <Text style={{ fontSize: 30, fontWeight: 600 }}>24</Text>
+                </View>
+                <View style={{ alignItems: "center" }}>
+                  <Text style={{ fontSize: 14 }}>Detected</Text>
+                  <Text style={{ fontSize: 30, fontWeight: 600 }}>19</Text>
+                </View>
+              </View>
+            </View>
+          </LinearGradient>
+          <LinearGradient
+            colors={["rgba(219, 48, 48, 0.47)", "#f2b6b6"]}
+            start={{ x: 0, y: 0 }}
+            end={{ x: 1, y: 0 }}
+            style={styles.notificationContainer}
+          >
+            <View style={styles.reportedInfoContainer}>
+              <Text style={{ fontSize: 16, fontWeight: 600 }}>Daily Data</Text>
+              <View
+                style={{
+                  flexDirection: "row",
+                  justifyContent: "space-between",
+                }}
+              >
+                <View style={{ alignItems: "center" }}>
+                  <Text style={{ fontSize: 14 }}>Detected</Text>
+                  <Text style={{ fontSize: 30, fontWeight: 600 }}>5</Text>
+                </View>
+                <View style={{ alignItems: "center" }}>
+                  <Text style={{ fontSize: 14 }}>Detected</Text>
+                  <Text style={{ fontSize: 30, fontWeight: 600 }}>3</Text>
+                </View>
+              </View>
+            </View>
+          </LinearGradient>
         </View>
         <View style={styles.statusContainer}>
           <LinearGradient
@@ -61,7 +103,7 @@ const styles = StyleSheet.create({
   },
   graphContainer: {
     flex: 2,
-    marginVertical: "2%",
+    marginVertical: "3%",
     justifyContent: "center",
     alignItems: "center",
     elevation: 5,
@@ -92,8 +134,6 @@ const styles = StyleSheet.create({
   },
   reportedContainer: {
     flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
     height: "100%",
     marginLeft: "4%",
     marginRight: "2%",
@@ -101,10 +141,13 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     overflow: "hidden",
   },
+  reportedInfoContainer: {
+    justifyContent: "space-between",
+    flex: 1,
+    margin: "7%",
+  },
   notificationContainer: {
     flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
     height: "100%",
     marginRight: "4%",
     marginLeft: "2%",
