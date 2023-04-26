@@ -1,5 +1,4 @@
 import {
-  Alert,
   StyleSheet,
   Text,
   View,
@@ -12,14 +11,12 @@ import topBarLogo from "../../assets/icons/topbar-logo.png";
 import defaultImage from "../../assets/icons/user-profile-small.png";
 import React, { useState, useEffect } from "react";
 import moment from "moment";
-import * as ImagePicker from "expo-image-picker";
 import Colors from "../utilities/Colors";
-import {firebase} from "../../firebase"
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import { firebase } from "../../firebase";
+import { LinearGradient } from "expo-linear-gradient";
 
-const BottomNavTopBar = ({ topBarTitle, navigation }) => {
-
-  const [imageUrl, setImageUrl] = useState (null) 
+const BottomNavTopBar = ({ topBarTitle, navigation, alertVisible, count }) => {
+  const [imageUrl, setImageUrl] = useState(null);
   const [dateTime, setDateTime] = useState(moment());
   useEffect(() => {
     // const storageRef = firebase.storage().ref();
@@ -71,6 +68,27 @@ const BottomNavTopBar = ({ topBarTitle, navigation }) => {
           </TouchableOpacity>
         </ImageBackground>
       </View>
+      {alertVisible && (
+        <LinearGradient
+          style={styles.alertSummaryContainer}
+          colors={[
+            Colors.PRIMARY_YELLOW,
+            "#ffcb3b",
+            "rgba(255, 203, 59, 0.62)",
+          ]}
+          start={{ x: 0, y: 0 }}
+          end={{ x: 1, y: 0 }}
+        >
+          <View style={styles.alertSummaryContent}>
+            <Text style={styles.alertSummaryText}>
+              Vehicle Detected: <Text style={{ fontWeight: 600 }}>{count}</Text>
+            </Text>
+            <Text style={styles.alertSummaryText}>
+              Vehicle Reported: <Text style={{ fontWeight: 600 }}>{count}</Text>
+            </Text>
+          </View>
+        </LinearGradient>
+      )}
     </View>
   );
 };
@@ -107,7 +125,6 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     textAlign: "left",
   },
-
   circle: {
     zIndex: 1,
     width: 60,
@@ -121,5 +138,24 @@ const styles = StyleSheet.create({
   image: {
     flex: 1,
     resizeMode: "cover",
+  },
+  alertSummaryContainer: {
+    zIndex: 1,
+    position: "absolute",
+    bottom: -70,
+    alignSelf: "center",
+    width: "80%",
+    height: 90,
+    borderRadius: 15,
+    overflow: "hidden",
+    justifyContent: "center",
+    paddingHorizontal: "10%",
+  },
+  alertSummaryContent: {
+    justifyContent: "space-around",
+    height: "70%",
+  },
+  alertSummaryText: {
+    fontSize: 22,
   },
 });

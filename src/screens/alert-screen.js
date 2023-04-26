@@ -4,16 +4,16 @@ import HistoryNavigator from "../navigations/HistoryNavigator";
 import BottomNavTopBar from "../components/BottomNavTopBar";
 import { FontAwesome5 } from "@expo/vector-icons";
 import FilterTool from "../components/FilterTool";
-import {firebase} from "../../firebase";
-
+import { firebase } from "../../firebase";
 
 const AlertScreen = ({ navigation }) => {
   const [activeButton, setActiveButton] = useState("History");
   const [selectedItem, setSelectedItem] = useState(null);
+  const [alertVisible, setAlertVisible] = useState(true);
   const [count, setCount] = useState(0);
 
   const getCount = async () => {
-    const snapshot = await firebase.firestore().collection('reports').get();
+    const snapshot = await firebase.firestore().collection("reports").get();
     const count = snapshot.size;
     setCount(count);
   };
@@ -21,7 +21,6 @@ const AlertScreen = ({ navigation }) => {
   useEffect(() => {
     getCount();
   }, []);
-  
 
   const handleSelect = (item) => {
     setSelectedItem(item);
@@ -29,7 +28,12 @@ const AlertScreen = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
-      <BottomNavTopBar topBarTitle={"ALERTS"} navigation={navigation} />
+      <BottomNavTopBar
+        topBarTitle={"ALERTS"}
+        navigation={navigation}
+        alertVisible={alertVisible}
+        count={count}
+      />
       <View style={styles.content}>
         <View style={styles.contentContainer}>
           <View style={styles.contentButtonsContainer}>
@@ -70,8 +74,6 @@ const AlertScreen = ({ navigation }) => {
               >
                 Notifications
               </Text>
-              <Text>Number of entries: {count} </Text>
-
             </TouchableOpacity>
           </View>
           <FilterTool onSelect={handleSelect} />
@@ -94,6 +96,7 @@ const styles = StyleSheet.create({
     zIndex: 0,
     flex: 1,
     paddingHorizontal: "5%",
+    marginTop: 70,
   },
   contentContainer: {
     flexDirection: "row",

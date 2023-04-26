@@ -11,7 +11,6 @@ import {
 import { FontAwesome5 } from "@expo/vector-icons";
 import changePasswordImage from "../../assets/images/change-password-1.png";
 import CustomButton from "../components/CustomButton";
-import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { firebase } from "../../firebase";
 import { ScrollView } from "react-native-gesture-handler";
 
@@ -38,14 +37,17 @@ const ChangePasswordScreen = ({ navigation }) => {
   };
 
   //Change User Password
-  const changePassword = () => { 
-    firebase.auth().sendPasswordResetEmail(firebase.auth().currentUser.email)
-    .then(() => {
-      alert ("Password reset email sent")
-    }).catch((error) => {
-      alert(error)
-    })
-  }
+  const changePassword = () => {
+    firebase
+      .auth()
+      .sendPasswordResetEmail(firebase.auth().currentUser.email)
+      .then(() => {
+        alert("Password reset email sent");
+      })
+      .catch((error) => {
+        alert(error);
+      });
+  };
 
   const handleFocus = () => {
     setIsFocused(true);
@@ -114,7 +116,7 @@ const ChangePasswordScreen = ({ navigation }) => {
       </View>
       <CustomButton
         text={"Save Changes"}
-        onPress={ changePassword}
+        onPress={changePassword}
         //   () =>
         //   Alert.alert(
         //     "Save Successful",

@@ -10,12 +10,13 @@ import React, { useState } from "react";
 import Checkbox from "../components/Checkbox";
 // import { auth, createUserWithEmailAndPassword } from "../../firebase";
 import Logos from "../utilities/Logos";
-import {firebase} from "../../firebase";
+import { firebase } from "../../firebase";
 import { firestore } from "firebase/firestore";
 import { auth, createUserWithEmailAndPassword } from "../../firebase";
 import Colors from "../utilities/Colors";
 import CustomButton from "../components/CustomButton";
 import CustomButtonWithIcon from "../components/CustomButtonWithIcon";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const RegisterScreen = ({ navigation }) => {
   const [email, setEmail] = useState("");
@@ -27,57 +28,47 @@ const RegisterScreen = ({ navigation }) => {
   const [isSelected, setSelection] = useState(false);
 
   const handleSignup = (email, password) => {
-   firebase.auth()
-   .createUserWithEmailAndPassword(email,password)
-   .then(userCredentials => {
-    const user =  userCredentials.user;
-    console.log(user.uid);
-
-   })
-   .catch(error => alert(error.message))
-  }
-
-  const navigateToEnterInfo = () => {
-    navigation.replace("EnterInformation", {email:email, password:password});
+    firebase
+      .auth()
+      .createUserWithEmailAndPassword(email, password)
+      .then((userCredentials) => {
+        const user = userCredentials.user;
+        console.log(user.uid);
+      })
+      .catch((error) => alert(error.message));
   };
+
   const handleSignupAndEnterInfo = (email, password) => {
     try {
+      AsyncStorage.clear();
       handleSignup(email, password);
-      // navigateToEnterInfo();
     } catch (error) {
       alert(error.message);
     }
   };
 
-  // const timestamp = firebase.Date;
-  // const updateTimestamp = await updateDoc(docRef, {
-  //   timestamp: serverTimestamp()
-  // });
+  function CreateNewProfile() {
+    setDoc(collection(db, "ProfileInfo"), {
+      fullName: fullName,
+      email: email,
+      password: password,
+      // updatedAt: timestamp,
+      // createdAt: Timestamp.fromDate(new Date("December 10, 1815")),
+    })
+      .then(() => {
+        // Data saved successfully!
+        console.log("data submitted");
+      })
+      .catch((error) => {
+        // The write failed...
+        console.log(error);
+      });
+  }
 
-  // const timestamp = firebase.firestore.FieldValue.serverTimestamp();
-
-  function CreateNewProfile () {
-    setDoc(collection(db, "ProfileInfo"), {     
-          fullName: fullName,
-          email: email,
-          password: password,
-          // updatedAt: timestamp,
-          // createdAt: Timestamp.fromDate(new Date("December 10, 1815")),
-        }).then(() => { 
-          // Data saved successfully!
-          console.log('data submitted');  
-    
-        }).catch((error) => {
-              // The write failed...
-              console.log(error);
-        });
-    }
-
-    function CreateSignup (){
-      handleSignup(email,password);
-      CreateNewProfile();
-      }
-
+  function CreateSignup() {
+    handleSignup(email, password);
+    CreateNewProfile();
+  }
 
   return (
     <KeyboardAvoidingView style={styles.container} behavior="height">
