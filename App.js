@@ -46,10 +46,6 @@ function useHasCompletedWalkthrough() {
       });
   }, []);
 
-  // useEffect(() => {
-  //   AsyncStorage.clear();
-  // });
-
   return [hasCompletedWalkthrough, completeWalkthrough];
 }
 

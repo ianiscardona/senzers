@@ -14,51 +14,23 @@ import React, { useState, useEffect } from "react";
 import moment from "moment";
 import * as ImagePicker from "expo-image-picker";
 import Colors from "../utilities/Colors";
+import {firebase} from "../../firebase"
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const BottomNavTopBar = ({ topBarTitle, navigation }) => {
-  const [dateTime, setDateTime] = useState(moment());
-  const [imageUri, setImageUri] = useState(defaultImage.uri);
-  useEffect(() => {
-    AsyncStorage.getItem("imageUri").then((value) => {
-      if (value !== null) {
-        setImageUri(value);
-      }
-    });
-  }, []);
 
+  const [imageUrl, setImageUrl] = useState (null) 
+  const [dateTime, setDateTime] = useState(moment());
   useEffect(() => {
-    if (imageUri) {
-      AsyncStorage.setItem("imageUri", imageUri);
-    }
+    // const storageRef = firebase.storage().ref();
+    // const imageRef = storageRef.child("user-images/" + Date.now());
+    // const snapshot =  imageRef.get(blob);
+    // const url = snapshot.ref.getDownloadURL();
     const interval = setInterval(() => {
       setDateTime(moment());
     }, 1000);
     return () => clearInterval(interval);
-  }, [imageUri]);
-
-  const pickImage = async () => {
-    const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
-    if (status !== "granted") {
-      alert("Sorry, we need camera roll permissions to make this work!");
-      return;
-    }
-
-    const result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.Images,
-      allowsEditing: true,
-      aspect: [1, 1],
-      quality: 1,
-    });
-
-    if (!result.canceled) {
-      setImageUri(result.assets[0].uri);
-      Alert.alert(
-        "Image saved!",
-        "The process may take some time. Feel free to continue using the Senzers app!"
-      );
-    }
-  };
+  }, []);
 
   return (
     <View style={styles.topBar}>
@@ -92,13 +64,10 @@ const BottomNavTopBar = ({ topBarTitle, navigation }) => {
           <TouchableOpacity
             style={styles.circle}
             onPress={() => {
-              navigation.navigate("AccountScreen", {
-                pickImage: pickImage,
-                imageUri: imageUri,
-              });
+              navigation.navigate("AccountScreen");
             }}
           >
-            <Image source={{ uri: imageUri }} alt="" style={styles.image} />
+            <Image source={defaultImage} alt="" style={styles.image} />
           </TouchableOpacity>
         </ImageBackground>
       </View>

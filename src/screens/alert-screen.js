@@ -1,13 +1,27 @@
 import { StyleSheet, View, TouchableOpacity, Text } from "react-native";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import HistoryNavigator from "../navigations/HistoryNavigator";
 import BottomNavTopBar from "../components/BottomNavTopBar";
 import { FontAwesome5 } from "@expo/vector-icons";
 import FilterTool from "../components/FilterTool";
+import {firebase} from "../../firebase";
+
 
 const AlertScreen = ({ navigation }) => {
   const [activeButton, setActiveButton] = useState("History");
   const [selectedItem, setSelectedItem] = useState(null);
+  const [count, setCount] = useState(0);
+
+  const getCount = async () => {
+    const snapshot = await firebase.firestore().collection('reports').get();
+    const count = snapshot.size;
+    setCount(count);
+  };
+
+  useEffect(() => {
+    getCount();
+  }, []);
+  
 
   const handleSelect = (item) => {
     setSelectedItem(item);
@@ -56,6 +70,8 @@ const AlertScreen = ({ navigation }) => {
               >
                 Notifications
               </Text>
+              <Text>Number of entries: {count} </Text>
+
             </TouchableOpacity>
           </View>
           <FilterTool onSelect={handleSelect} />

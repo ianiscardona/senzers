@@ -2,8 +2,47 @@ import { StyleSheet, Text, View } from "react-native";
 import React from "react";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { FontAwesome5 } from "@expo/vector-icons";
+import { useState,useEffect} from 'react';
+import {firebase} from "../../firebase";
+import { QuerySnapshot } from "firebase/firestore";
+import { set } from "react-native-reanimated";
 
 const ProfileContent = ({ navigation }) => {
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [email, setEmail] = useState("");
+  const [phoneNumber, setPhoneNumber] = useState("");
+  const [address, setAddress] = useState("");
+
+  useEffect(() => {
+    const currentUser = firebase.auth().currentUser;
+    if (currentUser) {
+      const todoRef = firebase
+        .firestore()
+        .collection("NewUsers")
+        .where("userId", "==", currentUser.uid);
+
+      const unsubscribe = todoRef.onSnapshot(
+        (querySnapshot) => {
+          querySnapshot.forEach((doc) => {
+            setFirstName(doc.data().firstName);
+            setLastName(doc.data().lastName);
+            setPhoneNumber(doc.data().phoneNumber);
+            setAddress(doc.data().address);
+          });
+        },
+        (error) => {
+          console.error(error);
+        }
+      );
+
+      return () => unsubscribe();
+    }
+  }, []);
+
+
+
+
   return (
     <>
       <TouchableOpacity
@@ -36,24 +75,29 @@ const ProfileContent = ({ navigation }) => {
       </View>
       <View style={styles.contentInfoContainer}>
         <View style={styles.contentInfo}>
-          <Text style={styles.contentInfoCategory}>Name</Text>
-          <Text style={styles.contentInfoItem}>Juan Dela Cruz</Text>
+          <Text style={styles.contentInfoCategory}>First Name</Text>
+          <Text style={styles.contentInfoItem}>{firstName}</Text>
         </View>
         <View style={styles.line}></View>
         <View style={styles.contentInfo}>
-          <Text style={styles.contentInfoCategory}>Email</Text>
-          <Text style={styles.contentInfoItem}>juandelacruz@gmail.com</Text>
+          <Text style={styles.contentInfoCategory}>Last Name</Text>
+          <Text style={styles.contentInfoItem}>{lastName}</Text>
         </View>
+        {/* <View style={styles.line}></View>
+        <View style={styles.contentInfo}>
+          <Text style={styles.contentInfoCategory}>Email</Text>
+          <Text style={styles.contentInfoItem}>{email}</Text>
+        </View> */}
         <View style={styles.line}></View>
         <View style={styles.contentInfo}>
           <Text style={styles.contentInfoCategory}>Phone</Text>
-          <Text style={styles.contentInfoItem}>+63 912 345 6789</Text>
+          <Text style={styles.contentInfoItem}>{phoneNumber}</Text>
         </View>
         <View style={styles.line}></View>
         <View style={styles.contentInfo}>
           <Text style={styles.contentInfoCategory}>Address</Text>
           <Text style={styles.contentInfoItem}>
-            123 Wagas St. Tondo, Manila
+            {address}
           </Text>
         </View>
       </View>

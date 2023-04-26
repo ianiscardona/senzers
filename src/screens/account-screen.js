@@ -4,14 +4,10 @@ import AccountNavigator from "../navigations/AccountNavigator";
 import TopBar from "../components/TopBar";
 import { useIsFocused } from "@react-navigation/native";
 
-const AccountScreen = ({ navigation, route }) => {
-  const { pickImage, imageUri } = route.params;
+const AccountScreen = ({ navigation }) => {
   const isFocused = useIsFocused();
   const [isTopBarVisible, setTopBarVisible] = useState(false);
 
-  const handlePickImage = () => {
-    pickImage();
-  };
   useEffect(() => {
     setTopBarVisible(true);
   }, []);
@@ -35,8 +31,6 @@ const AccountScreen = ({ navigation, route }) => {
     <View style={styles.container}>
       <TopBar
         isVisible={isTopBarVisible}
-        onPickImage={handlePickImage}
-        imageUri={imageUri}
       />
       <View style={styles.content}>
         <AccountNavigator onNavigate={handleNavigate} />

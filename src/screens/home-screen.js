@@ -4,6 +4,8 @@ import BottomNavTopBar from "../components/BottomNavTopBar";
 import Colors from "../utilities/Colors";
 import { LinearGradient } from "expo-linear-gradient";
 
+
+
 const HomeScreen = ({ navigation }) => {
   const [activeStatus, setActiveStatus] = useState(false);
 

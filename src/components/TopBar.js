@@ -10,17 +10,67 @@ import topBarBG from "../../assets/images/topbar-bg-1.png";
 import React, { useEffect, useState } from "react";
 import { MotiView, AnimatePresence } from "moti";
 import Colors from "../utilities/Colors";
+import { firebase } from "../../firebase";
+import { QuerySnapshot } from "firebase/firestore";
+import * as ImagePicker from "expo-image-picker";
+// import "firebase/storage";
 
-const TopBar = ({ isVisible, imageUri, onPickImage }) => {
-  const [localImageUri, setLocalImageUri] = useState(imageUri);
+const TopBar = ({ isVisible }) => {
+  const [imageUrl, setImageUrl] = useState(null);
+  const [firstName, setFirstName] = useState("");
 
   useEffect(() => {
-    setLocalImageUri(imageUri);
-  }, [imageUri]);
+    const currentUser = firebase.auth().currentUser;
+    if (currentUser) {
+      const todoRef = firebase
+        .firestore()
+        .collection("NewUsers")
+        .where("userId", "==", currentUser.uid);
 
-  const handlePickImage = () => {
-    onPickImage();
-    setLocalImageUri(imageUri);
+      const unsubscribe = todoRef.onSnapshot(
+        (querySnapshot) => {
+          querySnapshot.forEach((doc) => {
+            setFirstName(doc.data().firstName);
+          });
+        },
+        (error) => {
+          console.error(error);
+        }
+      );
+
+      return () => unsubscribe();
+    }
+  }, []);
+
+  const pickImage = async () => {
+    try {
+      const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+      if (status !== "granted") {
+        alert("Sorry, we need camera roll permissions to make this work!");
+        return;
+      }
+
+      const result = await ImagePicker.launchImageLibraryAsync({
+        mediaTypes: ImagePicker.MediaTypeOptions.Images,
+        allowsEditing: true,
+        aspect: [1, 1],
+        quality: 1,
+      });
+
+      if (!result.canceled && result.assets) {
+        const response = await fetch(result.assets[0].uri);
+        const blob = await response.blob();
+
+        const storageRef = firebase.storage().ref();
+        const imageRef = storageRef.child("user-images/" + Date.now());
+        const snapshot = await imageRef.put(blob);
+        const url = await snapshot.ref.getDownloadURL();
+
+        setImageUrl(url);
+      }
+    } catch (error) {
+      console.error(error);
+    }
   };
   return (
     <AnimatePresence>
@@ -49,7 +99,7 @@ const TopBar = ({ isVisible, imageUri, onPickImage }) => {
                     },
                   ]}
                 >
-                  MY
+                  MY PROFILE
                 </Text>
                 <Text
                   style={[
@@ -69,12 +119,12 @@ const TopBar = ({ isVisible, imageUri, onPickImage }) => {
                     },
                   ]}
                 >
-                  Juan Dela Cruz
+                  {firstName}
                 </Text>
               </MotiView>
             </ImageBackground>
           </View>
-          <TouchableOpacity onPress={handlePickImage}>
+          <TouchableOpacity onPress={pickImage}>
             <MotiView
               from={{
                 opacity: 1,
@@ -95,7 +145,7 @@ const TopBar = ({ isVisible, imageUri, onPickImage }) => {
               }}
               style={styles.circle}
             >
-              <Image source={{ uri: localImageUri }} style={styles.image} />
+              <Image source={{ uri: imageUrl }} style={styles.image} />
             </MotiView>
           </TouchableOpacity>
         </MotiView>
@@ -145,7 +195,6 @@ const styles = StyleSheet.create({
     borderRadius: 999,
     overflow: "hidden",
     borderWidth: 1,
-    borderColor: Colors.PRIMARY_WHITE,
   },
   image: {
     flex: 1,

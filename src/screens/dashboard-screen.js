@@ -11,6 +11,9 @@ import SensorStatusText from "../components/SensorStatusText";
 import ImportantModal from "../components/ImportantModal";
 import Colors from "../utilities/Colors";
 import { requestNotificationPermission } from "../components/Notification";
+import {firebase} from "../../firebase";
+import 'firebase/database';
+
 
 const DashboardScreen = ({ navigation, route }) => {
   const [isSensorActive, setIsSensorActive] = useState(false);
@@ -22,6 +25,23 @@ const DashboardScreen = ({ navigation, route }) => {
   const [isImportantModalActive, setIsImportantModalActive] = useState(false);
   const [rippleColor, setRippleColor] = useState(Colors.PRIMARY_YELLOW);
 
+  // useEffect(() => {
+  // firebase.database().ref('/status').on('magnetometer', (snapshot) => {
+  //   const data = snapshot.val();
+  //   setIsSensorActive(data);
+    
+  // })
+  // }, []);
+
+  // useEffect(() => {
+  //   firebase.database().ref('/magnetometer').orderByChild('createdAt').limitToLast(1).on('value', (snapshot) => {
+  //     snapshot.forEach((data) => {
+  //       const status = data.child('status').val();
+  //       console.log(status);
+  //     });
+  //   });
+  // }, []);
+  
   const handleClose = () => {
     setIsParkedTimeExpired(false);
   };

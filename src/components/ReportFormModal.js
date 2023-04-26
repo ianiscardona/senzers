@@ -9,6 +9,8 @@ import {
   KeyboardAvoidingView,
   Alert,
 } from "react-native";
+import { db, firebase } from "../../firebase";
+import { collection, doc, setDoc, addDoc} from "firebase/firestore";
 import Colors from "../utilities/Colors";
 
 const ReportFormModal = ({
@@ -21,22 +23,37 @@ const ReportFormModal = ({
 }) => {
   const [vehicleType, setVehicleType] = useState("");
   const [plateNumber, setPlateNumber] = useState("");
-  const [timeDetected, setTimeDetected] = useState("");
-  const [dateDetected, setDateDetected] = useState("");
-
+  const [timeSeen, setTimeSeen] = useState("");
+  const [dateSeen, setDateSeen] = useState("");
+  // const user = firebase.auth().currentUser;
+  
+  function Create () {
+    const user = firebase.auth().currentUser;
+    addDoc(collection(db, "reports"), {     
+          vehicleType: vehicleType,
+          plateNumber: plateNumber,
+          timeSeen: timeSeen,
+          dateSeen: dateSeen,
+          UserID: user.uid
+        }).then(() => { 
+          // Data saved successfully!
+          console.log('data submitted');  
+    
+        }).catch((error) => {
+              // The write failed...
+              console.log(error);
+        });
+    }
   const handleSave = () => {
-    console.log("Vehicle type:", vehicleType);
-    console.log("Plate number:", plateNumber);
-    console.log("Time Detected:", timeDetected);
-    console.log("Date Detected:", dateDetected);
+    Create ();
     onReset();
     onClose();
     onFormDone();
   };
 
   useEffect(() => {
-    setTimeDetected(formDate.format("hh:mm:ss"));
-    setDateDetected(formDate.format("MMMM Do YYYY"));
+    setTimeSeen(formDate.format("hh:mm:ss"));
+    setDateSeen(formDate.format("MMMM Do YYYY"));
   }, []);
 
   const handleCancel = () => {
@@ -107,8 +124,8 @@ const ReportFormModal = ({
               Time Detected:
             </Text>
             <TextInput
-              placeholder={timeDetected}
-              value={timeDetected}
+              placeholder={timeSeen}
+              value={timeSeen}
               style={styles.input}
               editable={false}
             />
@@ -116,8 +133,8 @@ const ReportFormModal = ({
               Date Detected:
             </Text>
             <TextInput
-              placeholder={dateDetected}
-              value={dateDetected}
+              placeholder={dateSeen}
+              value={dateSeen}
               style={styles.input}
               editable={false}
             />

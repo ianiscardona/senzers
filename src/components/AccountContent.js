@@ -2,6 +2,7 @@ import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
 import React, { useEffect } from "react";
 import { useIsFocused } from "@react-navigation/native";
 import { FontAwesome5 } from "@expo/vector-icons";
+import { firebase } from "../../firebase";
 import DashboardScreen from "../screens/dashboard-screen";
 
 const AccountContent = ({ navigation, route }) => {
@@ -43,7 +44,8 @@ const AccountContent = ({ navigation, route }) => {
           <FontAwesome5 name="angle-right" size={20} color="black" />
         </TouchableOpacity>
         <View style={styles.line} />
-        <TouchableOpacity style={styles.settingsChoicesContainer}>
+        <TouchableOpacity style={styles.settingsChoicesContainer}
+            onPress= {() => firebase.auth().signOut()}>
           <View style={{ flexDirection: "row" }}>
             <FontAwesome5 name="door-open" size={20} color="black" />
             <Text style={styles.settingsChoicesTitle}>Logout</Text>

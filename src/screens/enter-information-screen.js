@@ -11,8 +11,11 @@ import {
 import React, { useState } from "react";
 import { FontAwesome5 } from "@expo/vector-icons";
 import Checkbox from "../components/Checkbox";
-import { auth, createUserWithEmailAndPassword } from "../../firebase";
+import { auth,firestore,db  } from "../../firebase";
 import Logos from "../utilities/Logos";
+import {firebase} from "../../firebase";
+import { collection, doc, setDoc, addDoc} from "firebase/firestore";
+import { add, set } from "react-native-reanimated";
 
 const EnterInformationScreen = ({ onComplete }) => {
   const [firstName, setFirstName] = useState("");
@@ -20,9 +23,98 @@ const EnterInformationScreen = ({ onComplete }) => {
   const [phoneNumber, setPhoneNumber] = useState("");
   const [address, setAddress] = useState("");
   const [isSelected, setSelection] = useState(false);
-  function handleStart() {
-    onComplete();
+  // const {email,password} = route.params;
+
+  // const handleSignup = (email, password) => {
+  //   firebase.auth()
+  //   .createUserWithEmailAndPassword(email,password)
+  //   .then(userCredentials => {
+  //    const user =  userCredentials.user;
+  //    console.log(user.uid);
+ 
+  //   })
+  //   .catch(error => alert(error.message))
+  //  }
+
+
+// const handleregistration = (email, password) => {
+//   try {
+//     // handleSignup(email, password);
+//     AddInfo();
+//   } catch (error) {
+//     alert(error.message);}
+ 
+
+
+
+function AddUser () {
+  const user = firebase.auth().currentUser;
+  if (!user) {
+    console.error("Error: User not logged in");
+    return;
   }
+  const docRef = doc(db, "NewUsers", user.uid);
+  const data = {
+    firstName: firstName,
+    lastName: lastName,
+    phoneNumber: phoneNumber,
+    address: address,
+    createdAt: firebase.firestore.FieldValue.serverTimestamp()
+    // CreatedAt: firestore.Timestamp.fromDate(new Date())
+  };
+  setDoc(docRef, data)
+    .then(() => {
+      console.log("Data saved successfully!");
+    })
+    .catch((error) => {
+      console.error("Error saving data: ", error);
+    });
+}
+
+function handleStart() {
+  AddUser();
+  onComplete();
+}
+
+
+
+
+
+
+// function AddUser () {
+//   const user = firebase.auth().currentUser;
+//   const docRef = doc(db, "NewUsers", user.uid, "bumfEXdxx5YERAmMIfNxJoMnZ993"); // Use the doc function to create a document reference
+//   const data = {
+//     firstName: firstName,
+//     lastName: lastName,
+//     phoneNumber: phoneNumber,
+//     address: address
+//   };
+//   addDoc(docRef, data)
+//     .then(() => {
+//       console.log("Data saved successfully!");
+//     })
+//     .catch((error) => {
+//       console.error("Error saving data: ", error);
+//     });
+// }
+
+  function NewProfile () {
+    const userRef = doc(db, "UserProfile", currentUser.uid);
+    set(userRef, {
+      firstName: firstName,
+      lastName: lastName,
+      phoneNumber: phoneNumber,
+      address: address
+    }).then(() => { 
+      // Data saved successfully!
+      console.log('data submitted');  
+    }).catch((error) => {
+      // The write failed...
+      console.log(error);
+    });
+  }
+  
 
   return (
     <KeyboardAvoidingView style={styles.container} behavior="padding">
@@ -57,6 +149,7 @@ const EnterInformationScreen = ({ onComplete }) => {
             value={phoneNumber}
             onChangeText={(text) => setPhoneNumber(text)}
             style={styles.input}
+            keyboardType="numeric"
           />
         </View>
       </View>

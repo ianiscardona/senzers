@@ -13,21 +13,32 @@ import React, { useState } from "react";
 import { FontAwesome5 } from "@expo/vector-icons";
 import Logos from "../utilities/Logos";
 import { firebase } from "../../firebase";
+import { auth,firestore,db  } from "../../firebase";
+import * as GoogleSignIn from 'expo-google-app-auth';
+
+
+
 import CustomButton from "../components/CustomButton";
 import CustomButtonWithIcon from "../components/CustomButtonWithIcon";
 import Colors from "../utilities/Colors";
 import { MotiImage } from "moti";
 import LoadingScreen from "./loading-screen";
 
+
+
 const LoginScreen = ({ navigation }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(false);
+  
 
-  const loginUser = async (email, password) => {
+  
+  const loginUser = async ( email, password) => {
     try {
-      setLoading(true);
-      await firebase.auth().signInWithEmailAndPassword(email, password);
+      await firebase.auth().signInWithEmailAndPassword(email, password).then((userCredential) => {
+        console.log(userCredential.user.uid);
+      });
     } catch (error) {
       Alert.alert("Login unsuccessful", "Username or password incorrect");
     } finally {
@@ -189,4 +200,5 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     width: "45%",
   },
-});
+}); 
+
