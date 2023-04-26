@@ -81,12 +81,12 @@ const TimeCounter = ({
       }, 1000);
       timeoutIdRef.current = setTimeout(() => {
         const detectedTime = moment();
-        setTimeSeen(detectedTime.format("hh:mm:ss"));
-        setDateSeen(detectedTime.format("MMMM Do YYYY"));
-        console.log(timeSeen);
-        console.log(detectedTime.format("hh:mm:ss"));
-        setIsSensorActive(false);
-        Create();
+        // setTimeSeen(detectedTime.format("hh:mm:ss"));
+        // setDateSeen(detectedTime.format("MMMM Do YYYY"));
+        // console.log(timeSeen);
+        // console.log(detectedTime.format("hh:mm:ss"));
+        // setIsSensorActive(false);
+        // Create();
       }, 10000);
       timeoutIdRef.current = setTimeout(handleTimeout, 5000);
   
