@@ -1,10 +1,8 @@
 import { StyleSheet, View } from "react-native";
 import React, { useEffect, useState } from "react";
 import AccountNavigator from "../navigations/AccountNavigator";
-import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import TopBar from "../components/TopBar";
 import { useIsFocused } from "@react-navigation/native";
-import { FlatList, ScrollView } from "react-native-gesture-handler";
 
 const AccountScreen = ({ navigation }) => {
   const isFocused = useIsFocused();
@@ -31,7 +29,9 @@ const AccountScreen = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
-      <TopBar isVisible={isTopBarVisible} />
+      <TopBar
+        isVisible={isTopBarVisible}
+      />
       <View style={styles.content}>
         <AccountNavigator onNavigate={handleNavigate} />
       </View>

@@ -7,16 +7,16 @@ import {
   Image,
 } from "react-native";
 import topBarBG from "../../assets/images/topbar-bg-1.png";
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState } from "react";
 import { MotiView, AnimatePresence } from "moti";
-import * as ImagePicker from "expo-image-picker";
 import Colors from "../utilities/Colors";
 import { firebase } from "../../firebase";
 import { QuerySnapshot } from "firebase/firestore";
+import * as ImagePicker from "expo-image-picker";
 // import "firebase/storage";
 
 const TopBar = ({ isVisible }) => {
-  const [imageUri, setImageUri] = useState(null);
+  const [imageUrl, setImageUrl] = useState(null);
   const [firstName, setFirstName] = useState("");
 
   useEffect(() => {
@@ -66,13 +66,12 @@ const TopBar = ({ isVisible }) => {
         const snapshot = await imageRef.put(blob);
         const url = await snapshot.ref.getDownloadURL();
 
-        setImageUri(url);
+        setImageUrl(url);
       }
     } catch (error) {
       console.error(error);
     }
   };
-
   return (
     <AnimatePresence>
       {isVisible && (
@@ -146,9 +145,7 @@ const TopBar = ({ isVisible }) => {
               }}
               style={styles.circle}
             >
-              {imageUri ? (
-                <Image source={{ uri: imageUri }} style={styles.image} />
-              ) : null}
+              <Image source={{ uri: imageUrl }} style={styles.image} />
             </MotiView>
           </TouchableOpacity>
         </MotiView>

@@ -4,10 +4,12 @@ import firebase from "firebase/compat/app";
 import "firebase/compat/auth";
 import "firebase/compat/firestore";
 import "firebase/firestore";
+// import "firebase/compat/database";
 import { getFirestore, collection } from "firebase/firestore";
 import { initializeApp } from "firebase/app";
 import {getAuth} from "firebase/auth";
 import "firebase/compat/storage";
+// import { getDatabase } from "firebase/compat/database";
 // import * as firebase from 'firebase';
 
 
@@ -31,8 +33,8 @@ const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
 const storage = firebase.storage();
-
-export { firebase, db };
+// const database = getDatabase(app);
+export { firebase, db};
 
 
 

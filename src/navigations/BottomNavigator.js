@@ -2,30 +2,38 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import React, { useState, useEffect } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { StyleSheet } from "react-native";
-import DashboardScreen from "../screens/dashboard-screen";
-import AlertScreen from "../screens/alert-screen";
-import AccountScreen from "../screens/account-screen";
-import HomeScreen from "../screens/home-screen";
-import ChangePasswordScreen from "../screens/change-password-screen";
 import { FontAwesome5 } from "@expo/vector-icons";
-import EnterInformationScreen from "../screens/enter-information-screen";
-import ThanksScreen from "../screens/thanks-screen";
 import Tutorial from "../components/Tutorial";
 import { MotiView } from "moti";
 import { useIsFocused } from "@react-navigation/native";
 import Colors from "../utilities/Colors";
-
+import ThanksScreen from "../screens/thanks-screen";
+import AccountScreen from "../screens/account-screen";
+import ChangePasswordScreen from "../screens/change-password-screen";
+import HomeScreen from "../screens/home-screen";
+import DashboardScreen from "../screens/dashboard-screen";
+import AlertScreen from "../screens/alert-screen";
+import EnterInformationScreen from "../screens/enter-information-screen";
 const Tab = createBottomTabNavigator();
 
-const BottomNavigator = ({ user, onLogout }) => {
+const BottomNavigator = () => {
   const [isTutorialVisible, setIsTutorialVisible] = useState(false);
+  const [isEnterInformationVisible, setIsEnterInformationVisible] =
+    useState(false);
+  const [isEnterInfoDone, setIsEnterInfoDone] = useState(false);
 
   useEffect(() => {
-    // Check if tutorial has been shown before
     AsyncStorage.getItem("hasShownTutorial").then((value) => {
       if (!value) {
         setIsTutorialVisible(true);
         AsyncStorage.setItem("hasShownTutorial", "true");
+      }
+    });
+
+    AsyncStorage.getItem("hasEnteredInformation").then((value) => {
+      if (!value) {
+        setIsEnterInformationVisible(true);
+        AsyncStorage.setItem("hasEnteredInformation", "true");
       }
     });
   }, []);
@@ -33,208 +41,227 @@ const BottomNavigator = ({ user, onLogout }) => {
   const hideTutorial = () => {
     setIsTutorialVisible(false);
   };
+  const handleEnterInformationComplete = () => {
+    setIsEnterInformationVisible(false);
+    setIsEnterInfoDone(true);
+  };
 
   return (
     <>
-      {isTutorialVisible && <Tutorial onComplete={hideTutorial} />}
-      <Tab.Navigator
-        initialRouteName="HomeScreen"
-        screenOptions={{
-          tabBarShowLabel: false,
-          tabBarStyle: styles.tabBarStyle,
-          headerShown: false,
-        }}
-      >
-        <Tab.Screen
-          name="HomeScreen"
-          component={HomeScreen}
-          options={{
-            tabBarIcon: ({ focused }) => {
-              const isFocused = useIsFocused();
+      {isEnterInformationVisible ? (
+        <EnterInformationScreen onComplete={handleEnterInformationComplete} />
+      ) : (
+        <>
+          {isEnterInfoDone && isTutorialVisible ? (
+            <Tutorial onComplete={hideTutorial} />
+          ) : null}
+          <Tab.Navigator
+            initialRouteName="HomeScreen"
+            screenOptions={{
+              tabBarShowLabel: false,
+              tabBarStyle: styles.tabBarStyle,
+              headerShown: false,
+            }}
+          >
+            <Tab.Screen
+              name="HomeScreen"
+              component={HomeScreen}
+              options={{
+                tabBarIcon: ({ focused }) => {
+                  const isFocused = useIsFocused();
 
-              return (
-                <MotiView
-                  from={{
-                    scale: 1,
-                    translateY: 0,
-                  }}
-                  animate={{
-                    scale: isFocused ? 1.2 : 1,
-                    translateY: isFocused ? -20 : 0,
-                    backgroundColor: Colors.SPLASH_BLACK,
-                  }}
-                  transition={{
-                    type: "timing",
-                    duration: 400,
-                  }}
-                  style={[
-                    styles.iconContainer,
-                    isFocused && styles.iconContainerFocused,
-                  ]}
-                >
-                  <MotiView
-                    from={{
-                      translateY: 0,
-                    }}
-                    animate={{
-                      translateY: focused ? (isFocused ? 0 : -5) : 0,
-                    }}
-                    transition={{
-                      type: "timing",
-                      duration: 1000,
-                      loop: true,
-                    }}
-                  >
-                    <FontAwesome5
-                      name="home"
-                      color={
-                        isFocused ? Colors.PRIMARY_YELLOW : Colors.PRIMARY_WHITE
-                      }
-                      size={isFocused ? 27 : 22}
-                    />
-                  </MotiView>
-                </MotiView>
-              );
-            },
-          }}
-        />
-        <Tab.Screen
-          name="DashboardScreen"
-          component={DashboardScreen}
-          options={{
-            tabBarIcon: ({ focused }) => {
-              const isFocused = useIsFocused();
+                  return (
+                    <MotiView
+                      from={{
+                        scale: 1,
+                        translateY: 0,
+                      }}
+                      animate={{
+                        scale: isFocused ? 1.2 : 1,
+                        translateY: isFocused ? -20 : 0,
+                        backgroundColor: Colors.SPLASH_BLACK,
+                      }}
+                      transition={{
+                        type: "timing",
+                        duration: 400,
+                      }}
+                      style={[
+                        styles.iconContainer,
+                        isFocused && styles.iconContainerFocused,
+                      ]}
+                    >
+                      <MotiView
+                        from={{
+                          translateY: 0,
+                        }}
+                        animate={{
+                          translateY: focused ? (isFocused ? 0 : -5) : 0,
+                        }}
+                        transition={{
+                          type: "timing",
+                          duration: 1000,
+                          loop: true,
+                        }}
+                      >
+                        <FontAwesome5
+                          name="home"
+                          color={
+                            isFocused
+                              ? Colors.PRIMARY_YELLOW
+                              : Colors.PRIMARY_WHITE
+                          }
+                          size={isFocused ? 27 : 22}
+                        />
+                      </MotiView>
+                    </MotiView>
+                  );
+                },
+              }}
+            />
+            <Tab.Screen
+              name="DashboardScreen"
+              component={DashboardScreen}
+              options={{
+                tabBarIcon: ({ focused }) => {
+                  const isFocused = useIsFocused();
 
-              return (
-                <MotiView
-                  from={{
-                    scale: 1,
-                    translateY: 0,
-                  }}
-                  animate={{
-                    scale: isFocused ? 1.2 : 1,
-                    translateY: isFocused ? -20 : 0,
-                    backgroundColor: Colors.SPLASH_BLACK,
-                  }}
-                  transition={{
-                    type: "timing",
-                    duration: 400,
-                  }}
-                  style={[
-                    styles.iconContainer,
-                    isFocused && styles.iconContainerFocused,
-                  ]}
-                >
-                  <MotiView
-                    from={{
-                      translateY: 0,
-                    }}
-                    animate={{
-                      translateY: focused ? (isFocused ? 0 : -5) : 0,
-                    }}
-                    transition={{
-                      type: "timing",
-                      duration: 1000,
-                      loop: true,
-                    }}
-                  >
-                    <FontAwesome5
-                      name="car"
-                      color={
-                        isFocused ? Colors.PRIMARY_YELLOW : Colors.PRIMARY_WHITE
-                      }
-                      size={isFocused ? 30 : 25}
-                    />
-                  </MotiView>
-                </MotiView>
-              );
-            },
-          }}
-        />
-        <Tab.Screen
-          name="AlertScreen"
-          component={AlertScreen}
-          options={{
-            tabBarIcon: ({ focused }) => {
-              const isFocused = useIsFocused();
+                  return (
+                    <MotiView
+                      from={{
+                        scale: 1,
+                        translateY: 0,
+                      }}
+                      animate={{
+                        scale: isFocused ? 1.2 : 1,
+                        translateY: isFocused ? -20 : 0,
+                        backgroundColor: Colors.SPLASH_BLACK,
+                      }}
+                      transition={{
+                        type: "timing",
+                        duration: 400,
+                      }}
+                      style={[
+                        styles.iconContainer,
+                        isFocused && styles.iconContainerFocused,
+                      ]}
+                    >
+                      <MotiView
+                        from={{
+                          translateY: 0,
+                        }}
+                        animate={{
+                          translateY: focused ? (isFocused ? 0 : -5) : 0,
+                        }}
+                        transition={{
+                          type: "timing",
+                          duration: 1000,
+                          loop: true,
+                        }}
+                      >
+                        <FontAwesome5
+                          name="car"
+                          color={
+                            isFocused
+                              ? Colors.PRIMARY_YELLOW
+                              : Colors.PRIMARY_WHITE
+                          }
+                          size={isFocused ? 30 : 25}
+                        />
+                      </MotiView>
+                    </MotiView>
+                  );
+                },
+              }}
+            />
 
-              return (
-                <MotiView
-                  from={{
-                    scale: 1,
-                    translateY: 0,
-                  }}
-                  animate={{
-                    scale: isFocused ? 1.2 : 1,
-                    translateY: isFocused ? -20 : 0,
-                    backgroundColor: Colors.SPLASH_BLACK,
-                  }}
-                  transition={{
-                    type: "timing",
-                    duration: 400,
-                  }}
-                  style={[
-                    styles.iconContainer,
-                    isFocused && styles.iconContainerFocused,
-                  ]}
-                >
-                  <MotiView
-                    from={{
-                      translateY: 0,
-                    }}
-                    animate={{
-                      translateY: focused ? (isFocused ? 0 : -5) : 0,
-                    }}
-                    transition={{
-                      type: "timing",
-                      duration: 1000,
-                      loop: true,
-                    }}
-                  >
-                    <FontAwesome5
-                      name="th-large"
-                      color={
-                        isFocused ? Colors.PRIMARY_YELLOW : Colors.PRIMARY_WHITE
-                      }
-                      size={isFocused ? 27 : 22}
-                    />
-                  </MotiView>
-                </MotiView>
-              );
-            },
-          }}
-        />
-        <Tab.Screen
-          name="AccountScreen"
-          component={AccountScreen}
-          options={() => ({
-            tabBarStyle: {
-              display: "none",
-            },
-            tabBarButton: () => null,
-          })}
-        />
-        <Tab.Screen
-          name="ChangePasswordScreen"
-          component={ChangePasswordScreen}
-          options={() => ({
-            tabBarStyle: {
-              display: "none",
-            },
-            tabBarButton: () => null,
-          })}
-        />
-        <Tab.Screen
-          name="ThanksScreen"
-          component={ThanksScreen}
-          options={() => ({
-            tabBarStyle: {
-              display: "none",
-            },
-            tabBarButton: () => null,
-          })}
-        />
-      </Tab.Navigator>
+            <Tab.Screen
+              name="AlertScreen"
+              component={AlertScreen}
+              options={{
+                tabBarIcon: ({ focused }) => {
+                  const isFocused = useIsFocused();
+
+                  return (
+                    <MotiView
+                      from={{
+                        scale: 1,
+                        translateY: 0,
+                      }}
+                      animate={{
+                        scale: isFocused ? 1.2 : 1,
+                        translateY: isFocused ? -20 : 0,
+                        backgroundColor: Colors.SPLASH_BLACK,
+                      }}
+                      transition={{
+                        type: "timing",
+                        duration: 400,
+                      }}
+                      style={[
+                        styles.iconContainer,
+                        isFocused && styles.iconContainerFocused,
+                      ]}
+                    >
+                      <MotiView
+                        from={{
+                          translateY: 0,
+                        }}
+                        animate={{
+                          translateY: focused ? (isFocused ? 0 : -5) : 0,
+                        }}
+                        transition={{
+                          type: "timing",
+                          duration: 1000,
+                          loop: true,
+                        }}
+                      >
+                        <FontAwesome5
+                          name="th-large"
+                          color={
+                            isFocused
+                              ? Colors.PRIMARY_YELLOW
+                              : Colors.PRIMARY_WHITE
+                          }
+                          size={isFocused ? 27 : 22}
+                        />
+                      </MotiView>
+                    </MotiView>
+                  );
+                },
+              }}
+            />
+            <Tab.Screen
+              name="AccountScreen"
+              component={AccountScreen}
+              options={() => ({
+                tabBarStyle: {
+                  display: "none",
+                },
+                tabBarButton: () => null,
+              })}
+            />
+            <Tab.Screen
+              name="ChangePasswordScreen"
+              component={ChangePasswordScreen}
+              options={() => ({
+                tabBarStyle: {
+                  display: "none",
+                },
+                tabBarButton: () => null,
+              })}
+            />
+            <Tab.Screen
+              name="ThanksScreen"
+              component={ThanksScreen}
+              options={() => ({
+                tabBarStyle: {
+                  display: "none",
+                },
+                tabBarButton: () => null,
+              })}
+            />
+          </Tab.Navigator>
+        </>
+      )}
     </>
   );
 };

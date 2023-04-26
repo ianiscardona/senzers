@@ -1,4 +1,5 @@
 import {
+  Alert,
   StyleSheet,
   Text,
   View,
@@ -8,15 +9,23 @@ import {
 } from "react-native";
 import topBarBG from "../../assets/images/topbar-bg-1.png";
 import topBarLogo from "../../assets/icons/topbar-logo.png";
-import userProfileSmall from "../../assets/icons/user-profile-small.png";
+import defaultImage from "../../assets/icons/user-profile-small.png";
 import React, { useState, useEffect } from "react";
 import moment from "moment";
+import * as ImagePicker from "expo-image-picker";
 import Colors from "../utilities/Colors";
+import {firebase} from "../../firebase"
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const BottomNavTopBar = ({ topBarTitle, navigation }) => {
-  const [dateTime, setDateTime] = useState(moment());
 
+  const [imageUrl, setImageUrl] = useState (null) 
+  const [dateTime, setDateTime] = useState(moment());
   useEffect(() => {
+    // const storageRef = firebase.storage().ref();
+    // const imageRef = storageRef.child("user-images/" + Date.now());
+    // const snapshot =  imageRef.get(blob);
+    // const url = snapshot.ref.getDownloadURL();
     const interval = setInterval(() => {
       setDateTime(moment());
     }, 1000);
@@ -58,11 +67,7 @@ const BottomNavTopBar = ({ topBarTitle, navigation }) => {
               navigation.navigate("AccountScreen");
             }}
           >
-            <Image
-              source={userProfileSmall}
-              alt=""
-              style={{ resizeMode: "cover" }}
-            />
+            <Image source={defaultImage} alt="" style={styles.image} />
           </TouchableOpacity>
         </ImageBackground>
       </View>
@@ -104,11 +109,17 @@ const styles = StyleSheet.create({
   },
 
   circle: {
+    zIndex: 1,
     width: 60,
     height: 60,
     borderRadius: 999,
     borderWidth: 1,
     borderColor: Colors.PRIMARY_WHITE,
     overflow: "hidden",
+    backgroundColor: Colors.PRIMARY_WHITE,
+  },
+  image: {
+    flex: 1,
+    resizeMode: "cover",
   },
 });

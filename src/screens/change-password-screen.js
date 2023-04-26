@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import {
+  Alert,
   StyleSheet,
   View,
   Text,
@@ -16,6 +17,25 @@ import { ScrollView } from "react-native-gesture-handler";
 
 const ChangePasswordScreen = ({ navigation }) => {
   const [isFocused, setIsFocused] = useState(false);
+  const handleGoBack = () => {
+    Alert.alert(
+      "Security",
+      "You will be redirected to the home page if you execute this action.",
+      [
+        {
+          text: "Cancel",
+          style: "cancel",
+        },
+        {
+          text: "Confirm",
+          onPress: () => {
+            navigation.goBack();
+          },
+        },
+      ],
+      { cancelable: false }
+    );
+  };
 
   //Change User Password
   const changePassword = () => { 
@@ -38,9 +58,7 @@ const ChangePasswordScreen = ({ navigation }) => {
   return (
     <ScrollView style={styles.container}>
       <TouchableOpacity
-        onPress={() => {
-          navigation.navigate("AccountScreen");
-        }}
+        onPress={handleGoBack}
         style={{
           alignSelf: "flex-start",
         }}

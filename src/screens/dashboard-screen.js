@@ -11,23 +11,37 @@ import SensorStatusText from "../components/SensorStatusText";
 import ImportantModal from "../components/ImportantModal";
 import Colors from "../utilities/Colors";
 import { requestNotificationPermission } from "../components/Notification";
+import {firebase} from "../../firebase";
+import 'firebase/database';
 
-const DashboardScreen = ({ navigation }) => {
+
+const DashboardScreen = ({ navigation, route }) => {
   const [isSensorActive, setIsSensorActive] = useState(false);
   const [parkedTime, setParkedTime] = useState(moment.duration());
   const [formDate, setFormDate] = useState(moment());
   const [isParkedTimeExpired, setIsParkedTimeExpired] = useState(false);
   const [isContinueClicked, setIsContinueClicked] = useState(false);
-  const [rippleEffectActive, setRippleEffectActive] = useState(false);
-  const [modalVisible, setModalVisible] = useState(false);
-  const isSensorActiveRef = useRef(false);
   const [isFormDone, setIsFormDone] = useState(false);
   const [isImportantModalActive, setIsImportantModalActive] = useState(false);
+  const [rippleColor, setRippleColor] = useState(Colors.PRIMARY_YELLOW);
 
-  useEffect(() => {
-    isSensorActiveRef.current = isSensorActive;
-  }, [isSensorActive]);
+  // useEffect(() => {
+  // firebase.database().ref('/status').on('magnetometer', (snapshot) => {
+  //   const data = snapshot.val();
+  //   setIsSensorActive(data);
+    
+  // })
+  // }, []);
 
+  // useEffect(() => {
+  //   firebase.database().ref('/magnetometer').orderByChild('createdAt').limitToLast(1).on('value', (snapshot) => {
+  //     snapshot.forEach((data) => {
+  //       const status = data.child('status').val();
+  //       console.log(status);
+  //     });
+  //   });
+  // }, []);
+  
   const handleClose = () => {
     setIsParkedTimeExpired(false);
   };
@@ -36,7 +50,6 @@ const DashboardScreen = ({ navigation }) => {
     setIsSensorActive(false);
     setIsParkedTimeExpired(false);
     setIsContinueClicked(false);
-    setRippleEffectActive(false);
     setParkedTime(moment.duration());
     setFormDate(moment());
     setIsImportantModalActive(false);
@@ -44,7 +57,6 @@ const DashboardScreen = ({ navigation }) => {
 
   const vehicleDetected = () => {
     setIsSensorActive(true);
-    setRippleEffectActive(true);
   };
 
   const handleFormDone = () => {
@@ -68,7 +80,11 @@ const DashboardScreen = ({ navigation }) => {
           setIsSensorActive={setIsSensorActive}
           setIsImportantModalActive={setIsImportantModalActive}
         />
-        <RippleEffect isActive={rippleEffectActive} />
+        <RippleEffect
+          isSensorActive={isSensorActive}
+          setRippleColor={setRippleColor}
+          rippleColor={rippleColor}
+        />
         <SensorStatusText
           isSensorActive={isSensorActive}
           isParkedTimeExpired={isParkedTimeExpired}

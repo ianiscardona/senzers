@@ -17,9 +17,7 @@ import {firebase} from "../../firebase";
 import { collection, doc, setDoc, addDoc} from "firebase/firestore";
 import { add, set } from "react-native-reanimated";
 
-
-
-const EnterInformationScreen = ({ navigation, route}) => {
+const EnterInformationScreen = ({ onComplete }) => {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
@@ -39,15 +37,13 @@ const EnterInformationScreen = ({ navigation, route}) => {
   //  }
 
 
-const handleregistration = (email, password) => {
-  try {
-    // handleSignup(email, password);
-    AddInfo();
-  } catch (error) {
-    alert(error.message);
-  }
-};
-
+// const handleregistration = (email, password) => {
+//   try {
+//     // handleSignup(email, password);
+//     AddInfo();
+//   } catch (error) {
+//     alert(error.message);}
+ 
 
 
 
@@ -74,6 +70,12 @@ function AddUser () {
       console.error("Error saving data: ", error);
     });
 }
+
+function handleStart() {
+  AddUser();
+  onComplete();
+}
+
 
 
 
@@ -163,7 +165,7 @@ function AddUser () {
         </View>
       </View>
 
-      <TouchableOpacity onPress={AddUser}   style={styles.button}>
+      <TouchableOpacity onPress={handleStart} style={styles.button}>
         <Text style={styles.buttonText}>Create Account</Text>
       </TouchableOpacity>
     </KeyboardAvoidingView>
