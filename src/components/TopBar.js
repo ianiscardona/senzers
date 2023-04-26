@@ -11,26 +11,65 @@ import React, { useEffect, useState, useRef } from "react";
 import { MotiView, AnimatePresence } from "moti";
 import * as ImagePicker from "expo-image-picker";
 import Colors from "../utilities/Colors";
+import { firebase } from "../../firebase";
+import { QuerySnapshot } from "firebase/firestore";
+// import "firebase/storage";
 
 const TopBar = ({ isVisible }) => {
   const [imageUri, setImageUri] = useState(null);
+  const [firstName, setFirstName] = useState("");
+
+  useEffect(() => {
+    const currentUser = firebase.auth().currentUser;
+    if (currentUser) {
+      const todoRef = firebase
+        .firestore()
+        .collection("NewUsers")
+        .where("userId", "==", currentUser.uid);
+
+      const unsubscribe = todoRef.onSnapshot(
+        (querySnapshot) => {
+          querySnapshot.forEach((doc) => {
+            setFirstName(doc.data().firstName);
+          });
+        },
+        (error) => {
+          console.error(error);
+        }
+      );
+
+      return () => unsubscribe();
+    }
+  }, []);
 
   const pickImage = async () => {
-    const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
-    if (status !== "granted") {
-      alert("Sorry, we need camera roll permissions to make this work!");
-      return;
-    }
+    try {
+      const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+      if (status !== "granted") {
+        alert("Sorry, we need camera roll permissions to make this work!");
+        return;
+      }
 
-    const result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.Images,
-      allowsEditing: true,
-      aspect: [1, 1],
-      quality: 1,
-    });
+      const result = await ImagePicker.launchImageLibraryAsync({
+        mediaTypes: ImagePicker.MediaTypeOptions.Images,
+        allowsEditing: true,
+        aspect: [1, 1],
+        quality: 1,
+      });
 
-    if (!result.canceled) {
-      setImageUri(result.assets[0].uri);
+      if (!result.canceled && result.assets) {
+        const response = await fetch(result.assets[0].uri);
+        const blob = await response.blob();
+
+        const storageRef = firebase.storage().ref();
+        const imageRef = storageRef.child("user-images/" + Date.now());
+        const snapshot = await imageRef.put(blob);
+        const url = await snapshot.ref.getDownloadURL();
+
+        setImageUri(url);
+      }
+    } catch (error) {
+      console.error(error);
     }
   };
 
@@ -61,7 +100,7 @@ const TopBar = ({ isVisible }) => {
                     },
                   ]}
                 >
-                  MY
+                  MY PROFILE
                 </Text>
                 <Text
                   style={[
@@ -81,7 +120,7 @@ const TopBar = ({ isVisible }) => {
                     },
                   ]}
                 >
-                  Juan Dela Cruz
+                  {firstName}
                 </Text>
               </MotiView>
             </ImageBackground>
@@ -159,7 +198,6 @@ const styles = StyleSheet.create({
     borderRadius: 999,
     overflow: "hidden",
     borderWidth: 1,
-    borderColor: Colors.PRIMARY_WHITE,
   },
   image: {
     flex: 1,

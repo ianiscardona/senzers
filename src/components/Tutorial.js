@@ -2,6 +2,7 @@ import { StyleSheet, Text, View, TouchableOpacity, Modal } from "react-native";
 import React, { useState } from "react";
 import { TutorialPresetsData } from "../data/TutorialPresetsData";
 import TutorialPresets from "./TutorialPresets";
+import { MotiView } from "moti";
 import Colors from "../utilities/Colors";
 
 const Tutorial = ({ onComplete }) => {
@@ -35,25 +36,35 @@ const Tutorial = ({ onComplete }) => {
       <View style={styles.container}>
         <View style={styles.modalContent}>
           <View style={{ width: "80%" }}>{Presets[currentIndex]}</View>
-          <View style={styles.paginationContainer}>
-            {Presets.map((_, index) => {
-              return (
-                <View
-                  key={index}
-                  style={[
-                    styles.paginationCircle,
-                    currentIndex === index
-                      ? styles.paginationActive
-                      : styles.paginationInactive,
-                  ]}
-                />
-              );
-            })}
-          </View>
+          {currentIndex === 0 ? null : (
+            <View style={styles.paginationContainer}>
+              {Presets.map((_, index) => {
+                return (
+                  <MotiView
+                    key={index}
+                    from={{
+                      width: 10,
+                      opacity: 1,
+                    }}
+                    animate={{
+                      width: currentIndex === index ? 30 : 10,
+                    }}
+                    style={[
+                      styles.paginationCircle,
+                      currentIndex === index
+                        ? styles.paginationActive
+                        : styles.paginationInactive,
+                      index === 0 ? { display: "none" } : null,
+                    ]}
+                  />
+                );
+              })}
+            </View>
+          )}
           <View style={styles.buttonContainer}>
             {currentIndex === 0 ? null : (
               <TouchableOpacity
-                style={[styles.button, { backgroundColor: "#ECF4EF" }]}
+                style={[styles.button, { backgroundColor: Colors.STATUS_GRAY }]}
                 onPress={previous}
               >
                 <Text style={{ fontSize: 14 }}>Previous</Text>
@@ -67,7 +78,7 @@ const Tutorial = ({ onComplete }) => {
                 ]}
                 onPress={handleStart}
               >
-                <Text style={{ fontSize: 14 }}>Start</Text>
+                <Text style={{ fontSize: 14 }}>I Understand</Text>
               </TouchableOpacity>
             ) : currentIndex === 0 ? (
               <TouchableOpacity
@@ -80,7 +91,7 @@ const Tutorial = ({ onComplete }) => {
                 ]}
                 onPress={next}
               >
-                <Text style={{ fontSize: 14 }}>Get Started!</Text>
+                <Text style={{ fontSize: 14 }}>Continue</Text>
               </TouchableOpacity>
             ) : (
               <TouchableOpacity
@@ -107,11 +118,12 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "rgba(0, 0, 0, 0.5)",
     alignItems: "center",
+    justifyContent: "center",
   },
   modalContent: {
     backgroundColor: Colors.PRIMARY_WHITE,
+    borderRadius: 20,
     paddingVertical: 15,
-    borderRadius: 0,
     width: "90%",
     alignItems: "center",
     height: "auto",
@@ -135,6 +147,8 @@ const styles = StyleSheet.create({
   },
   buttonContainer: {
     flexDirection: "row",
+    justifyContent: "space-evenly",
+    width: "75%",
   },
   button: {
     width: 110,

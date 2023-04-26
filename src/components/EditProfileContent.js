@@ -18,6 +18,7 @@ import {firebase} from "../../firebase";
 
 
 import CustomButton from "./CustomButton";
+
 const EditProfileContent = ({ navigation }) => {
   const [userData, setUserData] = useState(null);
 
@@ -84,10 +85,10 @@ const EditProfileContent = ({ navigation }) => {
         <View>
           <Text style={{ fontWeight: 600, marginBottom: 5 }}>First Name</Text>
           <TextInput
-            placeholder="Juan "
             value={userData?.firstName || ''}
             onChangeText={text => handleInputChange('firstName', text)}
             placeholderTextColor="black"
+            placeholder="first name"
             style={[styles.contentInput, { fontStyle: "italic" }]}
           />
         </View>
@@ -125,12 +126,7 @@ const EditProfileContent = ({ navigation }) => {
         </View>
         <View style={{ alignSelf: "center", marginTop: 10 }}>
           <CustomButton
-            onPress={() => {
-              Alert.alert(
-                "Save Successful",
-                "You have changed your information succesfully!"
-              );
-            }}
+            onPress={handleUpdate}
             text={"Save Changes"}
             width={200}
           />

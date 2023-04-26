@@ -11,7 +11,7 @@ const WalkthroughNavigator = ({ onComplete }) => {
         name="Walkthrough"
         component={Walkthrough}
         options={{ title: "Walkthrough" }}
-        onComplete={onComplete} // Pass onComplete as a prop to Walkthrough
+        onComplete={onComplete}
       />
     </Stack.Navigator>
   );

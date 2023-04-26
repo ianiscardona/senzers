@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Modal,
   Text,
@@ -13,7 +13,14 @@ import { db, firebase } from "../../firebase";
 import { collection, doc, setDoc, addDoc} from "firebase/firestore";
 import Colors from "../utilities/Colors";
 
-const ReportFormModal = ({ onClose, visible, onReset, onFormDone }) => {
+const ReportFormModal = ({
+  onClose,
+  visible,
+  onReset,
+  onFormDone,
+  formDate,
+  isSensorActive,
+}) => {
   const [vehicleType, setVehicleType] = useState("");
   const [plateNumber, setPlateNumber] = useState("");
   const [timeSeen, setTimeSeen] = useState("");
@@ -43,6 +50,11 @@ const ReportFormModal = ({ onClose, visible, onReset, onFormDone }) => {
     onClose();
     onFormDone();
   };
+
+  useEffect(() => {
+    setTimeSeen(formDate.format("hh:mm:ss"));
+    setDateSeen(formDate.format("MMMM Do YYYY"));
+  }, []);
 
   const handleCancel = () => {
     Alert.alert(
@@ -109,24 +121,22 @@ const ReportFormModal = ({ onClose, visible, onReset, onFormDone }) => {
               style={styles.input}
             />
             <Text style={{ fontSize: 16, fontWeight: "bold", marginBottom: 5 }}>
-              Time Seen:
+              Time Detected:
             </Text>
             <TextInput
-              placeholder="Time seen"
-              placeholderTextColor="gray"
+              placeholder={timeSeen}
               value={timeSeen}
-              onChangeText={setTimeSeen}
               style={styles.input}
+              editable={false}
             />
             <Text style={{ fontSize: 16, fontWeight: "bold", marginBottom: 5 }}>
-              Date Seen:
+              Date Detected:
             </Text>
             <TextInput
-              placeholder="Date seen"
-              placeholderTextColor="gray"
+              placeholder={dateSeen}
               value={dateSeen}
-              onChangeText={setDateSeen}
               style={styles.input}
+              editable={false}
             />
           </View>
           <View style={styles.line}></View>

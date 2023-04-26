@@ -21,6 +21,8 @@
     "expo-google-app-auth": "~8.3.0",
     "expo-google-sign-in": "^11.0.0",
     "expo-image-picker": "^14.1.1",
+    "expo-notifications": "~0.18.1",
+    "expo-splash-screen": "~0.18.1",
     "expo-status-bar": "~1.4.4",
     "firebase": "^9.20.0",
     "moment": "^2.29.4",

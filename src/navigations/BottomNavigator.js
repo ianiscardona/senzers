@@ -30,10 +30,6 @@ const BottomNavigator = ({ user, onLogout }) => {
     });
   }, []);
 
-  useEffect(() => {
-    AsyncStorage.clear();
-  }, []);
-
   const hideTutorial = () => {
     setIsTutorialVisible(false);
   };

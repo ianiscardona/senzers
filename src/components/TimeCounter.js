@@ -1,20 +1,70 @@
 import { StyleSheet, Text, View } from "react-native";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import moment from "moment";
 import Colors from "../utilities/Colors";
+import { scheduleNotification } from "./Notification";
+import { db, firebase } from "../../firebase";
+import { collection, doc, setDoc, addDoc} from "firebase/firestore";
+
 
 const TimeCounter = ({
   parkedTime,
   isSensorActive,
   setParkedTime,
   setIsParkedTimeExpired,
+  setFormDate,
+  setIsSensorActive,
+  setIsImportantModalActive,
+  onReset,
 }) => {
   const [startTime, setStartTime] = useState(null);
+  const [detectedTime, setDetectedTime] = useState(null);
+  const intervalIdRef = useRef(null);
+  const timeoutIdRef = useRef(null);
+  // const [vehicleType, setVehicleType] = useState(null);
+  // const [plateNumber, setPlateNumber] = useState(null);
+  const [timeSeen, setTimeSeen] = useState("");
+  const [dateSeen, setDateSeen] = useState("");
+ 
+  // const user = firebase.auth().currentUser;
+  
+  const handleTimeout = useCallback(() => {
+    setIsParkedTimeExpired(true);
+    console.log("nice");
+    scheduleNotification(
+      {
+        title: "Check the location now!",
+        body: "Please confirm if Senzers has detected an illegally parked vehicle.",
+      },
+      {
+        seconds: 1,
+      }
+    );
+    // setTimeout(() => {
+    //   setIsSensorActive(false);
+    //   setIsImportantModalActive(true);
+    // }, 5000);
+  }, [setIsParkedTimeExpired, setIsSensorActive, setIsImportantModalActive]);
 
   useEffect(() => {
     if (isSensorActive) {
+      const formDateNow = moment();
       setStartTime(moment());
+      setFormDate(formDateNow);
+      setDetectedTime(formDateNow);
+      console.log(formDateNow);
+      console.log(detectedTime);
+      scheduleNotification(
+        {
+          title: "Vehicle Detected!",
+          body: "Please wait while senzers is active.",
+        },
+        {
+          seconds: 1,
+        }
+      );
     } else {
+      setFormDate(null);
       setStartTime(null);
       setParkedTime(moment.duration());
     }
@@ -22,21 +72,52 @@ const TimeCounter = ({
 
   useEffect(() => {
     if (startTime) {
-      const intervalId = setInterval(() => {
+      intervalIdRef.current = setInterval(() => {
         const duration = moment.duration(moment().diff(startTime));
         setParkedTime(duration);
       }, 1000);
-      const timeoutId = setTimeout(() => {
-        setIsParkedTimeExpired(true);
-        console.log("nice");
-      }, 5000);
+      timeoutIdRef.current = setTimeout(() => {
+        const detectedTime = moment();
+        setTimeSeen(detectedTime.format("hh:mm:ss"));
+        setDateSeen(detectedTime.format("MMMM Do YYYY"));
+        console.log(timeSeen);
+        console.log(detectedTime.format("hh:mm:ss"));
+        setIsSensorActive(false);
+        Create();
+      }, 10000);
+      timeoutIdRef.current = setTimeout(handleTimeout, 5000);
+  
       return () => {
-        clearInterval(intervalId);
-        clearTimeout(timeoutId);
+        clearInterval(intervalIdRef.current);
+        clearTimeout(timeoutIdRef.current);
       };
     }
-  }, [startTime, setParkedTime, setIsParkedTimeExpired]);
-  // 300000
+  }, [startTime, setParkedTime, handleTimeout, Create]);
+  
+  function Create() {
+    const user = firebase.auth().currentUser;
+    if (timeSeen && dateSeen && user) {
+      addDoc(collection(db, "detected"), {
+        // vehicleType: vehicleType,
+        // plateNumber: plateNumber,
+        timeSeen: timeSeen,
+        dateSeen: dateSeen,
+        UserID: user.uid,
+      })
+        .then(() => {
+          // Data saved successfully!
+          console.log("data submitted");
+        })
+        .catch((error) => {
+          // The write failed...
+          console.log(error);
+        });
+    } else {
+      console.log("Missing required data to create document");
+    }
+  }
+
+  // setIsSensorActive(false);
 
   const displayDuration = moment.duration(parkedTime);
   const hours = displayDuration.hours().toString().padStart(2, "0");
