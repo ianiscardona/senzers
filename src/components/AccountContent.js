@@ -1,9 +1,10 @@
-import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
+import { StyleSheet, Text, View, TouchableOpacity, Image } from "react-native";
 import React, { useEffect } from "react";
 import { useIsFocused } from "@react-navigation/native";
 import { FontAwesome5 } from "@expo/vector-icons";
 import { firebase } from "../../firebase";
 import DashboardScreen from "../screens/dashboard-screen";
+import Logos from "../utilities/Logos";
 
 const AccountContent = ({ navigation, route }) => {
   return (
@@ -44,8 +45,10 @@ const AccountContent = ({ navigation, route }) => {
           <FontAwesome5 name="angle-right" size={20} color="black" />
         </TouchableOpacity>
         <View style={styles.line} />
-        <TouchableOpacity style={styles.settingsChoicesContainer}
-            onPress= {() => firebase.auth().signOut()}>
+        <TouchableOpacity
+          style={styles.settingsChoicesContainer}
+          onPress={() => firebase.auth().signOut()}
+        >
           <View style={{ flexDirection: "row" }}>
             <FontAwesome5 name="door-open" size={20} color="black" />
             <Text style={styles.settingsChoicesTitle}>Logout</Text>
@@ -53,6 +56,15 @@ const AccountContent = ({ navigation, route }) => {
           <FontAwesome5 name="angle-right" size={20} color="black" />
         </TouchableOpacity>
         <View style={styles.line} />
+      </View>
+      <View style={styles.footer}>
+        <Image
+          source={Logos.SENZERS_LOGO_BLACK_MEDIUM}
+          style={{ width: 50, height: 50 }}
+        />
+        <Text style={styles.footerText}>
+          © 2023 Senzers. All Rights Reserved.
+        </Text>
       </View>
     </>
   );
@@ -82,5 +94,16 @@ const styles = StyleSheet.create({
     marginTop: 10,
     marginBottom: 10,
     width: "100%",
+  },
+  footer: {
+    marginBottom: 10,
+    justifyContent: "center",
+    alignItems: "center",
+    flexDirection: "column",
+  },
+  footerText: {
+    marginTop: 5,
+    fontSize: 16,
+    fontWeight: 600,
   },
 });
