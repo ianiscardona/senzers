@@ -4,8 +4,7 @@ import moment from "moment";
 import Colors from "../utilities/Colors";
 import { scheduleNotification } from "./Notification";
 import { db, firebase } from "../../firebase";
-import { collection, doc, setDoc, addDoc} from "firebase/firestore";
-
+import { collection, doc, setDoc, addDoc } from "firebase/firestore";
 
 const TimeCounter = ({
   parkedTime,
@@ -25,11 +24,12 @@ const TimeCounter = ({
   // const [plateNumber, setPlateNumber] = useState(null);
   const [timeSeen, setTimeSeen] = useState("");
   const [dateSeen, setDateSeen] = useState("");
- 
+
   // const user = firebase.auth().currentUser;
-  
+
   const handleTimeout = useCallback(() => {
     setIsParkedTimeExpired(true);
+    setIsImportantModalActive(true);
     console.log("nice");
     scheduleNotification(
       {
@@ -40,10 +40,10 @@ const TimeCounter = ({
         seconds: 1,
       }
     );
-    // setTimeout(() => {
-    //   setIsSensorActive(false);
-    //   setIsImportantModalActive(true);
-    // }, 5000);
+    if (!isSensorActive) {
+      setIsImportantModalActive(true);
+      onReset();
+    }
   }, [setIsParkedTimeExpired, setIsSensorActive, setIsImportantModalActive]);
 
   useEffect(() => {
@@ -79,24 +79,15 @@ const TimeCounter = ({
           onReset();
         }
       }, 1000);
-      timeoutIdRef.current = setTimeout(() => {
-        const detectedTime = moment();
-        setTimeSeen(detectedTime.format("hh:mm:ss"));
-        setDateSeen(detectedTime.format("MMMM Do YYYY"));
-        console.log(timeSeen);
-        console.log(detectedTime.format("hh:mm:ss"));
-        setIsSensorActive(false);
-        Create();
-      }, 10000);
-      timeoutIdRef.current = setTimeout(handleTimeout, 5000);
-  
+      timeoutIdRef.current = setTimeout(handleTimeout, 10000);
+
       return () => {
         clearInterval(intervalIdRef.current);
         clearTimeout(timeoutIdRef.current);
       };
     }
-  }, [startTime, setParkedTime, handleTimeout, Create]);
-  
+  }, [startTime, setParkedTime, handleTimeout]);
+
   function Create() {
     const user = firebase.auth().currentUser;
     if (timeSeen && dateSeen && user) {
