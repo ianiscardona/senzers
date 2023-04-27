@@ -1,8 +1,11 @@
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, View, Image } from "react-native";
 import React, { useState, useEffect } from "react";
 import BottomNavTopBar from "../components/BottomNavTopBar";
 import Colors from "../utilities/Colors";
+import homeScreen1 from "../../assets/images/home-screen-1.png";
+import homeScreen2 from "../../assets/images/home-screen-2.png";
 import { LinearGradient } from "expo-linear-gradient";
+import { ImageBackground } from "react-native";
 
 const HomeScreen = ({ navigation }) => {
   const [activeStatus, setActiveStatus] = useState(false);
@@ -21,56 +24,122 @@ const HomeScreen = ({ navigation }) => {
           </View>
         </View>
         <View style={styles.historyDisplay}>
-          <LinearGradient
-            colors={["rgba(255, 188, 0, 0.47)", "#ffeab180"]}
-            start={{ x: 0, y: 0 }}
-            end={{ x: 1, y: 0 }}
+          <ImageBackground
+            source={homeScreen1}
             style={styles.reportedContainer}
           >
-            <View style={styles.reportedInfoContainer}>
-              <Text style={{ fontSize: 16, fontWeight: 600 }}>Total Data</Text>
-              <View
-                style={{
-                  flexDirection: "row",
-                  justifyContent: "space-between",
-                }}
-              >
-                <View style={{ alignItems: "center" }}>
-                  <Text style={{ fontSize: 14 }}>Detected</Text>
-                  <Text style={{ fontSize: 30, fontWeight: 600 }}>24</Text>
-                </View>
-                <View style={{ alignItems: "center" }}>
-                  <Text style={{ fontSize: 14 }}>Detected</Text>
-                  <Text style={{ fontSize: 30, fontWeight: 600 }}>19</Text>
+            <LinearGradient
+              colors={["rgba(62, 62, 62, 0.76)", Colors.PRIMARY_YELLOW]}
+              start={{ x: 0, y: 0 }}
+              end={{ x: 1, y: 0 }}
+              style={{ flex: 1 }}
+            >
+              <View style={styles.reportedInfoContainer}>
+                <Text
+                  style={{
+                    fontSize: 16,
+                    fontWeight: 600,
+                    color: Colors.PRIMARY_WHITE,
+                  }}
+                >
+                  Total Data
+                </Text>
+                <View
+                  style={{
+                    flexDirection: "row",
+                    justifyContent: "space-between",
+                  }}
+                >
+                  <View style={{ alignItems: "center" }}>
+                    <Text style={{ fontSize: 14, color: Colors.PRIMARY_WHITE }}>
+                      Detected
+                    </Text>
+                    <Text
+                      style={{
+                        fontSize: 30,
+                        fontWeight: 600,
+                        color: Colors.PRIMARY_WHITE,
+                      }}
+                    >
+                      24
+                    </Text>
+                  </View>
+                  <View style={{ alignItems: "center" }}>
+                    <Text style={{ fontSize: 14, color: Colors.PRIMARY_WHITE }}>
+                      Detected
+                    </Text>
+                    <Text
+                      style={{
+                        fontSize: 30,
+                        fontWeight: 600,
+                        color: Colors.PRIMARY_WHITE,
+                      }}
+                    >
+                      19
+                    </Text>
+                  </View>
                 </View>
               </View>
-            </View>
-          </LinearGradient>
-          <LinearGradient
-            colors={["rgba(219, 48, 48, 0.47)", "#f2b6b6"]}
-            start={{ x: 0, y: 0 }}
-            end={{ x: 1, y: 0 }}
+            </LinearGradient>
+          </ImageBackground>
+          <ImageBackground
+            source={homeScreen2}
             style={styles.notificationContainer}
           >
-            <View style={styles.reportedInfoContainer}>
-              <Text style={{ fontSize: 16, fontWeight: 600 }}>Daily Data</Text>
-              <View
-                style={{
-                  flexDirection: "row",
-                  justifyContent: "space-between",
-                }}
-              >
-                <View style={{ alignItems: "center" }}>
-                  <Text style={{ fontSize: 14 }}>Detected</Text>
-                  <Text style={{ fontSize: 30, fontWeight: 600 }}>5</Text>
-                </View>
-                <View style={{ alignItems: "center" }}>
-                  <Text style={{ fontSize: 14 }}>Detected</Text>
-                  <Text style={{ fontSize: 30, fontWeight: 600 }}>3</Text>
+            <LinearGradient
+              colors={["rgba(62, 62, 62, 0.76)", Colors.PRIMARY_RED]}
+              start={{ x: 0, y: 0 }}
+              end={{ x: 1, y: 0 }}
+              style={{ flex: 1 }}
+            >
+              <View style={styles.reportedInfoContainer}>
+                <Text
+                  style={{
+                    fontSize: 16,
+                    fontWeight: 600,
+                    color: Colors.PRIMARY_WHITE,
+                  }}
+                >
+                  Daily Data
+                </Text>
+                <View
+                  style={{
+                    flexDirection: "row",
+                    justifyContent: "space-between",
+                  }}
+                >
+                  <View style={{ alignItems: "center" }}>
+                    <Text style={{ fontSize: 14, color: Colors.PRIMARY_WHITE }}>
+                      Detected
+                    </Text>
+                    <Text
+                      style={{
+                        fontSize: 30,
+                        fontWeight: 600,
+                        color: Colors.PRIMARY_WHITE,
+                      }}
+                    >
+                      5
+                    </Text>
+                  </View>
+                  <View style={{ alignItems: "center" }}>
+                    <Text style={{ fontSize: 14, color: Colors.PRIMARY_WHITE }}>
+                      Detected
+                    </Text>
+                    <Text
+                      style={{
+                        fontSize: 30,
+                        fontWeight: 600,
+                        color: Colors.PRIMARY_WHITE,
+                      }}
+                    >
+                      3
+                    </Text>
+                  </View>
                 </View>
               </View>
-            </View>
-          </LinearGradient>
+            </LinearGradient>
+          </ImageBackground>
         </View>
         <View style={styles.statusContainer}>
           <LinearGradient
@@ -137,9 +206,9 @@ const styles = StyleSheet.create({
     height: "100%",
     marginLeft: "4%",
     marginRight: "2%",
-    backgroundColor: Colors.FIELDS_GRAY,
     borderRadius: 20,
     overflow: "hidden",
+    position: "relative",
   },
   reportedInfoContainer: {
     justifyContent: "space-between",
