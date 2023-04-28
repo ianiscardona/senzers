@@ -11,6 +11,7 @@ const AlertScreen = ({ navigation }) => {
   const [selectedItem, setSelectedItem] = useState(null);
   const [alertVisible, setAlertVisible] = useState(true);
   const [count, setCount] = useState(0);
+  const [counts, setCounts] = useState(0);
 
   const getCount = async () => {
     const snapshot = await firebase.firestore().collection("reports").get();
@@ -20,6 +21,17 @@ const AlertScreen = ({ navigation }) => {
 
   useEffect(() => {
     getCount();
+  }, []);
+
+
+  const getCounts = async () => {
+    const snapshot = await firebase.firestore().collection("detected").get();
+    const counts = snapshot.size;
+    setCounts(counts);
+  };
+
+  useEffect(() => {
+    getCounts();
   }, []);
 
   const handleSelect = (item) => {
@@ -33,6 +45,7 @@ const AlertScreen = ({ navigation }) => {
         navigation={navigation}
         alertVisible={alertVisible}
         count={count}
+        counts={counts}
       />
       <View style={styles.content}>
         <View style={styles.contentContainer}>

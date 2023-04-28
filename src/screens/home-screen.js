@@ -6,9 +6,85 @@ import homeScreen1 from "../../assets/images/home-screen-1.png";
 import homeScreen2 from "../../assets/images/home-screen-2.png";
 import { LinearGradient } from "expo-linear-gradient";
 import { ImageBackground } from "react-native";
+import {firebase} from "../../firebase";
+import { parse, format } from 'date-fns';
 
 const HomeScreen = ({ navigation }) => {
   const [activeStatus, setActiveStatus] = useState(false);
+  const [data, setData] = useState([]);
+  const [count, setCount] = useState(0);
+  const [counts, setCounts] = useState(0);
+
+  useEffect(() => {
+    const db = firebase.firestore();
+    const currentUser = firebase.auth().currentUser;
+  
+    if (currentUser) {
+      const unsubscribe = db
+        .collection("detected")
+        .where("UserID", "==", currentUser.uid)
+        .onSnapshot((querySnapshot) => {
+          const items = [];
+          querySnapshot.forEach((doc) => {
+            const data = doc.data();
+            items.push({
+              dateSeen: data.dateSeen,
+              timeSeen: data.timeSeen,
+            });
+          });
+  
+          // Group the data by 3-hour intervals
+          const groupedData = items.reduce((acc, item) => {
+            const interval = Math.floor(parseInt(item.timeSeen) / 3);
+            acc[interval] = (acc[interval] || 0) + 1;
+            return acc;
+          }, {});
+  
+          console.log("Data grouped by 3-hour intervals:", groupedData);
+        });
+  
+      return () => unsubscribe();
+    }
+  }, []);
+
+  const getCount = async () => {
+    const snapshot = await firebase.firestore().collection("detected").get();
+    const count = snapshot.size;
+    setCount(count);
+    console.log ("Count:", count);
+  };
+
+  useEffect(() => {
+    getCount();
+  }, []);
+
+  const getCounts = async () => {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0); // set time to start of the day
+  
+    const snapshot = await firebase.firestore()
+      .collection("detected")
+      .get();
+  
+    let counts = 0;
+  
+    snapshot.forEach((doc) => {
+      const dateSeenStr = doc.data().dateSeen;
+      const dateSeen = parse(dateSeenStr, 'MMMM do yyyy', new Date());
+  
+      if (format(dateSeen, 'yyyy-MM-dd') === format(today, 'yyyy-MM-dd')) {
+        counts++;
+      }
+    });
+  
+    console.log("Count:", counts);
+    setCounts(counts);
+  };
+  
+  useEffect(() => {
+    getCounts();
+  }, []);
+  
 
   useEffect(() => {
     console.log(`activeStatus changed to ${activeStatus}`);
@@ -61,7 +137,7 @@ const HomeScreen = ({ navigation }) => {
                         color: Colors.PRIMARY_WHITE,
                       }}
                     >
-                      24
+                      {count}
                     </Text>
                   </View>
                   <View style={{ alignItems: "center" }}>
@@ -75,7 +151,7 @@ const HomeScreen = ({ navigation }) => {
                         color: Colors.PRIMARY_WHITE,
                       }}
                     >
-                      19
+                      {count}
                     </Text>
                   </View>
                 </View>
@@ -119,7 +195,7 @@ const HomeScreen = ({ navigation }) => {
                         color: Colors.PRIMARY_WHITE,
                       }}
                     >
-                      5
+                      {counts}
                     </Text>
                   </View>
                   <View style={{ alignItems: "center" }}>
@@ -133,7 +209,7 @@ const HomeScreen = ({ navigation }) => {
                         color: Colors.PRIMARY_WHITE,
                       }}
                     >
-                      3
+                      {counts}
                     </Text>
                   </View>
                 </View>

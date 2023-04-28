@@ -59,8 +59,8 @@ function AddUser () {
     lastName: lastName,
     phoneNumber: phoneNumber,
     address: address,
-    createdAt: firebase.firestore.FieldValue.serverTimestamp()
-    // CreatedAt: firestore.Timestamp.fromDate(new Date())
+    createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+    userId: user.uid
   };
   setDoc(docRef, data)
     .then(() => {
