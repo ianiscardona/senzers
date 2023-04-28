@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, ScrollView } from "react-native";
 import { firebase } from "../../firebase";
 import NotificationCard from "../components/NotificationCard";
 
@@ -8,30 +8,26 @@ const NotificationData = () => {
 
   useEffect(() => {
     const db = firebase.firestore();
-    const currentUser = firebase.auth().currentUser;
-
-    if (currentUser) {
-      const unsubscribe = db
-        .collection("detected")
-        .where("UserID", "==", currentUser.uid)
-        .onSnapshot((querySnapshot) => {
-          const items = [];
-          querySnapshot.forEach((doc) => {
-            const data = doc.data();
-            items.push({
-              dateSeen: data.dateSeen,
-              timeSeen: data.timeSeen,
-            });
+    const unsubscribe = db
+      .collection("detected")
+      .orderBy("dateSeen", "desc")
+      .onSnapshot((querySnapshot) => {
+        const items = [];
+        querySnapshot.forEach((doc) => {
+          const data = doc.data();
+          items.push({
+            dateSeen: data.dateSeen,
+            timeSeen: data.timeSeen,
           });
-          setData(items);
-          console.log("Data from Firestore:", items);
         });
-      return () => unsubscribe();
-    }
+        setData(items);
+        console.log("Data from Firestore:", items);
+      });
+    return () => unsubscribe();
   }, []);
 
   return (
-    <View style={styles.container}>
+    <ScrollView style={styles.container}>
       {data.map((item, index) => (
         <NotificationCard
           key={index}
@@ -39,7 +35,7 @@ const NotificationData = () => {
           timeSeen={item.timeSeen}
         />
       ))}
-    </View>
+    </ScrollView>
   );
 };
 

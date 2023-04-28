@@ -11,11 +11,10 @@ import * as Notifications from "expo-notifications";
 function useHasCompletedWalkthrough() {
   const [hasCompletedWalkthrough, setHasCompletedWalkthrough] = useState(false);
 
-  useEffect(() => {
-    AsyncStorage.clear();
-  }, []);
+  // useEffect(() => {
+  //   AsyncStorage.clear();
+  // }, []);
 
-  
   useEffect(() => {
     Notifications.setNotificationHandler({
       handleNotification: async () => ({

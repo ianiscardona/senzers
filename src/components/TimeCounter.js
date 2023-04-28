@@ -29,7 +29,6 @@ const TimeCounter = ({
 
   const handleTimeout = useCallback(() => {
     setIsParkedTimeExpired(true);
-    setIsImportantModalActive(true);
     console.log("nice");
     scheduleNotification(
       {
@@ -44,7 +43,12 @@ const TimeCounter = ({
       setIsImportantModalActive(true);
       onReset();
     }
-  }, [setIsParkedTimeExpired, setIsSensorActive, setIsImportantModalActive]);
+  }, [
+    setIsParkedTimeExpired,
+    setIsSensorActive,
+    setIsImportantModalActive,
+    isSensorActive,
+  ]);
 
   useEffect(() => {
     if (isSensorActive) {
@@ -89,7 +93,6 @@ const TimeCounter = ({
       //   // Create();
       // }, 10000);
       // timeoutIdRef.current = setTimeout(handleTimeout, 5000);
-  
       timeoutIdRef.current = setTimeout(handleTimeout, 10000);
 
       return () => {

@@ -11,11 +11,16 @@ import React from "react";
 import { useState, useEffect } from "react";
 import { FontAwesome5 } from "@expo/vector-icons";
 import { firestore } from "firebase/firestore";
-import { collection, doc, setDoc, addDoc, update, Timestamp} from "firebase/firestore";
+import {
+  collection,
+  doc,
+  setDoc,
+  addDoc,
+  update,
+  Timestamp,
+} from "firebase/firestore";
 import { storage } from "firebase/storage";
-import {firebase} from "../../firebase";
-
-
+import { firebase } from "../../firebase";
 
 import CustomButton from "./CustomButton";
 
@@ -26,13 +31,16 @@ const EditProfileContent = ({ navigation }) => {
     const user = firebase.auth().currentUser;
     const db = firebase.firestore();
 
-    const unsubscribe = db.collection('NewUsers').doc(user.uid).onSnapshot(doc => {
-      if (doc.exists) {
-        setUserData(doc.data());
-      } else {
-        console.log('No user data available');
-      }
-    });
+    const unsubscribe = db
+      .collection("NewUsers")
+      .doc(user.uid)
+      .onSnapshot((doc) => {
+        if (doc.exists) {
+          setUserData(doc.data());
+        } else {
+          console.log("No user data available");
+        }
+      });
 
     return () => unsubscribe();
   }, []);
@@ -42,23 +50,29 @@ const EditProfileContent = ({ navigation }) => {
     const db = firebase.firestore();
 
     try {
-      await db.collection('NewUsers').doc(user.uid).update({
+      await db.collection("NewUsers").doc(user.uid).update({
         firstName: userData.firstName,
         lastName: userData.lastName,
         phoneNumber: userData.phoneNumber,
         address: userData.address,
-        updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+        updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
       });
-      console.log('User updated successfully!');
-      Alert.alert('Profile Updated!', 'Your profile has been updated successfully.');
+      console.log("User updated successfully!");
+      Alert.alert(
+        "Profile Updated!",
+        "Your profile has been updated successfully."
+      );
     } catch (error) {
-      console.error('Error updating user:', error);
-      Alert.alert('Error', 'There was an error updating your profile. Please try again later.');
+      console.error("Error updating user:", error);
+      Alert.alert(
+        "Error",
+        "There was an error updating your profile. Please try again later."
+      );
     }
   };
 
   const handleInputChange = (field, value) => {
-    setUserData(prevUserData => ({ ...prevUserData, [field]: value }));
+    setUserData((prevUserData) => ({ ...prevUserData, [field]: value }));
   };
 
   return (
@@ -85,20 +99,19 @@ const EditProfileContent = ({ navigation }) => {
         <View>
           <Text style={{ fontWeight: 600, marginBottom: 5 }}>First Name</Text>
           <TextInput
-            value={userData?.firstName || ''}
-            onChangeText={text => handleInputChange('firstName', text)}
+            value={userData?.firstName || ""}
+            placeholder="Juan"
+            onChangeText={(text) => handleInputChange("firstName", text)}
             placeholderTextColor="black"
-            placeholder="first name"
             style={[styles.contentInput, { fontStyle: "italic" }]}
           />
         </View>
-
         <View>
           <Text style={{ fontWeight: 600, marginBottom: 5 }}>Last Name</Text>
           <TextInput
             placeholder="Dela Cruz"
-            value={userData?.lastName || ''}
-           onChangeText={text => handleInputChange('lastName', text)}
+            value={userData?.lastName || ""}
+            onChangeText={(text) => handleInputChange("lastName", text)}
             placeholderTextColor="black"
             style={[styles.contentInput, { fontStyle: "italic" }]}
           />
@@ -107,8 +120,8 @@ const EditProfileContent = ({ navigation }) => {
           <Text style={{ fontWeight: 600, marginBottom: 5 }}>Phone Number</Text>
           <TextInput
             placeholder="+63 912 345 6789"
-            value={userData?.phoneNumber || ''}
-            onChangeText={text => handleInputChange('phoneNumber', text)}
+            value={userData?.phoneNumber || ""}
+            onChangeText={(text) => handleInputChange("phoneNumber", text)}
             placeholderTextColor="black"
             style={[styles.contentInput, { fontStyle: "italic" }]}
             keyboardType="numeric"
@@ -118,8 +131,8 @@ const EditProfileContent = ({ navigation }) => {
           <Text style={{ fontWeight: 600, marginBottom: 5 }}>Address</Text>
           <TextInput
             placeholder="123 Wagas St. Tondo, Manila"
-            value={userData?.address || ''}
-            onChangeText={text => handleInputChange('address', text)}
+            value={userData?.address || ""}
+            onChangeText={(text) => handleInputChange("address", text)}
             placeholderTextColor="black"
             style={[styles.contentInput, { fontStyle: "italic" }]}
           />
