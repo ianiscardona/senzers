@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, View, ScrollView } from "react-native";
 import React, { useState, useEffect } from "react";
 import { FontAwesome5 } from "@expo/vector-icons";
 import { firebase } from "../../firebase";
@@ -34,7 +34,7 @@ const NotificationCard = ({ index, dateSeen, timeSeen }) => {
   }, []);
 
   return (
-    <View style={styles.cardContainer}>
+    <ScrollView contentContainerStyle={styles.cardContainer}>
       {data.map((item, index) => (
         <View style={styles.card} key={index}>
           <FontAwesome5
@@ -51,7 +51,7 @@ const NotificationCard = ({ index, dateSeen, timeSeen }) => {
           </View>
         </View>
       ))}
-    </View>
+    </ScrollView>
   );
 };
 
@@ -61,8 +61,8 @@ const styles = StyleSheet.create({
   cardContainer: {
     marginTop: 10,
     marginBottom: 10,
-    // marginLeft: 10,
-    // marginRight: 10,
+    marginLeft: 10,
+    marginRight: 10,
   },
   card: {
     flexDirection: "row",
