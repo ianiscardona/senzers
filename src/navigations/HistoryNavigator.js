@@ -9,7 +9,7 @@ const HistoryTab = createStackNavigator();
 const HistoryNavigator = () => {
   return (
     <HistoryTab.Navigator
-      sceneContainerStyle={{ backgroundColor: "transparent" }}
+      sceneContainerStyle={{ backgroundColor: "white" }}
       screenOptions={{
         headerShown: false,
       }}

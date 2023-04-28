@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, Image } from "react-native";
+import { StyleSheet, Text, View, Dimensions } from "react-native";
 import React, { useState, useEffect } from "react";
 import BottomNavTopBar from "../components/BottomNavTopBar";
 import Colors from "../utilities/Colors";
@@ -6,19 +6,39 @@ import homeScreen1 from "../../assets/images/home-screen-1.png";
 import homeScreen2 from "../../assets/images/home-screen-2.png";
 import { LinearGradient } from "expo-linear-gradient";
 import { ImageBackground } from "react-native";
-import {firebase} from "../../firebase";
-import { parse, format } from 'date-fns';
+import { firebase } from "../../firebase";
+import { LineChart } from "react-native-chart-kit";
+import { parse, format } from "date-fns";
 
 const HomeScreen = ({ navigation }) => {
   const [activeStatus, setActiveStatus] = useState(false);
   const [data, setData] = useState([]);
-  const [count, setCount] = useState(0);
-  const [counts, setCounts] = useState(0);
+  const [overallCount, setOverallCount] = useState(0);
+  const [currentDateCount, setcurrentDateCount] = useState(0);
+  useEffect(() => {
+    const db = firebase.database();
+    // Listen for the latest data on the "magnetometer" node
+    db.ref("/magnetometer")
+      .orderByChild("createAt")
+      .limitToLast(1)
+      .on("value", (snapshot) => {
+        const data = snapshot.val();
+        if (data) {
+          // Get the latest data object
+          const latestData = Object.values(data)[0];
+          console.log("Latest data:", latestData);
+          // Get the value of the "status" field (assuming it's a boolean)
+          const status = latestData.status;
+          console.log(`Latest status: ${status}`);
+          setActiveStatus(status);
+        }
+      });
+  }, []);
 
   useEffect(() => {
     const db = firebase.firestore();
     const currentUser = firebase.auth().currentUser;
-  
+
     if (currentUser) {
       const unsubscribe = db
         .collection("detected")
@@ -32,63 +52,56 @@ const HomeScreen = ({ navigation }) => {
               timeSeen: data.timeSeen,
             });
           });
-  
+
           // Group the data by 3-hour intervals
           const groupedData = items.reduce((acc, item) => {
             const interval = Math.floor(parseInt(item.timeSeen) / 3);
             acc[interval] = (acc[interval] || 0) + 1;
             return acc;
           }, {});
-  
+
           console.log("Data grouped by 3-hour intervals:", groupedData);
         });
-  
+
       return () => unsubscribe();
     }
   }, []);
 
-  const getCount = async () => {
+  const getOverallCount = async () => {
     const snapshot = await firebase.firestore().collection("detected").get();
-    const count = snapshot.size;
-    setCount(count);
-    console.log ("Count:", count);
+    const overallCount = snapshot.size;
+    setOverallCount(overallCount);
+    console.log("Count:", overallCount);
   };
 
   useEffect(() => {
-    getCount();
+    getOverallCount();
   }, []);
 
-  const getCounts = async () => {
+  const getcurrentDateCount = async () => {
     const today = new Date();
     today.setHours(0, 0, 0, 0); // set time to start of the day
-  
-    const snapshot = await firebase.firestore()
-      .collection("detected")
-      .get();
-  
-    let counts = 0;
-  
+
+    const snapshot = await firebase.firestore().collection("detected").get();
+
+    let currentDateCount = 0;
+
     snapshot.forEach((doc) => {
       const dateSeenStr = doc.data().dateSeen;
-      const dateSeen = parse(dateSeenStr, 'MMMM do yyyy', new Date());
-  
-      if (format(dateSeen, 'yyyy-MM-dd') === format(today, 'yyyy-MM-dd')) {
-        counts++;
+      const dateSeen = parse(dateSeenStr, "MMMM do yyyy", new Date());
+
+      if (format(dateSeen, "yyyy-MM-dd") === format(today, "yyyy-MM-dd")) {
+        currentDateCount++;
       }
     });
-  
-    console.log("Count:", counts);
-    setCounts(counts);
+
+    console.log("Count:", currentDateCount);
+    setcurrentDateCount(currentDateCount);
   };
-  
-  useEffect(() => {
-    getCounts();
-  }, []);
-  
 
   useEffect(() => {
-    console.log(`activeStatus changed to ${activeStatus}`);
-  }, [activeStatus]);
+    getcurrentDateCount();
+  }, []);
 
   return (
     <View style={styles.container}>
@@ -96,9 +109,31 @@ const HomeScreen = ({ navigation }) => {
       <View style={styles.context}>
         <View style={styles.graphContainer}>
           <View style={styles.graphDisplay}>
-            <Text>__/\___|</Text>
+            <LineChart
+              data={{
+                labels: ["Overall", "Current Date"],
+                datasets: [
+                  {
+                    data: [overallCount, currentDateCount],
+                  },
+                ],
+              }}
+              width={Dimensions.get("window").width - 40}
+              height={200}
+              chartConfig={{
+                backgroundColor: "#ffffff",
+                backgroundGradientFrom: "#ffffff",
+                backgroundGradientTo: "#ffffff",
+                decimalPlaces: 0,
+                color: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
+                labelColor: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
+              }}
+              bezier
+              style={styles.graph}
+            />
           </View>
         </View>
+
         <View style={styles.historyDisplay}>
           <ImageBackground
             source={homeScreen1}
@@ -137,7 +172,7 @@ const HomeScreen = ({ navigation }) => {
                         color: Colors.PRIMARY_WHITE,
                       }}
                     >
-                      {count}
+                      {overallCount}
                     </Text>
                   </View>
                   <View style={{ alignItems: "center" }}>
@@ -151,7 +186,7 @@ const HomeScreen = ({ navigation }) => {
                         color: Colors.PRIMARY_WHITE,
                       }}
                     >
-                      {count}
+                      {overallCount}
                     </Text>
                   </View>
                 </View>
@@ -195,7 +230,7 @@ const HomeScreen = ({ navigation }) => {
                         color: Colors.PRIMARY_WHITE,
                       }}
                     >
-                      {counts}
+                      {currentDateCount}
                     </Text>
                   </View>
                   <View style={{ alignItems: "center" }}>
@@ -209,7 +244,7 @@ const HomeScreen = ({ navigation }) => {
                         color: Colors.PRIMARY_WHITE,
                       }}
                     >
-                      {counts}
+                      {currentDateCount}
                     </Text>
                   </View>
                 </View>
@@ -265,6 +300,10 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.FIELDS_GRAY,
     borderRadius: 20,
     overflow: "hidden",
+  },
+  graph: {
+    marginVertical: 8,
+    borderRadius: 16,
   },
   historyDisplay: {
     flex: 1,
