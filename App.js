@@ -12,6 +12,11 @@ function useHasCompletedWalkthrough() {
   const [hasCompletedWalkthrough, setHasCompletedWalkthrough] = useState(false);
 
   useEffect(() => {
+    AsyncStorage.clear();
+  }, []);
+
+  
+  useEffect(() => {
     Notifications.setNotificationHandler({
       handleNotification: async () => ({
         shouldShowAlert: true,

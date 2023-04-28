@@ -1,42 +1,64 @@
+import React, { useState, useEffect } from "react";
 import { StyleSheet, Text, View } from "react-native";
-import React from "react";
+import { firebase } from "../../firebase";
 import { FontAwesome5 } from "@expo/vector-icons";
 
-const HistoryCard = () => {
+const HistoryCard = ({ data }) => {
   return (
     <View style={styles.container}>
-      <FontAwesome5
-        name="road"
-        size={30}
-        color="black"
-        style={{ marginRight: 15 }}
-      />
+      <View style={styles.iconContainer}>
+        <View style={styles.iconCircle}>
+          <View style={styles.iconSquare}></View>
+        </View>
+      </View>
       <View>
         <Text style={styles.historyText}>
-          Vehicle Illegaly Parked was Reported
+          Vehicle Illegally Parked was Reported
         </Text>
-        <Text style={styles.historyHour}>2h ago</Text>
+        <Text style={styles.historyDate}>{data.dateSeen}</Text>
+        <Text style={styles.historyTime}>{data.timeSeen} ago</Text>
       </View>
     </View>
   );
 };
 
-export default HistoryCard;
-
 const styles = StyleSheet.create({
   container: {
     flexDirection: "row",
-    height: 60,
+    height: 80,
     width: "100%",
     alignItems: "center",
+    backgroundColor: "white",
+    paddingHorizontal: 20,
+  },
+  iconContainer: {
+    marginRight: 20,
+  },
+  iconCircle: {
+    height: 40,
+    width: 40,
+    borderRadius: 20,
+    backgroundColor: "#00BFFF",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  iconSquare: {
+    height: 20,
+    width: 4,
     backgroundColor: "white",
   },
   historyText: {
     fontSize: 16,
     fontWeight: "bold",
+    marginBottom: 5,
   },
-  historyHour: {
+  historyDate: {
+    color: "grey",
+    marginBottom: 3,
+  },
+  historyTime: {
     color: "lightgrey",
-    fontWeight: "bold",
   },
 });
+
+export default HistoryCard;

@@ -1,0 +1,23 @@
+{
+  "indexes": [
+    {
+      "collectionGroup": "detected",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "UserID",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "timeSeen",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "dateSeen",
+          "order": "ASCENDING"
+        }
+      ]
+    }
+  ],
+  "fieldOverrides": []
+}

@@ -15,7 +15,7 @@ import Colors from "../utilities/Colors";
 import { firebase } from "../../firebase";
 import { LinearGradient } from "expo-linear-gradient";
 
-const BottomNavTopBar = ({ topBarTitle, navigation, alertVisible, count }) => {
+const BottomNavTopBar = ({ topBarTitle, navigation, alertVisible, count, counts }) => {
   const [imageUrl, setImageUrl] = useState(null);
   const [dateTime, setDateTime] = useState(moment());
   useEffect(() => {
@@ -81,7 +81,7 @@ const BottomNavTopBar = ({ topBarTitle, navigation, alertVisible, count }) => {
         >
           <View style={styles.alertSummaryContent}>
             <Text style={styles.alertSummaryText}>
-              Vehicle Detected: <Text style={{ fontWeight: 600 }}>{count}</Text>
+              Vehicle Detected: <Text style={{ fontWeight: 600 }}>{counts}</Text>
             </Text>
             <Text style={styles.alertSummaryText}>
               Vehicle Reported: <Text style={{ fontWeight: 600 }}>{count}</Text>

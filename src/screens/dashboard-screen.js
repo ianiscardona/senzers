@@ -11,8 +11,10 @@ import SensorStatusText from "../components/SensorStatusText";
 import ImportantModal from "../components/ImportantModal";
 import Colors from "../utilities/Colors";
 import { requestNotificationPermission } from "../components/Notification";
-import { firebase } from "../../firebase";
-import "firebase/database";
+import {firebase} from "../../firebase";
+import {Database} from 'firebase/compat/database';
+// import { Database } from "firebase/database";
+
 
 const DashboardScreen = ({ navigation, route }) => {
   const [isSensorActive, setIsSensorActive] = useState(false);
@@ -24,6 +26,58 @@ const DashboardScreen = ({ navigation, route }) => {
   const [isImportantModalActive, setIsImportantModalActive] = useState(false);
   const [rippleColor, setRippleColor] = useState(Colors.PRIMARY_YELLOW);
 
+  // useEffect(() => {
+  // firebase.database().ref('/status').on('magnetometer', (snapshot) => {
+  //   const data = snapshot.val();
+  //   setIsSensorActive(data);
+    
+  // })
+  // }, []);
+
+  // useEffect(() => {
+  //   firebase.database().ref('/magnetometer').orderByChild('createdAt').limitToLast(1).on('value', (snapshot) => {
+  //     snapshot.forEach((data) => {
+  //       const status = data.child('status').val();
+  //       console.log(status);
+  //     });
+  //   });
+  // }, []);
+
+  useEffect(() => {
+    const db = firebase.database();
+    // Listen for the latest data on the "magnetometer" node
+    db.ref('/magnetometer').orderByChild('createdAt').limitToLast(1).on('value', (snapshot) => {
+      const data = snapshot.val();
+      if (data) {
+        // Get the latest data object
+        const latestData = Object.values(data)[0];
+        console.log('Latest data:', latestData);
+        // Get the value of the "status" field (assuming it's a boolean)
+        const status = latestData.status;
+        console.log(`Latest status: ${status}`);
+        setIsSensorActive(status); // Move this line inside the `if (data)` block
+      }
+    });
+  }, []);
+  
+
+//     useEffect(() => {
+//     setIsSensorActive();
+//   }, []);
+//   const db = firebase.database();
+// // Listen for the latest data on the "magnetometer" node
+// db.ref('/magnetometer').orderByChild('createdAt').limitToLast(1).on('value', (snapshot) => {
+//   const data = snapshot.val();
+//   if (data) {
+//     // Get the latest data object
+//     const latestData = Object.values(data)[0];
+//     console.log('Latest data:', latestData);
+//     // Get the value of the "status" field (assuming it's a boolean)
+//     const status = latestData.status;
+//     console.log(`Latest status: ${status}`);
+//   }
+// });
+  
   const handleClose = () => {
     setIsParkedTimeExpired(false);
   };
