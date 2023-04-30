@@ -9,12 +9,8 @@ const RippleEffect = ({ isSensorActive, setRippleColor, rippleColor }) => {
   useEffect(() => {
     if (isSensorActive === true) {
       setRippleColor("red");
-      console.log(rippleColor);
-      console.log(isSensorActive);
     } else if (isSensorActive === false) {
       setRippleColor(Colors.PRIMARY_YELLOW);
-      console.log(rippleColor);
-      console.log(isSensorActive);
     }
   });
 

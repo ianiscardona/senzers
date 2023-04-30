@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, Dimensions } from "react-native";
+import { StyleSheet, Text, View, Dimensions, Touchable } from "react-native";
 import React, { useState, useEffect } from "react";
 import BottomNavTopBar from "../components/BottomNavTopBar";
 import Colors from "../utilities/Colors";
@@ -8,26 +8,30 @@ import { LinearGradient } from "expo-linear-gradient";
 import { ImageBackground } from "react-native";
 import { firebase } from "../../firebase";
 import { LineChart } from "react-native-chart-kit";
-import { parse, format } from "date-fns";
+import moment from "moment";
+import { TouchableOpacity } from "react-native-gesture-handler";
+import { FontAwesome5 } from "@expo/vector-icons";
 
 const HomeScreen = ({ navigation }) => {
   const [activeStatus, setActiveStatus] = useState(false);
-  const [data, setData] = useState([]);
   const [overallCount, setOverallCount] = useState(0);
-  const [currentDateCount, setcurrentDateCount] = useState(0);
+  const [overallReported, setOverallReported] = useState(0);
+  const [overallDates, setOverallDates] = useState([0]);
+  const [dailyReported, setDailyReported] = useState([0]);
+  const [dailyCount, setDailyCount] = useState([0]);
+  const [uniqueDates, setUniqueDates] = useState([0]);
+  const windowWidth = Dimensions.get("window").width;
+  const windowHeight = Dimensions.get("window").height;
   useEffect(() => {
     const db = firebase.database();
-    // Listen for the latest data on the "magnetometer" node
     db.ref("/magnetometer")
       .orderByChild("createAt")
       .limitToLast(1)
       .on("value", (snapshot) => {
         const data = snapshot.val();
         if (data) {
-          // Get the latest data object
           const latestData = Object.values(data)[0];
           console.log("Latest data:", latestData);
-          // Get the value of the "status" field (assuming it's a boolean)
           const status = latestData.status;
           console.log(`Latest status: ${status}`);
           setActiveStatus(status);
@@ -35,73 +39,79 @@ const HomeScreen = ({ navigation }) => {
       });
   }, []);
 
-  useEffect(() => {
-    const db = firebase.firestore();
-    const currentUser = firebase.auth().currentUser;
-
-    if (currentUser) {
-      const unsubscribe = db
-        .collection("detected")
-        .where("UserID", "==", currentUser.uid)
-        .onSnapshot((querySnapshot) => {
-          const items = [];
-          querySnapshot.forEach((doc) => {
-            const data = doc.data();
-            items.push({
-              dateSeen: data.dateSeen,
-              timeSeen: data.timeSeen,
-            });
-          });
-
-          // Group the data by 3-hour intervals
-          const groupedData = items.reduce((acc, item) => {
-            const interval = Math.floor(parseInt(item.timeSeen) / 3);
-            acc[interval] = (acc[interval] || 0) + 1;
-            return acc;
-          }, {});
-
-          console.log("Data grouped by 3-hour intervals:", groupedData);
-        });
-
-      return () => unsubscribe();
-    }
-  }, []);
-
   const getOverallCount = async () => {
     const snapshot = await firebase.firestore().collection("detected").get();
     const overallCount = snapshot.size;
     setOverallCount(overallCount);
-    console.log("Count:", overallCount);
+  };
+  const getOverallReported = async () => {
+    const snapshot = await firebase.firestore().collection("reports").get();
+    const overallCount = snapshot.size;
+    setOverallReported(overallCount);
+  };
+  const getDailyCount = async () => {
+    const snapshot = await firebase.firestore().collection("detected").get();
+    const docs = snapshot.docs.map((doc) => doc.data());
+    const dates = docs.map((doc) => doc.dateSeen);
+    const formattedDates = dates.map((date) => {
+      const momentDate = moment(date, "MMMM Do YYYY");
+      return momentDate.format("MM/DD/YY");
+    });
+
+    const uniqueDates = [...new Set(formattedDates)];
+    const dailyCounts = uniqueDates.map(
+      (date) =>
+        docs.filter(
+          (doc) =>
+            moment(doc.dateSeen, "MMMM Do YYYY").format("MM/DD/YY") === date
+        ).length
+    );
+
+    setUniqueDates(uniqueDates);
+    setDailyCount(dailyCounts);
+  };
+
+  const getDailyReported = async () => {
+    const snapshot = await firebase.firestore().collection("reports").get();
+    const docs = snapshot.docs.map((doc) => doc.data());
+    const dates = docs.map((doc) => doc.dateSeen);
+    const formattedDates = dates.map((date) => {
+      const momentDate = moment(date, "MMMM Do YYYY");
+      return momentDate.format("MM/DD/YY");
+    });
+
+    const uniqueDates = [...new Set(formattedDates)];
+    const dailyCounts = uniqueDates.map(
+      (date) =>
+        docs.filter(
+          (doc) =>
+            moment(doc.dateSeen, "MMMM Do YYYY").format("MM/DD/YY") === date
+        ).length
+    );
+
+    setOverallDates(uniqueDates);
+    setDailyReported(dailyCounts);
   };
 
   useEffect(() => {
     getOverallCount();
+    getOverallReported();
+    getDailyCount();
+    getDailyReported();
   }, []);
 
-  const getcurrentDateCount = async () => {
-    const today = new Date();
-    today.setHours(0, 0, 0, 0); // set time to start of the day
+  const [useOverallData, setUseOverallData] = useState(false);
 
-    const snapshot = await firebase.firestore().collection("detected").get();
-
-    let currentDateCount = 0;
-
-    snapshot.forEach((doc) => {
-      const dateSeenStr = doc.data().dateSeen;
-      const dateSeen = parse(dateSeenStr, "MMMM do yyyy", new Date());
-
-      if (format(dateSeen, "yyyy-MM-dd") === format(today, "yyyy-MM-dd")) {
-        currentDateCount++;
-      }
-    });
-
-    console.log("Count:", currentDateCount);
-    setcurrentDateCount(currentDateCount);
+  const handleDataChange = () => {
+    setUseOverallData(!useOverallData);
   };
 
-  useEffect(() => {
-    getcurrentDateCount();
-  }, []);
+  const dates = useOverallData
+    ? [...overallDates].reverse().slice(1, 5)
+    : [...uniqueDates].reverse().slice(1, 5);
+  const counts = useOverallData
+    ? [...dailyReported].reverse().slice(1, 5)
+    : [0, ...dailyCount].reverse().slice(1, 5);
 
   return (
     <View style={styles.container}>
@@ -109,27 +119,48 @@ const HomeScreen = ({ navigation }) => {
       <View style={styles.context}>
         <View style={styles.graphContainer}>
           <View style={styles.graphDisplay}>
+            <TouchableOpacity
+              onPress={handleDataChange}
+              style={{
+                flexDirection: "row",
+                alignItems: "center",
+                marginVertical: 5,
+              }}
+            >
+              <Text style={styles.graphText}>
+                {useOverallData ? "Daily Reported" : "Daily Detected"}
+              </Text>
+              <FontAwesome5
+                name="exchange-alt"
+                size={15}
+                color="black"
+                style={{ marginLeft: 10 }}
+              />
+            </TouchableOpacity>
             <LineChart
               data={{
-                labels: ["Overall", "Current Date"],
+                labels: dates,
                 datasets: [
                   {
-                    data: [overallCount, currentDateCount],
+                    data: counts,
                   },
                 ],
               }}
-              width={Dimensions.get("window").width - 40}
-              height={200}
+              width={windowWidth - 40}
+              height={windowHeight * 0.27}
               chartConfig={{
-                backgroundColor: "#ffffff",
-                backgroundGradientFrom: "#ffffff",
-                backgroundGradientTo: "#ffffff",
+                backgroundColor: "#fff",
+                backgroundGradientFrom: "#fff",
+                backgroundGradientTo: "#fff",
                 decimalPlaces: 0,
-                color: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
+                color: (opacity = 1) => Colors.PRIMARY_YELLOW,
                 labelColor: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
+                strokeWidth: 2,
+                propsForDots: { r: "0" },
               }}
               bezier
-              style={styles.graph}
+              style={{ flex: 1, borderRadius: 20, left: -20 }}
+              withVerticalLines={false}
             />
           </View>
         </View>
@@ -177,7 +208,7 @@ const HomeScreen = ({ navigation }) => {
                   </View>
                   <View style={{ alignItems: "center" }}>
                     <Text style={{ fontSize: 14, color: Colors.PRIMARY_WHITE }}>
-                      Detected
+                      Reported
                     </Text>
                     <Text
                       style={{
@@ -186,7 +217,7 @@ const HomeScreen = ({ navigation }) => {
                         color: Colors.PRIMARY_WHITE,
                       }}
                     >
-                      {overallCount}
+                      {overallReported}
                     </Text>
                   </View>
                 </View>
@@ -230,12 +261,12 @@ const HomeScreen = ({ navigation }) => {
                         color: Colors.PRIMARY_WHITE,
                       }}
                     >
-                      {currentDateCount}
+                      {dailyCount[0]}
                     </Text>
                   </View>
                   <View style={{ alignItems: "center" }}>
                     <Text style={{ fontSize: 14, color: Colors.PRIMARY_WHITE }}>
-                      Detected
+                      Reported
                     </Text>
                     <Text
                       style={{
@@ -244,7 +275,7 @@ const HomeScreen = ({ navigation }) => {
                         color: Colors.PRIMARY_WHITE,
                       }}
                     >
-                      {currentDateCount}
+                      {dailyReported[0]}
                     </Text>
                   </View>
                 </View>
@@ -293,17 +324,18 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.4,
   },
   graphDisplay: {
-    justifyContent: "center",
+    justifyContent: "space-between",
     alignItems: "center",
     width: "92%",
     height: "100%",
-    backgroundColor: Colors.FIELDS_GRAY,
+    backgroundColor: Colors.PRIMARY_WHITE,
     borderRadius: 20,
     overflow: "hidden",
   },
-  graph: {
-    marginVertical: 8,
-    borderRadius: 16,
+  graphText: {
+    marginVertical: 5,
+    fontSize: 20,
+    fontWeight: 600,
   },
   historyDisplay: {
     flex: 1,

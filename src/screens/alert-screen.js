@@ -23,7 +23,6 @@ const AlertScreen = ({ navigation }) => {
     getCount();
   }, []);
 
-
   const getCounts = async () => {
     const snapshot = await firebase.firestore().collection("detected").get();
     const counts = snapshot.size;
@@ -89,7 +88,6 @@ const AlertScreen = ({ navigation }) => {
               </Text>
             </TouchableOpacity>
           </View>
-          <FilterTool onSelect={handleSelect} />
         </View>
         <HistoryNavigator />
       </View>

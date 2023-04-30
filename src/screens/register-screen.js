@@ -8,11 +8,8 @@ import {
 } from "react-native";
 import React, { useState } from "react";
 import Checkbox from "../components/Checkbox";
-// import { auth, createUserWithEmailAndPassword } from "../../firebase";
 import Logos from "../utilities/Logos";
 import { firebase } from "../../firebase";
-import { firestore } from "firebase/firestore";
-import { auth, createUserWithEmailAndPassword } from "../../firebase";
 import Colors from "../utilities/Colors";
 import CustomButton from "../components/CustomButton";
 import CustomButtonWithIcon from "../components/CustomButtonWithIcon";

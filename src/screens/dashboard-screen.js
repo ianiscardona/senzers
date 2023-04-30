@@ -25,40 +25,6 @@ const DashboardScreen = ({ navigation, route }) => {
   const [isImportantModalActive, setIsImportantModalActive] = useState(false);
   const [rippleColor, setRippleColor] = useState(Colors.PRIMARY_YELLOW);
 
-  // useEffect(() => {
-  // firebase.database().ref('/status').on('magnetometer', (snapshot) => {
-  //   const data = snapshot.val();
-  //   setIsSensorActive(data);
-
-  // })
-  // }, []);
-
-  // useEffect(() => {
-  //   firebase.database().ref('/magnetometer').orderByChild('createdAt').limitToLast(1).on('value', (snapshot) => {
-  //     snapshot.forEach((data) => {
-  //       const status = data.child('status').val();
-  //       console.log(status);
-  //     });
-  //   });
-  // }, []);
-
-  //     useEffect(() => {
-  //     setIsSensorActive();
-  //   }, []);
-  //   const db = firebase.database();
-  // // Listen for the latest data on the "magnetometer" node
-  // db.ref('/magnetometer').orderByChild('createdAt').limitToLast(1).on('value', (snapshot) => {
-  //   const data = snapshot.val();
-  //   if (data) {
-  //     // Get the latest data object
-  //     const latestData = Object.values(data)[0];
-  //     console.log('Latest data:', latestData);
-  //     // Get the value of the "status" field (assuming it's a boolean)
-  //     const status = latestData.status;
-  //     console.log(`Latest status: ${status}`);
-  //   }
-  // });
-
   const handleClose = () => {
     setIsParkedTimeExpired(false);
   };
@@ -85,17 +51,14 @@ const DashboardScreen = ({ navigation, route }) => {
 
   useEffect(() => {
     const db = firebase.database();
-    // Listen for the latest data on the "magnetometer" node
     db.ref("/magnetometer")
       .orderByChild("createAt")
       .limitToLast(1)
       .on("value", (snapshot) => {
         const data = snapshot.val();
         if (data) {
-          // Get the latest data object
           const latestData = Object.values(data)[0];
           console.log("Latest data:", latestData);
-          // Get the value of the "status" field (assuming it's a boolean)
           const status = latestData.status;
           console.log(`Latest status: ${status}`);
           setIsSensorActive(status);
@@ -114,6 +77,7 @@ const DashboardScreen = ({ navigation, route }) => {
           setIsParkedTimeExpired={setIsParkedTimeExpired}
           parkedTime={parkedTime}
           isSensorActive={isSensorActive}
+          isParkedTimeExpired={isParkedTimeExpired}
           setIsSensorActive={setIsSensorActive}
           setIsImportantModalActive={setIsImportantModalActive}
         />

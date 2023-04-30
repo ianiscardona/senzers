@@ -1,51 +1,44 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import { StyleSheet, Text, View } from "react-native";
-import { firebase } from "../../firebase";
 import { FontAwesome5 } from "@expo/vector-icons";
+import Colors from "../utilities/Colors";
 
-const HistoryCard = ({ data }) => {
+const HistoryCard = ({ index, dateSeen, timeSeen }) => {
   return (
-    <View style={styles.container}>
-      <View style={styles.iconContainer}>
-        <View style={styles.iconCircle}>
-          <View style={styles.iconSquare}></View>
+    <View style={styles.cardContainer}>
+      <View style={styles.card} key={index}>
+        <FontAwesome5
+          name="car"
+          size={30}
+          color="black"
+          style={{ marginRight: 15 }}
+        />
+
+        <View>
+          <Text style={styles.historyText}>
+            Vehicle Illegally Parked was Reported
+          </Text>
+          <Text style={styles.historyDate}>{dateSeen}</Text>
+          <Text style={styles.historyTime}>{timeSeen}</Text>
         </View>
       </View>
-      <View>
-        <Text style={styles.historyText}>
-          Vehicle Illegally Parked was Reported
-        </Text>
-        <Text style={styles.historyDate}>{data.dateSeen}</Text>
-        <Text style={styles.historyTime}>{data.timeSeen} ago</Text>
-      </View>
+      <View style={styles.line} />
     </View>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
+  cardContainer: {
+    marginTop: 2,
+    marginBottom: 2,
+    backgroundColor: "white",
+  },
+  card: {
     flexDirection: "row",
-    height: 80,
-    width: "100%",
+    height: 60,
     alignItems: "center",
     backgroundColor: "white",
-    paddingHorizontal: 20,
-  },
-  iconContainer: {
-    marginRight: 20,
-  },
-  iconCircle: {
-    height: 40,
-    width: 40,
-    borderRadius: 20,
-    backgroundColor: "#00BFFF",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  iconSquare: {
-    height: 20,
-    width: 4,
-    backgroundColor: "white",
+    padding: 10,
   },
   historyText: {
     fontSize: 16,
@@ -58,6 +51,12 @@ const styles = StyleSheet.create({
   },
   historyTime: {
     color: "lightgrey",
+  },
+  line: {
+    borderBottomColor: Colors.STATUS_GRAY,
+    borderBottomWidth: 1,
+    marginTop: 2,
+    width: "100%",
   },
 });
 

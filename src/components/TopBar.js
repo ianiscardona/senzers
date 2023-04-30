@@ -11,9 +11,7 @@ import React, { useEffect, useState } from "react";
 import { MotiView, AnimatePresence } from "moti";
 import Colors from "../utilities/Colors";
 import { firebase } from "../../firebase";
-import { QuerySnapshot } from "firebase/firestore";
 import * as ImagePicker from "expo-image-picker";
-// import "firebase/storage";
 
 const TopBar = ({ isVisible }) => {
   const [imageUrl, setImageUrl] = useState(null);
@@ -44,7 +42,8 @@ const TopBar = ({ isVisible }) => {
 
   const pickImage = async () => {
     try {
-      const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+      const { status } =
+        await ImagePicker.requestMediaLibraryPermissionsAsync();
       if (status !== "granted") {
         alert("Sorry, we need camera roll permissions to make this work!");
         return;
@@ -66,12 +65,58 @@ const TopBar = ({ isVisible }) => {
         const snapshot = await imageRef.put(blob);
         const url = await snapshot.ref.getDownloadURL();
 
-        setImageUrl(url);
+        // Save the image URL to the user's profile
+        const user = firebase.auth().currentUser;
+        if (user) {
+          const { uid } = user;
+          await firebase
+            .storage()
+            .ref()
+            .child("user-images/" + uid)
+            .put(blob);
+
+          const url = await firebase
+            .storage()
+            .ref()
+            .child("user-images/" + uid)
+            .getDownloadURL();
+
+          await user.updateProfile({
+            photoURL: url,
+          });
+
+          setImageUrl(url);
+        }
       }
     } catch (error) {
       console.error(error);
     }
   };
+
+  useEffect(() => {
+    const fetchProfileImage = async () => {
+      const user = firebase.auth().currentUser;
+      if (user) {
+        const { photoURL } = user;
+        if (photoURL) {
+          setImageUrl(photoURL);
+        } else {
+          const db = firebase.firestore();
+          const userRef = db.collection("users").doc(user.uid);
+          const doc = await userRef.get();
+          if (doc.exists) {
+            const userData = doc.data();
+            if (userData && userData.imageUrl) {
+              setImageUrl(userData.imageUrl);
+            }
+          }
+        }
+      }
+    };
+
+    fetchProfileImage();
+  }, []);
+
   return (
     <AnimatePresence>
       {isVisible && (

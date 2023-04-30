@@ -18,8 +18,8 @@ const ChangePasswordScreen = ({ navigation }) => {
   const [isFocused, setIsFocused] = useState(false);
   const handleGoBack = () => {
     Alert.alert(
-      "Security",
-      "You will be redirected to the home page if you execute this action.",
+      "Are you sure?",
+      "All unsaved changes will be lost.",
       [
         {
           text: "Cancel",
@@ -28,7 +28,7 @@ const ChangePasswordScreen = ({ navigation }) => {
         {
           text: "Confirm",
           onPress: () => {
-            navigation.goBack();
+            navigation.navigate("AccountScreen");
           },
         },
       ],

@@ -11,6 +11,7 @@ const NotificationData = () => {
     const unsubscribe = db
       .collection("detected")
       .orderBy("dateSeen", "desc")
+      .limit(30)
       .onSnapshot((querySnapshot) => {
         const items = [];
         querySnapshot.forEach((doc) => {

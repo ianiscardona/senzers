@@ -12,17 +12,45 @@ import defaultImage from "../../assets/icons/user-profile-small.png";
 import React, { useState, useEffect } from "react";
 import moment from "moment";
 import Colors from "../utilities/Colors";
-import { firebase } from "../../firebase";
 import { LinearGradient } from "expo-linear-gradient";
+import firebase from "firebase/compat";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
-const BottomNavTopBar = ({ topBarTitle, navigation, alertVisible, count, counts }) => {
-  const [imageUrl, setImageUrl] = useState(null);
+const BottomNavTopBar = ({
+  topBarTitle,
+  navigation,
+  alertVisible,
+  count,
+  counts,
+}) => {
   const [dateTime, setDateTime] = useState(moment());
+  const [profileImageUrl, setProfileImageUrl] = useState(null);
+
   useEffect(() => {
-    // const storageRef = firebase.storage().ref();
-    // const imageRef = storageRef.child("user-images/" + Date.now());
-    // const snapshot =  imageRef.get(blob);
-    // const url = snapshot.ref.getDownloadURL();
+    const fetchProfileImage = async () => {
+      const user = firebase.auth().currentUser;
+      if (user) {
+        const { photoURL } = user;
+        if (photoURL) {
+          setProfileImageUrl(photoURL);
+        } else {
+          const db = firebase.firestore();
+          const userRef = db.collection("users").doc(user.uid);
+          const doc = await userRef.get();
+          if (doc.exists) {
+            const userData = doc.data();
+            if (userData && userData.profileImageUrl) {
+              setProfileImageUrl(userData.profileImageUrl);
+            }
+          }
+        }
+      }
+    };
+
+    fetchProfileImage();
+  }, []);
+
+  useEffect(() => {
     const interval = setInterval(() => {
       setDateTime(moment());
     }, 1000);
@@ -64,7 +92,11 @@ const BottomNavTopBar = ({ topBarTitle, navigation, alertVisible, count, counts 
               navigation.navigate("AccountScreen");
             }}
           >
-            <Image source={defaultImage} alt="" style={styles.image} />
+            <Image
+              source={profileImageUrl ? { uri: profileImageUrl } : defaultImage}
+              alt=""
+              style={styles.image}
+            />
           </TouchableOpacity>
         </ImageBackground>
       </View>
@@ -81,7 +113,8 @@ const BottomNavTopBar = ({ topBarTitle, navigation, alertVisible, count, counts 
         >
           <View style={styles.alertSummaryContent}>
             <Text style={styles.alertSummaryText}>
-              Vehicle Detected: <Text style={{ fontWeight: 600 }}>{counts}</Text>
+              Vehicle Detected:{" "}
+              <Text style={{ fontWeight: 600 }}>{counts}</Text>
             </Text>
             <Text style={styles.alertSummaryText}>
               Vehicle Reported: <Text style={{ fontWeight: 600 }}>{count}</Text>
