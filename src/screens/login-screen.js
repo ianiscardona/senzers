@@ -25,6 +25,7 @@ const LoginScreen = ({ navigation }) => {
 
   const loginUser = async (email, password) => {
     try {
+      setLoading(true);
       await firebase
         .auth()
         .signInWithEmailAndPassword(email, password)
