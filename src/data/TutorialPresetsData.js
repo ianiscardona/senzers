@@ -2,6 +2,7 @@ import tutorialTitle from "../../assets/images/tutorial/tutorial-title.png";
 import tutorialTwo from "../../assets/images/tutorial/tutorial-2.png";
 import tutorialThree from "../../assets/images/tutorial/tutorial-3.png";
 import tutorialFour from "../../assets/images/tutorial/tutorial-4.png";
+import tutorialFive from "../../assets/images/tutorial/tutorial-5.png";
 
 export const TutorialPresetsData = [
   {
@@ -23,5 +24,10 @@ export const TutorialPresetsData = [
     id: 4,
     img: tutorialFour,
     desc: "Now how are they used?",
+  },
+  {
+    id: 5,
+    img: tutorialFive,
+    desc: "Once the sensor has detected a vehicle, it will send a notification immediately. After 5 minutes, it will send another notification that the vehicle is now considered illegally parked. You can now fill up the form and report the vehicle!",
   },
 ];

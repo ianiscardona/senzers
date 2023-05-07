@@ -7,14 +7,14 @@ import {
   Pressable,
   Alert,
 } from "react-native";
-import React, { useState } from "react";
+import React, { useState, useMemo } from "react";
 import { FontAwesome5 } from "@expo/vector-icons";
 import Logos from "../utilities/Logos";
 import { firebase } from "../../firebase";
 import CustomButton from "../components/CustomButton";
 import CustomButtonWithIcon from "../components/CustomButtonWithIcon";
 import Colors from "../utilities/Colors";
-import { MotiImage } from "moti";
+import { MotiImage, MotiView } from "moti";
 import LoadingScreen from "./loading-screen";
 
 const LoginScreen = ({ navigation }) => {
@@ -38,13 +38,31 @@ const LoginScreen = ({ navigation }) => {
       setLoading(false);
     }
   };
+
+  const memoizedAnimation = useMemo(
+    () => ({
+      from: {
+        translateY: 0,
+      },
+      animate: {
+        translateY: -10,
+      },
+      transition: {
+        type: "timing",
+        duration: 700,
+        loop: true,
+      },
+    }),
+    []
+  );
+
   return (
     <KeyboardAvoidingView style={styles.container} behavior="height">
       {loading ? (
         <LoadingScreen />
       ) : (
         <>
-          <View style={styles.logoAndTextContainer}>
+          <MotiView {...memoizedAnimation} style={styles.logoAndTextContainer}>
             <MotiImage
               style={{ width: 100, height: 100 }}
               source={Logos.SENZERS_LOGO_BLACK_MAIN}
@@ -53,7 +71,7 @@ const LoginScreen = ({ navigation }) => {
               animate={{ opacity: 1, translateY: 0 }}
               transition={{ type: "timing", duration: 500 }}
             />
-          </View>
+          </MotiView>
           <View style={styles.credentialContainer}>
             <Text style={styles.inputTitle}>Email</Text>
             <View style={styles.inputContainer}>
@@ -102,7 +120,7 @@ const LoginScreen = ({ navigation }) => {
               width={"100%"}
             />
           </View>
-          <View style={[styles.buttonContainer]}>
+          {/* <View style={[styles.buttonContainer]}>
             <CustomButtonWithIcon
               onPress={() => {}}
               text={"Login with Google"}
@@ -112,7 +130,7 @@ const LoginScreen = ({ navigation }) => {
               size={18}
               color={"white"}
             />
-          </View>
+          </View> */}
           <View style={styles.orContainer}>
             <View style={styles.line} />
             <Text

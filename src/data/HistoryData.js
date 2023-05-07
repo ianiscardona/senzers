@@ -15,8 +15,8 @@ const HistoryData = () => {
     if (currentUser) {
       const unsubscribe = db
         .collection("reports")
-        .where("UserID", "==", currentUser.uid)
         .orderBy("dateSeen", "desc")
+        .limit(30)
         .onSnapshot((querySnapshot) => {
           const items = [];
           querySnapshot.forEach((doc) => {

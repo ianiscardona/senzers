@@ -1,4 +1,10 @@
-import { StyleSheet, Text, View, Dimensions, Touchable } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  View,
+  Dimensions,
+  TouchableOpacity,
+} from "react-native";
 import React, { useState, useEffect } from "react";
 import BottomNavTopBar from "../components/BottomNavTopBar";
 import Colors from "../utilities/Colors";
@@ -9,7 +15,6 @@ import { ImageBackground } from "react-native";
 import { firebase } from "../../firebase";
 import { LineChart } from "react-native-chart-kit";
 import moment from "moment";
-import { TouchableOpacity } from "react-native-gesture-handler";
 import { FontAwesome5 } from "@expo/vector-icons";
 
 const HomeScreen = ({ navigation }) => {

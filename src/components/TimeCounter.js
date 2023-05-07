@@ -101,7 +101,7 @@ const TimeCounter = ({
           onReset();
         }
       }, 1000);
-      timeoutIdRef.current = setTimeout(handleTimeout, 5000);
+      timeoutIdRef.current = setTimeout(handleTimeout, 300000);
 
       return () => {
         clearInterval(intervalIdRef.current);
