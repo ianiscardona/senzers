@@ -18,8 +18,8 @@ const ChangePasswordScreen = ({ navigation }) => {
   const [isFocused, setIsFocused] = useState(false);
   const handleGoBack = () => {
     Alert.alert(
-      "Security",
-      "You will be redirected to the home page if you execute this action.",
+      "Are you sure?",
+      "All unsaved changes will be lost.",
       [
         {
           text: "Cancel",
@@ -28,7 +28,7 @@ const ChangePasswordScreen = ({ navigation }) => {
         {
           text: "Confirm",
           onPress: () => {
-            navigation.goBack();
+            navigation.navigate("AccountScreen");
           },
         },
       ],
@@ -79,8 +79,17 @@ const ChangePasswordScreen = ({ navigation }) => {
           style={{ resizeMode: "contain" }}
         />
       </View>
-      <Text style={{ fontWeight: "bold", fontSize: 24 }}>Change Password</Text>
-      <View style={styles.contentInputContainer}>
+      <Text
+        style={{
+          fontWeight: "bold",
+          fontSize: 24,
+          alignSelf: "center",
+          marginBottom: 20,
+        }}
+      >
+        Change Password
+      </Text>
+      {/* <View style={styles.contentInputContainer}>
         <View>
           <Text style={{ fontWeight: 600, marginBottom: 5 }}>Old Password</Text>
           <TextInput
@@ -113,9 +122,9 @@ const ChangePasswordScreen = ({ navigation }) => {
             onBlur={handleBlur}
           />
         </View>
-      </View>
+      </View> */}
       <CustomButton
-        text={"Save Changes"}
+        text={"Send Link to Email"}
         onPress={changePassword}
         //   () =>
         //   Alert.alert(

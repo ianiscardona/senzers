@@ -3,55 +3,66 @@ import {
   StyleSheet,
   TextInput,
   View,
-  TouchableOpacity,
   Text,
   Pressable,
-  Image,
   Alert,
 } from "react-native";
-import React, { useState } from "react";
+import React, { useState, useMemo } from "react";
 import { FontAwesome5 } from "@expo/vector-icons";
 import Logos from "../utilities/Logos";
 import { firebase } from "../../firebase";
-import { auth,firestore,db  } from "../../firebase";
-import * as GoogleSignIn from 'expo-google-app-auth';
-
-
-
 import CustomButton from "../components/CustomButton";
 import CustomButtonWithIcon from "../components/CustomButtonWithIcon";
 import Colors from "../utilities/Colors";
-import { MotiImage } from "moti";
+import { MotiImage, MotiView } from "moti";
 import LoadingScreen from "./loading-screen";
-
-
 
 const LoginScreen = ({ navigation }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(false);
-  
 
-  
-  const loginUser = async ( email, password) => {
+  const loginUser = async (email, password) => {
     try {
-      await firebase.auth().signInWithEmailAndPassword(email, password).then((userCredential) => {
-        console.log(userCredential.user.uid);
-      });
+      setLoading(true);
+      await firebase
+        .auth()
+        .signInWithEmailAndPassword(email, password)
+        .then((userCredential) => {
+          console.log(userCredential.user.uid);
+        });
     } catch (error) {
       Alert.alert("Login unsuccessful", "Username or password incorrect");
     } finally {
       setLoading(false);
     }
   };
+
+  const memoizedAnimation = useMemo(
+    () => ({
+      from: {
+        translateY: 0,
+      },
+      animate: {
+        translateY: -10,
+      },
+      transition: {
+        type: "timing",
+        duration: 700,
+        loop: true,
+      },
+    }),
+    []
+  );
+
   return (
     <KeyboardAvoidingView style={styles.container} behavior="height">
       {loading ? (
         <LoadingScreen />
       ) : (
         <>
-          <View style={styles.logoAndTextContainer}>
+          <MotiView {...memoizedAnimation} style={styles.logoAndTextContainer}>
             <MotiImage
               style={{ width: 100, height: 100 }}
               source={Logos.SENZERS_LOGO_BLACK_MAIN}
@@ -60,7 +71,7 @@ const LoginScreen = ({ navigation }) => {
               animate={{ opacity: 1, translateY: 0 }}
               transition={{ type: "timing", duration: 500 }}
             />
-          </View>
+          </MotiView>
           <View style={styles.credentialContainer}>
             <Text style={styles.inputTitle}>Email</Text>
             <View style={styles.inputContainer}>
@@ -109,7 +120,7 @@ const LoginScreen = ({ navigation }) => {
               width={"100%"}
             />
           </View>
-          <View style={[styles.buttonContainer]}>
+          {/* <View style={[styles.buttonContainer]}>
             <CustomButtonWithIcon
               onPress={() => {}}
               text={"Login with Google"}
@@ -119,7 +130,7 @@ const LoginScreen = ({ navigation }) => {
               size={18}
               color={"white"}
             />
-          </View>
+          </View> */}
           <View style={styles.orContainer}>
             <View style={styles.line} />
             <Text
@@ -200,5 +211,4 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     width: "45%",
   },
-}); 
-
+});

@@ -7,12 +7,10 @@ const NotificationCard = ({ index, dateSeen, timeSeen }) => {
   return (
     <View style={styles.cardContainer}>
       <View style={styles.card} key={index}>
-        <FontAwesome5
-          name="road"
-          size={30}
-          color="black"
-          style={{ marginRight: 15 }}
-        />
+        <View style={styles.circle}>
+          <FontAwesome5 name="exclamation" size={30} color="black" />
+        </View>
+
         <View>
           <Text style={styles.notificationText}>Parking Detected</Text>
           <Text style={styles.notificationHour}>
@@ -53,5 +51,14 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     marginTop: 2,
     width: "100%",
+  },
+  circle: {
+    width: 50,
+    height: 50,
+    borderRadius: 30,
+    backgroundColor: Colors.PRIMARY_RED,
+    justifyContent: "center",
+    alignItems: "center",
+    marginRight: 10,
   },
 });

@@ -14,7 +14,7 @@ export const WalkthroughPresetsData = [
     id: 2,
     header: "Wait for the Radar",
     img: walkthroughTwo,
-    desc: "Wait for the radar to pick up a signal that a vehicle.",
+    desc: "Wait for the radar to pick up a signal that a vehicle has parked in the vicinity.",
   },
   {
     id: 3,

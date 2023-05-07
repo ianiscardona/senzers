@@ -5,14 +5,11 @@ import {
   View,
   Text,
   Pressable,
+  Alert,
 } from "react-native";
 import React, { useState } from "react";
 import Checkbox from "../components/Checkbox";
-// import { auth, createUserWithEmailAndPassword } from "../../firebase";
-import Logos from "../utilities/Logos";
 import { firebase } from "../../firebase";
-import { firestore } from "firebase/firestore";
-import { auth, createUserWithEmailAndPassword } from "../../firebase";
 import Colors from "../utilities/Colors";
 import CustomButton from "../components/CustomButton";
 import CustomButtonWithIcon from "../components/CustomButtonWithIcon";
@@ -39,6 +36,10 @@ const RegisterScreen = ({ navigation }) => {
   };
 
   const handleSignupAndEnterInfo = (email, password) => {
+    if (!isSelected) {
+      Alert.alert("Accept the terms before signing up");
+      return;
+    }
     try {
       AsyncStorage.clear();
       handleSignup(email, password);
@@ -138,7 +139,7 @@ const RegisterScreen = ({ navigation }) => {
           width={"100%"}
         />
       </View>
-      <View style={[styles.buttonContainer]}>
+      {/* <View style={[styles.buttonContainer]}>
         <CustomButtonWithIcon
           onPress={() => {}}
           text={"Register with Google"}
@@ -148,7 +149,7 @@ const RegisterScreen = ({ navigation }) => {
           size={18}
           color={"white"}
         />
-      </View>
+      </View> */}
       <View style={styles.orContainer}>
         <View style={styles.line} />
         <Text style={{ fontSize: 16, fontWeight: "bold", marginHorizontal: 5 }}>

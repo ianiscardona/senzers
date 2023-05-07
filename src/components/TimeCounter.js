@@ -14,14 +14,13 @@ const TimeCounter = ({
   setFormDate,
   setIsSensorActive,
   setIsImportantModalActive,
+  isParkedTimeExpired,
   onReset,
 }) => {
   const [startTime, setStartTime] = useState(null);
   const [detectedTime, setDetectedTime] = useState(null);
   const intervalIdRef = useRef(null);
   const timeoutIdRef = useRef(null);
-  // const [vehicleType, setVehicleType] = useState(null);
-  // const [plateNumber, setPlateNumber] = useState(null);
   const [timeSeen, setTimeSeen] = useState("");
   const [dateSeen, setDateSeen] = useState("");
 
@@ -49,15 +48,30 @@ const TimeCounter = ({
     setIsImportantModalActive,
     isSensorActive,
   ]);
+  const Create = () => {
+    const user = firebase.auth().currentUser;
+    if (timeSeen && dateSeen && user) {
+      addDoc(collection(db, "detected"), {
+        timeSeen: timeSeen,
+        dateSeen: dateSeen,
+        UserID: user.uid,
+      })
+        .then(() => {
+          console.log("data submitted");
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    } else {
+      console.log("Missing required data to create document");
+    }
+  };
 
   useEffect(() => {
     if (isSensorActive) {
       const formDateNow = moment();
       setStartTime(moment());
       setFormDate(formDateNow);
-      setDetectedTime(formDateNow);
-      console.log(formDateNow);
-      console.log(detectedTime);
       scheduleNotification(
         {
           title: "Vehicle Detected!",
@@ -79,21 +93,15 @@ const TimeCounter = ({
       intervalIdRef.current = setInterval(() => {
         const duration = moment.duration(moment().diff(startTime));
         setParkedTime(duration);
-        if (!isSensorActive) {
+        if (!isSensorActive && !isParkedTimeExpired) {
+          console.log("eroeore");
+          setTimeSeen(startTime.format("HH:mm:ss"));
+          setDateSeen(startTime.format("MMMM Do YYYY"));
+          Create();
           onReset();
         }
       }, 1000);
-      // timeoutIdRef.current = setTimeout(() => {
-      //   const detectedTime = moment();
-      //   // setTimeSeen(detectedTime.format("hh:mm:ss"));
-      //   // setDateSeen(detectedTime.format("MMMM Do YYYY"));
-      //   // console.log(timeSeen);
-      //   // console.log(detectedTime.format("hh:mm:ss"));
-      //   // setIsSensorActive(false);
-      //   // Create();
-      // }, 10000);
-      // timeoutIdRef.current = setTimeout(handleTimeout, 5000);
-      timeoutIdRef.current = setTimeout(handleTimeout, 10000);
+      timeoutIdRef.current = setTimeout(handleTimeout, 300000);
 
       return () => {
         clearInterval(intervalIdRef.current);
@@ -101,31 +109,6 @@ const TimeCounter = ({
       };
     }
   }, [startTime, setParkedTime, handleTimeout]);
-
-  function Create() {
-    const user = firebase.auth().currentUser;
-    if (timeSeen && dateSeen && user) {
-      addDoc(collection(db, "detected"), {
-        // vehicleType: vehicleType,
-        // plateNumber: plateNumber,
-        timeSeen: timeSeen,
-        dateSeen: dateSeen,
-        UserID: user.uid,
-      })
-        .then(() => {
-          // Data saved successfully!
-          console.log("data submitted");
-        })
-        .catch((error) => {
-          // The write failed...
-          console.log(error);
-        });
-    } else {
-      console.log("Missing required data to create document");
-    }
-  }
-
-  // setIsSensorActive(false);
 
   const displayDuration = moment.duration(parkedTime);
   const hours = displayDuration.hours().toString().padStart(2, "0");

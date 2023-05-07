@@ -15,14 +15,14 @@ const HistoryData = () => {
     if (currentUser) {
       const unsubscribe = db
         .collection("reports")
-        .where("UserID", "==", currentUser.uid)
         .orderBy("dateSeen", "desc")
+        .limit(30)
         .onSnapshot((querySnapshot) => {
           const items = [];
           querySnapshot.forEach((doc) => {
             const data = doc.data();
             items.push({
-              dateSeen: moment(data.dateSeen, "YYYY-MM-DD").format("MMMM Do YYYY"),
+              dateSeen: data.dateSeen,
               timeSeen: data.timeSeen,
             });
           });
@@ -34,12 +34,25 @@ const HistoryData = () => {
   }, []);
 
   return (
-    <ScrollView>
-      {data.map((item) => (
-        <HistoryCard key={item.dateSeen} data={item} />
+    <ScrollView style={styles.container}>
+      {data.map((item, index) => (
+        <HistoryCard
+          key={index}
+          dateSeen={item.dateSeen}
+          timeSeen={item.timeSeen}
+        />
       ))}
     </ScrollView>
   );
 };
 
 export default HistoryData;
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: "white",
+    paddingHorizontal: 0,
+    paddingVertical: 10,
+  },
+});

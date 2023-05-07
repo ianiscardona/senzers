@@ -10,7 +10,7 @@ import {
   Alert,
 } from "react-native";
 import { db, firebase } from "../../firebase";
-import { collection, doc, setDoc, addDoc} from "firebase/firestore";
+import { collection, doc, setDoc, addDoc } from "firebase/firestore";
 import Colors from "../utilities/Colors";
 
 const ReportFormModal = ({
@@ -26,26 +26,27 @@ const ReportFormModal = ({
   const [timeSeen, setTimeSeen] = useState("");
   const [dateSeen, setDateSeen] = useState("");
   // const user = firebase.auth().currentUser;
-  
-  function Create () {
+
+  function Create() {
     const user = firebase.auth().currentUser;
-    addDoc(collection(db, "reports"), {     
-          vehicleType: vehicleType,
-          plateNumber: plateNumber,
-          timeSeen: timeSeen,
-          dateSeen: dateSeen,
-          UserID: user.uid
-        }).then(() => { 
-          // Data saved successfully!
-          console.log('data submitted');  
-    
-        }).catch((error) => {
-              // The write failed...
-              console.log(error);
-        });
-    }
+    addDoc(collection(db, "reports"), {
+      vehicleType: vehicleType,
+      plateNumber: plateNumber,
+      timeSeen: timeSeen,
+      dateSeen: dateSeen,
+      UserID: user.uid,
+    })
+      .then(() => {
+        // Data saved successfully!
+        console.log("data submitted");
+      })
+      .catch((error) => {
+        // The write failed...
+        console.log(error);
+      });
+  }
   const handleSave = () => {
-    Create ();
+    Create();
     onReset();
     onClose();
     onFormDone();
@@ -126,7 +127,7 @@ const ReportFormModal = ({
             <TextInput
               placeholder={timeSeen}
               value={timeSeen}
-              style={styles.input}
+              style={[styles.input, { color: "black" }]}
               editable={false}
             />
             <Text style={{ fontSize: 16, fontWeight: "bold", marginBottom: 5 }}>
@@ -135,7 +136,7 @@ const ReportFormModal = ({
             <TextInput
               placeholder={dateSeen}
               value={dateSeen}
-              style={styles.input}
+              style={[styles.input, { color: "black" }]}
               editable={false}
             />
           </View>
@@ -146,7 +147,7 @@ const ReportFormModal = ({
               style={[
                 styles.button,
                 {
-                  backgroundColor: "#F6F8A3",
+                  backgroundColor: Colors.NO_GRAY,
                 },
               ]}
             >
@@ -154,7 +155,10 @@ const ReportFormModal = ({
             </TouchableOpacity>
             <TouchableOpacity
               onPress={handleSave}
-              style={[styles.button, { backgroundColor: "#F3F641" }]}
+              style={[
+                styles.button,
+                { backgroundColor: Colors.PRIMARY_YELLOW },
+              ]}
             >
               <Text style={styles.buttonText}>Save</Text>
             </TouchableOpacity>
